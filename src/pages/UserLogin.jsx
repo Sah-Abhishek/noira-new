@@ -30,6 +30,8 @@ export default function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const {
     register,
@@ -40,7 +42,7 @@ export default function UserLogin() {
   });
 
   const onSubmit = async (data) => {
-    const endpoint = "http://192.168.1.20:3000/auth/user/login";
+    const endpoint = `${apiUrl}/auth/login`
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, data);
@@ -52,11 +54,12 @@ export default function UserLogin() {
       }
     } catch (error) {
       if (error.response) {
-        setErrorMsg(`Login failed: ${error.response.data.message || error.response.statusText}`);
+        setErrorMsg(`Login failed: ${error.response.data.message || error.response.statusText
+          } `);
       } else if (error.request) {
         setErrorMsg("No response from server. Please try again later.");
       } else {
-        setErrorMsg(`Error: ${error.message}`);
+        setErrorMsg(`Error: ${error.message} `);
       }
       setIsLoading(false);
     }
@@ -84,7 +87,7 @@ export default function UserLogin() {
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-yellow-500"}`}
+              className={`w - full px - 4 py - 3 rounded - md bg - [#2b2b2b] text - white placeholder - gray - 500 outline - none focus: ring - 2 ${errors.email ? "ring-red-500" : "focus:ring-yellow-500"} `}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
@@ -99,7 +102,7 @@ export default function UserLogin() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password")}
-                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-yellow-500"}`}
+                className={`w - full px - 4 py - 3 rounded - md bg - [#2b2b2b] text - white placeholder - gray - 500 outline - none focus: ring - 2 ${errors.password ? "ring-red-500" : "focus:ring-yellow-500"} `}
               />
               <span
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
@@ -119,8 +122,8 @@ export default function UserLogin() {
           {/* Login Button */}
           <button
             type="submit"
-            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2
-              ${isLoading ? "bg-black text-white cursor-not-allowed" : "bg-yellow-500 hover:bg-yellow-400 text-black"}`}
+            className={`w - full font - semibold py - 3 rounded - md flex items - center justify - center gap - 2
+              ${isLoading ? "bg-black text-white cursor-not-allowed" : "bg-yellow-500 hover:bg-yellow-400 text-black"} `}
             disabled={isLoading}
           >
             {isLoading ? (

@@ -13,6 +13,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import UserSignup from './pages/UserSignup.jsx';
 import UserLogin from './pages/UserLogin.jsx';
 import TherapistDashboard from './pages/TherapistDashobard.jsx'
+import ServicesPage from './pages/ServicesPage.jsx';
+import CartPage from './pages/CartPage.jsx';
+import ChooseTherapistPage from './pages/ChooseTherapistPage.jsx';
 
 const AppRoutes = () => {
   return (
@@ -31,8 +34,12 @@ const AppRoutes = () => {
       {/* <Route path="/services" element={<ServicesPage />} /> */}
 
 
+      {/* ProtectedRoute   */}
       <Route path="/admindashboard" element={<ProtectedRoute ><AdminDashoboard /></ProtectedRoute>} />
-      <Route path="/therapistdashboard" element={<TherapistDashboard />} />
+      <Route path="/servicespage" element={<ServicesPage />} />
+      <Route path="/cartpage" element={<CartPage />} />
+      < Route path="/therapistdashboard" element={< TherapistDashboard />} />
+      < Route path="/choosetherapist" element={< ChooseTherapistPage />} />
 
     </Routes >
   );
