@@ -17,6 +17,7 @@ import ServicesPage from './pages/ServicesPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import ChooseTherapistPage from './pages/ChooseTherapistPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import PaymentPage from './pages/PaymentPage.jsx';
 
 const AppRoutes = () => {
   return (
@@ -42,6 +43,8 @@ const AppRoutes = () => {
       <Route path="/cartpage" element={<CartPage />} />
       < Route path="/therapistdashboard" element={< TherapistDashboard />} />
       < Route path="/choosetherapist" element={< ChooseTherapistPage />} />
+      < Route path="/paymentpage" element={< PaymentPage />} />
+
 
     </Routes >
   );

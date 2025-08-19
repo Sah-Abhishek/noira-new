@@ -8,6 +8,8 @@ import cartWheel from '../assets/cartWheel.png';
 import { FaArrowRight } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
+import Link from '@mui/material/Link';
+import { useNavigate } from 'react-router-dom';
 
 // Mock service data with real images from Unsplash
 const services = [
@@ -71,10 +73,15 @@ const fadeInUp = {
 const Services = () => {
   // Assuming a context provider for theme is set up
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
 
   // Dynamic classes for dark/light mode
   const sectionBg = isDarkMode ? 'bg-black text-white' : 'bg-gray-200/70 text-black';
   const descriptionText = isDarkMode ? 'text-gray-400' : 'text-gray-600';
+
+  const handleOnClick = () => {
+    navigate('/servicespage');
+  }
 
   return (
     <section
@@ -153,7 +160,11 @@ const Services = () => {
               </p>
 
               <div>
-                <button className='bg-[#D59940] font-bold text-black rounded-full px-3 py-2'>Request Prices</button>
+                <button onClick={handleOnClick} className='bg-[#D59940] font-bold text-black rounded-full px-3 py-2'>
+
+                  Request Prices</button>
+
+
               </div>
 
               {/* Prices List */}
@@ -174,7 +185,7 @@ const Services = () => {
           </motion.div>
         ))}
       </div>
-    </section>
+    </section >
   );
 };
 

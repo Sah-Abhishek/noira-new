@@ -83,9 +83,9 @@ const CartPage = () => {
   const serviceFee = 15;
   const total = subtotal + serviceFee;
   //
-  // if (viewCart.length === 0) {
-  //   return null;
-  // }
+  if (viewCart.length === 0) {
+    return null;
+  }
 
 
   return (

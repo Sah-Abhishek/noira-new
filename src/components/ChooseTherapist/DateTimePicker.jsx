@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import axios from "axios";
 import useBookingStore from "../../store/bookingStore.jsx"; // 👈 adjust path
 
@@ -25,18 +26,21 @@ const generateMonthDays = (year, month) => {
 };
 
 const DateTimePicker = ({
-  availableTimes = ["09:00", "10:30", "12:00", "14:00", "15:30", "17:00"],
+  availableTimes = ["09:00", "10:00", "10:30", "12:00", "14:00", "15:30", "17:00"],
 }) => {
   const today = new Date();
-  const { cart, date, time, setDate, setTime } = useBookingStore();
+  const { cart, setTherapists, date, time, setDate, setTime, findingTherapist, setFindingTherapist } = useBookingStore();
 
   const [days, setDays] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    setDays(generateMonthDays(today.getFullYear(), today.getMonth()));
-  }, []);
+    const monthDays = generateMonthDays(currentYear, currentMonth);
+    setDays(monthDays);
+  }, [currentMonth, currentYear]);
 
   const handleConfirm = async () => {
     if (!cart || !date || !time) {
@@ -44,6 +48,7 @@ const DateTimePicker = ({
       return;
     }
 
+    const apiUrl = import.meta.env.VITE_API_URL;
     const bookingData = {
       service: cart,
       date: formatDate(date), // DD-MM-YYYY
@@ -51,11 +56,16 @@ const DateTimePicker = ({
     };
 
     try {
+      setFindingTherapist(true);
       setLoading(true);
       setMessage(null);
 
-      // 👇 Axios instead of fetch
-      const res = await axios.post("/api/bookings", bookingData);
+      const res = await axios.post(
+        `${apiUrl}/auth/therapist/filter`,
+        bookingData
+      );
+
+      setTherapists(res.data.therapists);
 
       if (res.status !== 200 && res.status !== 201) {
         throw new Error("Failed to save booking");
@@ -65,7 +75,26 @@ const DateTimePicker = ({
     } catch (err) {
       setMessage("❌ " + (err.response?.data?.message || err.message));
     } finally {
+      setFindingTherapist(false);
       setLoading(false);
+    }
+  };
+
+  const goToPreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((prev) => prev - 1);
+    } else {
+      setCurrentMonth((prev) => prev - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((prev) => prev + 1);
+    } else {
+      setCurrentMonth((prev) => prev + 1);
     }
   };
 
@@ -78,9 +107,26 @@ const DateTimePicker = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Date Picker */}
         <div className="bg-[#1a2234] p-6 rounded-2xl">
-          <h3 className="text-sm md:text-lg font-medium mb-4 text-primary">
-            Choose Date
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={goToPreviousMonth}
+              className="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600"
+            >
+              <ArrowLeft />
+            </button>
+            <h3 className="text-sm md:text-lg font-medium text-primary">
+              {new Date(currentYear, currentMonth).toLocaleString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h3>
+            <button
+              onClick={goToNextMonth}
+              className="px-2 py-1 bg-gray-700 rounded hover:bg-gray-600"
+            >
+              <ArrowRight />
+            </button>
+          </div>
 
           <div className="grid grid-cols-7 gap-2">
             {days.map((d, idx) => {
@@ -88,7 +134,8 @@ const DateTimePicker = ({
                 date &&
                 date instanceof Date &&
                 date.getDate() === d.date &&
-                date.getMonth() === d.fullDate.getMonth();
+                date.getMonth() === d.fullDate.getMonth() &&
+                date.getFullYear() === d.fullDate.getFullYear();
 
               return (
                 <button
@@ -136,17 +183,20 @@ const DateTimePicker = ({
       <div className="mt-6 flex justify-center">
         <button
           onClick={handleConfirm}
-          disabled={loading}
-          className="px-6 py-3 bg-primary text-black font-semibold rounded-lg hover:bg-amber-500 transition disabled:opacity-50"
+          disabled={loading || !date || !time}
+          className={`px-6 py-3 rounded-lg font-semibold transition ${loading || !date || !time
+            ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+            : "bg-primary text-black hover:bg-amber-500"
+            }`}
         >
-          {loading ? "Saving..." : "Confirm Booking"}
+          {loading ? "Saving..." : "Find Therapist"}
         </button>
       </div>
 
       {/* Response message */}
-      {message && (
-        <p className="mt-4 text-center text-red-500 text-sm">{message}</p>
-      )}
+      {/* {message && ( */}
+      {/*   <p className="mt-4 text-center text-red-500 text-sm">{message}</p> */}
+      {/* )} */}
     </div>
   );
 };

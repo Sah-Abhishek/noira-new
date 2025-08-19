@@ -45,7 +45,8 @@ const ServicesPage = () => {
     resetCart();
   };
 
-  const hasCart = cart !== null; // check if user added a service
+  const hasCart = cart && Object.keys(cart).length > 0;
+  console.log("This is the value of hascart: ", hasCart);
 
   return (
     <div className="bg-black w-full text-white">
@@ -53,16 +54,16 @@ const ServicesPage = () => {
       <HeroSectionServices />
 
       {/* Services and Cart */}
-      <div className="bg-black w-full px-4 py-12">
+      <div className="bg-black w-full px-4 py-12 ">
         <div
-          className={`max-w-7xl mx-auto gap-6 ${hasCart
-              ? "flex flex-col lg:flex-row" // show side by side
-              : "flex justify-center" // center services when no cart
+          className={`max-w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
+            ? "flex flex-col lg:flex-row" // show side by side
+            : "flex justify-center" // center services when no cart
             }`}
         >
           {/* Service Cards Section */}
           <div
-            className={`${hasCart ? "flex-1" : "w-full lg:w-3/4"
+            className={` ${hasCart ? "flex-1" : "w-full lg:w-3/4"
               } space-y-6`}
           >
             {loading
