@@ -1,12 +1,23 @@
 import { ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+
 
 const FloatingCartButton = ({ cart, onChooseTherapist }) => {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/choosetherapist');
+  }
+
+
   return (
     <div className="fixed bottom-6 w-full flex justify-between px-6">
       {/* Choose Therapist Button - Centered at bottom */}
       {cart.length > 0 && (
         <button
-          onClick={onChooseTherapist}
+          onClick={handleClick}
           className="bg-[#C49E5B] hover:bg-amber-600 text-black font-semibold px-6 py-3 rounded-lg shadow-lg transition mx-auto"
         >
           Choose Therapist

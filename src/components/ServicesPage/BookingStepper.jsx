@@ -22,7 +22,7 @@ const BookingStepper = ({ currentStep }) => {
                   ${isCompleted
                     ? "bg-green-500 text-white"
                     : isActive
-                      ? "bg-yellow-400 text-black"
+                      ? "bg-primary text-black"
                       : "bg-gray-700 text-gray-400"
                   }`}
               >
@@ -34,7 +34,7 @@ const BookingStepper = ({ currentStep }) => {
                 className={`text-sm font-medium ${isCompleted
                   ? "text-green-400"
                   : isActive
-                    ? "text-yellow-400"
+                    ? "text-primary"
                     : "text-gray-400"
                   }`}
               >
@@ -48,7 +48,7 @@ const BookingStepper = ({ currentStep }) => {
                 className={`flex-1 h-[2px] ${isCompleted
                   ? "bg-green-500"
                   : isActive
-                    ? "bg-yellow-400"
+                    ? "bg-primary"
                     : "bg-gray-600"
                   }`}
                 style={{ marginTop: "16px", marginBottom: "16px" }} // Adding space between lines

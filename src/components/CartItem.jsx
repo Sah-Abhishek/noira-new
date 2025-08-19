@@ -9,38 +9,16 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
           <h3 className="text-[#C49E5B] text-xl font-semibold mb-2">
             {item.title}
           </h3>
-          <p className="text-gray-300 text-sm mb-4">
-            {item.duration}
-          </p>
+          <p className="text-gray-300 text-sm mb-4">{item.duration}</p>
           <p className="text-gray-400 text-sm leading-relaxed">
             {item.description}
           </p>
         </div>
 
-        {/* Right side - Controls and price */}
-        <div className="flex items-center gap-4 flex-shrink-0">
-          {/* Quantity controls */}
-          {/* <div className="flex items-center bg-black rounded-full overflow-hidden"> */}
-          {/*   <button */}
-          {/*     onClick={() => onDecrement(item.id)} */}
-          {/*     className="p-2 text-white hover:text-gray-300 transition-colors disabled:opacity-50" */}
-          {/*     disabled={item.quantity <= 1} */}
-          {/*   > */}
-          {/*     <Minus size={14} /> */}
-          {/*   </button> */}
-          {/*   <span className="text-white font-semibold px-4 py-2 min-w-[50px] text-center"> */}
-          {/*     {item.quantity} */}
-          {/*   </span> */}
-          {/*   <button */}
-          {/*     onClick={() => onIncrement(item.id)} */}
-          {/*     className="p-2 text-white hover:text-gray-300 transition-colors" */}
-          {/*   > */}
-          {/*     <Plus size={14} /> */}
-          {/*   </button> */}
-          {/* </div> */}
-          {/**/}
+        {/* Right side - Controls stacked vertically */}
+        <div className="flex flex-col items-end gap-3 flex-shrink-0">
           {/* Price */}
-          <div className="text-[#C49E5B] text-lg font-bold min-w-[70px] text-right">
+          <div className="text-[#C49E5B] text-lg font-bold">
             £{item.price}
           </div>
 

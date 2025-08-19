@@ -38,7 +38,7 @@ const MassageServiceCard = ({ service, cart, addToCart, removeFromCart }) => {
 
               {inCart ? (
                 <button
-                  onClick={() => removeFromCart(service, index)}
+                  onClick={() => removeFromCart()}
                   className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors text-sm"
                 >
                   Remove

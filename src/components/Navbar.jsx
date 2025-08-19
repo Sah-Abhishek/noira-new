@@ -38,6 +38,9 @@ max-w-6xl w-[90%]`}
 
       {/* Desktop Nav */}
       <div className="hidden md:flex gap-6 text-sm items-center">
+        <a href="/" className="hover:text-[#95793e] transition">
+          Home
+        </a>
         <a href="#services" className="hover:text-[#95793e] transition">
           Services
         </a>

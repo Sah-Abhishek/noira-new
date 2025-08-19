@@ -16,6 +16,7 @@ import TherapistDashboard from './pages/TherapistDashobard.jsx'
 import ServicesPage from './pages/ServicesPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import ChooseTherapistPage from './pages/ChooseTherapistPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/otpinput" element={<OtpInput />} />
       <Route path="/usersignup" element={<UserSignup />} />
       <Route path="/userlogin" element={<UserLogin />} />
+      <Route path="*" element={<NotFoundPage />} />
 
       {/* <Route path="/contact" element={<ContactPage />} /> */}
       {/* <Route path="/services" element={<ServicesPage />} /> */}

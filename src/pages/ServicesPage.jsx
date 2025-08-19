@@ -1,21 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import HeroSectionServices from "../components/ServicesPage/HeroSectionServices";
-import MassageServiceCard from "../components/ServicesPage/MassageServiceCards";
-import FooterSection from "../components/FooterSection";
-import MassageServiceSkeleton from "../components/ServicesPage/MassageServicesSkeletonCard.jsx";
 import FloatingCartButton from "../components/ServicesPage/FoatingActionButton.jsx";
-import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
+import useBookingStore from "../store/bookingStore.jsx";
+import CartPage from "./CartPage.jsx";
+import HeroSectionServices from "../components/ServicesPage/HeroSectionServices.jsx";
+import MassageServiceSkeleton from "../components/ServicesPage/MassageServicesSkeletonCard.jsx";
+import MassageServiceCard from "../components/ServicesPage/MassageServiceCards.jsx";
+import FooterSection from "../components/FooterSection.jsx";
 
 const ServicesPage = () => {
-  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
+
+  // Zustand store
+  const { cart, setCart, resetCart, services, setServices } = useBookingStore();
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get("https://noira-backend.vercel.app/services/list");
-      setServices(response.data);
+      const response = await axios.get(
+        "https://noira-backend.vercel.app/services/list"
+      );
+      setServices(response.data); // ✅ store in Zustand
     } catch (error) {
       console.error("Failed to fetch services:", error);
     } finally {
@@ -24,70 +28,79 @@ const ServicesPage = () => {
   };
 
   useEffect(() => {
-    fetchServices();
+    // Only fetch if not already in store (persisted)
+    if (!services || services.length === 0) {
+      fetchServices();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  // Add to cart
+  // Add only one service
   const addToCart = (service, optionIndex) => {
-    setCart((prev) => [...prev, { serviceId: service._id, optionIndex }]);
+    setCart({ serviceId: service._id, optionIndex });
   };
 
-  // Remove from cart
-  const removeFromCart = (service, optionIndex) => {
-    setCart((prev) =>
-      prev.filter(
-        (item) =>
-          !(item.serviceId === service._id && item.optionIndex === optionIndex)
-      )
-    );
+  const removeFromCart = () => {
+    resetCart();
   };
 
-  // Choose therapist → send cart to backend
-  const handleChooseTherapist = async () => {
-    try {
-      const response = await axios.post("https://noira-backend.vercel.app/cart/checkout", {
-        items: cart,
-      });
-      console.log("Cart sent successfully:", response.data);
-    } catch (error) {
-      console.error("Failed to send cart:", error);
-    }
-  };
+  const hasCart = cart !== null; // check if user added a service
 
   return (
-    <div className="bg-black w-full">
-      {/* Stepper */}
-      {/* <div className="w-full max-w-4xl mt-20 px-4 mx-auto"> */}
-      {/*   <BookingStepper currentStep={1} /> */}
-      {/* </div> */}
-
+    <div className="bg-black w-full text-white">
       {/* Hero Section */}
       <HeroSectionServices />
 
-      {/* Service Cards */}
+      {/* Services and Cart */}
       <div className="bg-black w-full px-4 py-12">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {loading
-            ? Array.from({ length: 3 }).map((_, i) => (
-              <MassageServiceSkeleton key={i} />
-            ))
-            : services.map((service) => (
-              <MassageServiceCard
-                key={service._id}
-                service={service}
-                cart={cart}
-                addToCart={addToCart}
-                removeFromCart={removeFromCart}
-              />
-            ))}
+        <div
+          className={`max-w-7xl mx-auto gap-6 ${hasCart
+              ? "flex flex-col lg:flex-row" // show side by side
+              : "flex justify-center" // center services when no cart
+            }`}
+        >
+          {/* Service Cards Section */}
+          <div
+            className={`${hasCart ? "flex-1" : "w-full lg:w-3/4"
+              } space-y-6`}
+          >
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                <MassageServiceSkeleton key={i} />
+              ))
+              : services.map((s) => (
+                <MassageServiceCard
+                  key={s._id}
+                  service={s}
+                  cart={cart ? [cart] : []}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                />
+              ))}
+          </div>
+
+          {/* Cart Section (only if cart has items) */}
+          {hasCart && (
+            <div className="w-full lg:w-[450px]">
+              <div className="lg:sticky lg:top-24">
+                <CartPage />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Footer */}
       <FooterSection />
 
-      {/* Floating Button */}
-      <FloatingCartButton cart={cart} onChooseTherapist={handleChooseTherapist} />
+      {/* Floating Cart Button */}
+      <FloatingCartButton
+        cart={cart ? [cart] : []}
+        onChooseTherapist={() =>
+          console.log("Go to date & time picker")
+        }
+      />
     </div>
   );
 };
