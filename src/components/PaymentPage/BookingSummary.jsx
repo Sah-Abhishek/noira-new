@@ -57,14 +57,30 @@ const BookingSummary = () => {
       </div>
 
       {/* Booking Details */}
+      {/* Booking Details */}
       <div className="space-y-3 mb-6">
         <div className="flex justify-between border-b border-gray-700 pb-1">
           <span className="text-gray-400">Date:</span>
-          <span className="text-white">{date || "Not selected"}</span>
+          <span className="text-white">
+            {date
+              ? new Date(date).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+              : "Not selected"}
+          </span>
         </div>
         <div className="flex justify-between border-b border-gray-700 pb-1">
           <span className="text-gray-400">Time:</span>
-          <span className="text-white">{time || "Not selected"}</span>
+          <span className="text-white">
+            {time
+              ? new Date(time).toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+              : "Not selected"}
+          </span>
         </div>
         <div className="flex justify-between border-b border-gray-700 pb-1">
           <span className="text-gray-400">Duration:</span>
