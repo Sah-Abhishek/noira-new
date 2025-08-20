@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import '../index.css'
-import { zoomies } from 'ldrs'
-zoomies.register()
+import "../index.css";
+import { zoomies } from "ldrs";
+zoomies.register();
 import noira from "/noira.png";
 import {
   FaUserMd,
@@ -31,7 +31,8 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("therapist");
   const navigate = useNavigate();
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const {
     register,
@@ -42,36 +43,26 @@ export default function AdminLogin() {
   });
 
   const onSubmit = async (data) => {
-    const endpoint = "http://192.168.1.12:3000/auth/admin/login"
+    const endpoint = `${apiUrl}/auth/${role}/login`;
     const payload = {
       ...data,
-      role: role
-    }
+    };
 
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, payload);
-      console.log("Login success:", response.data);
-      //TODO: handle success (e.g., redirect, save token)
-      if (response.status == 200) {
-        console.log("This is the email: ", data.email);
-        localStorage.setItem('userEmail', data.email);
-        navigate('/otpinput');
 
+      if (response.status == 200) {
+        localStorage.setItem("userEmail", data.email);
+        navigate("/otpinput/login");
       }
     } catch (error) {
       if (error.response) {
-        // Server responded with a status other than 2xx
-        setErrorMsg(`Login failed: ${error.response.data.message || error.response.statusText}`)
-        // alert(`Login failed: ${error.response.data.message || error.response.statusText}`);
+        setErrorMsg(`Login failed: ${error.response.data.message || error.response.statusText}`);
       } else if (error.request) {
-        // Request was made but no response received
-        setErrorMsg('No response from server. Please try again later.')
-        // alert("No response from server. Please try again later.");
+        setErrorMsg("No response from server. Please try again later.");
       } else {
-        // Something else caused the error
-        setErrorMsg(`Error: ${error.message}`)
-        // alert(`Error: ${error.message}`);
+        setErrorMsg(`Error: ${error.message}`);
       }
       setIsLoading(false);
     }
@@ -91,18 +82,14 @@ export default function AdminLogin() {
         {/* Role Tabs */}
         <div className="flex w-full bg-[#2b2b2b] rounded-lg overflow-hidden mt-4">
           <button
-            className={`w-1/2 py-2 text-sm font-medium flex items-center justify-center gap-2 ${role === "therapist"
-              ? "bg-yellow-500 text-black"
-              : "text-gray-400"
+            className={`w-1/2 py-2 text-sm font-medium flex items-center justify-center gap-2 ${role === "therapist" ? "bg-primary text-black" : "text-gray-400"
               }`}
             onClick={() => setRole("therapist")}
           >
             <FaUserMd /> Therapist
           </button>
           <button
-            className={`w-1/2 py-2 text-sm font-medium flex items-center justify-center gap-2 ${role === "admin"
-              ? "bg-yellow-500 text-black"
-              : "text-gray-400"
+            className={`w-1/2 py-2 text-sm font-medium flex items-center justify-center gap-2 ${role === "admin" ? "bg-primary text-black" : "text-gray-400"
               }`}
             onClick={() => setRole("admin")}
           >
@@ -115,32 +102,36 @@ export default function AdminLogin() {
           {/* Email Input */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
-                <FaEnvelope /> </span> Email Address
+              <span className="text-primary">
+                <FaEnvelope />
+              </span>{" "}
+              Email Address
             </label>
             <input
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-yellow-500"}`}
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-primary"
+                }`}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
           {/* Password Input */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
-                <FaLock /></span> Password
+              <span className="text-primary">
+                <FaLock />
+              </span>{" "}
+              Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password")}
-                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-yellow-500"}`}
+                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-yellow-500"
+                  }`}
               />
               <span
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
@@ -164,24 +155,26 @@ export default function AdminLogin() {
           {/* Sign In Button */}
           <button
             type="submit"
-            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2
-    ${isLoading
-                ? 'bg-black text-white cursor-not-allowed'
-                : 'bg-yellow-500 hover:bg-yellow-400 text-black'}
-  `}
-
+            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2 transition ${isLoading
+              ? "bg-black text-white cursor-not-allowed"
+              : "bg-primary hover:bg-amber-500 text-black"
+              }`}
             disabled={isLoading}
           >
-            {isLoading ? <span>
+            {isLoading ? (
               <l-zoomies
                 size="80"
                 stroke="5"
                 bg-opacity="0.1"
                 speed="1.4"
                 color="yellow"
-
-              ></l-zoomies></span> : <span className="inline-flex items-center ">               <FaSignInAlt className="mr-2" />
-              Sign In</span>}
+              ></l-zoomies>
+            ) : (
+              <span className="inline-flex items-center">
+                <FaSignInAlt className="mr-2" />
+                Sign In
+              </span>
+            )}
           </button>
           <h1 className="text-center text-sm text-red-500">{errorMsg}</h1>
         </form>
@@ -218,12 +211,12 @@ export default function AdminLogin() {
           </div>
           <div>
             Need help? Contact us at{" "}
-            <a href="mailto:support@noira.com" className="text-yellow-400">
+            <a href="mailto:support@noira.com" className="text-primary">
               support@noira.com
             </a>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

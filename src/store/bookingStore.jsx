@@ -5,6 +5,8 @@ const useBookingStore = create(
   persist(
     (set) => ({
       // booking state
+
+      useEmail: localStorage.getItem("userEmail") || null,
       findingTherapist: false,
       cart: [], // previously service
       date: null,

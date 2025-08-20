@@ -66,7 +66,7 @@ export default function UserSignup() {
 
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
-        navigate("/otpinput");
+        navigate("/otpinput/register");
       }
     } catch (error) {
       if (error.response) {

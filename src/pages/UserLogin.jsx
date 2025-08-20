@@ -49,7 +49,7 @@ export default function UserLogin() {
 
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
-        navigate("/dashboard");
+        navigate("/otpinput/login");
       }
     } catch (error) {
       if (error.response) {

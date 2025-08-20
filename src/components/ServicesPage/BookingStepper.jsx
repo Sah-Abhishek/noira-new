@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const BookingStepper = ({ currentStep }) => {
   const steps = [
-    { id: 1, label: "Service Selected" },
-    { id: 2, label: "Choose Therapist" },
-    { id: 3, label: "Confirm Booking" },
+    { id: 1, label: "Service Selected", redirect: "/servicespage" },
+    { id: 2, label: "Choose Therapist", redirect: "/choosetherapist" },
+    { id: 3, label: "Confirm Booking", redirect: "/paymentpage" },
   ];
 
   return (
@@ -30,7 +31,7 @@ const BookingStepper = ({ currentStep }) => {
               </div>
 
               {/* Label */}
-              <span
+              <Link to={step.redirect}
                 className={`text-sm font-medium ${isCompleted
                   ? "text-green-400"
                   : isActive
@@ -39,7 +40,7 @@ const BookingStepper = ({ currentStep }) => {
                   }`}
               >
                 {step.label}
-              </span>
+              </Link>
             </div>
 
             {/* Line between steps */}

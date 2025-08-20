@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import React from 'react';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import axios from 'axios';
@@ -9,7 +10,10 @@ const OtpInput = () => {
   const [otp, setOtp] = React.useState('');
   const userEmail = localStorage.getItem('userEmail');
   const [errMsg, setErrMsg] = useState('');
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const { purpose } = useParams();  // e.g. "login", "register", "password_reset"
 
+  const [loading, setLoading] = useState(false);
   const handleChange = (newValue) => {
     setOtp(newValue);
   };
@@ -21,23 +25,34 @@ const OtpInput = () => {
     }
 
     try {
-      const response = await axios.post('https://noira-backend.vercel.app/verifyotp', {
-
+      console.log("This is the purpose");
+      setLoading(true);
+      const response = await axios.post(`${apiUrl}/verifyotp/${purpose}`, {
         otpCode: otp,
         email: userEmail,
-        purpose: "email_verification"
       });
 
-      console.log("This is the response: ", response.data);
-
       if (response.data.success) {
-        navigate('/servicespage');
+        localStorage.setItem("authToken", response.data.token);
+
+        // Redirect based on purpose
+        if (purpose === "login") {
+          navigate("/servicespage");
+        } else if (purpose === "register") {
+          navigate("/welcome");
+        } else if (purpose === "password_reset") {
+          navigate("/reset-password-success");
+        } else {
+          navigate("/");
+        }
       } else {
         setErrMsg("OTP verification failed. Please try again.");
       }
     } catch (err) {
-      console.error("There was an error:", err);
-      setErrMsg("Failed to verify OTP. Please check your network or try again later.");
+      console.error(err);
+      setErrMsg("Failed to verify OTP. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,10 +119,11 @@ const OtpInput = () => {
         onClick={handleVerify}
         disabled={otp.length !== 6}
         className={`mt-6 w-full max-w-xs sm:max-w-sm px-6 py-2 font-semibold rounded transition
-          ${otp.length !== 6
+  ${otp.length !== 6
             ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-            : 'bg-primary hover:bg-amber-500 text-black'}
-        `}
+            : 'bg-primary hover:bg-amber-500 text-black'
+          }
+`}
       >
         Verify OTP
       </button>

@@ -7,6 +7,8 @@ import { useTheme } from "../context/ThemeContext"; // adjust the path if needed
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
+  const userEmail = localStorage.getItem('userEmail');
+  const [mobileLoginOpen, setMobileLoginOpen] = useState(false);
 
   return (
     <nav
@@ -72,21 +74,47 @@ max-w-6xl w-[90%]`}
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
         </Link>
-        <a
-          href="#book"
-          className="hidden bg-gradient-to-r from-[#f5e18c] via-[#e0a528] to-[#a66c00] hover:from-yellow-300 hover:to-yellow-500 text-black font-semibold px-4 py-2 rounded-full transition"
-        >
-          Book Now
-        </a>
-
-        {/* Theme Toggle Button */}
-        {/* <button */}
-        {/*   onClick={toggleTheme} */}
-        {/*   className="ml-4 text-sm p-2 rounded-full border border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition" */}
-        {/*   title={`${isDarkMode ? "light" : "dark"} mode`} */}
+        {/* <a */}
+        {/*   href="#book" */}
+        {/*   className="hidden bg-gradient-to-r from-[#f5e18c] via-[#e0a528] to-[#a66c00] hover:from-yellow-300 hover:to-yellow-500 text-black font-semibold px-4 py-2 rounded-full transition" */}
         {/* > */}
-        {/*   {isDarkMode ? <FaSun /> : <FaMoon />} */}
-        {/* </button> */}
+        {/*   Book Now */}
+        {/* </a> */}
+        {!userEmail &&
+
+          <div className="relative group">
+            <div className="inline-flex items-center px-3 py-2 rounded-full text-black font-medium bg-primary cursor-pointer">
+              Login
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4 ml-1"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </div>
+
+            {/* Dropdown menu */}
+            <div className="absolute right-0 z-50 w-40 hidden group-hover:flex flex-col bg-white dark:bg-[#222] shadow-lg rounded-md overflow-hidden text-sm border border-gray-200 dark:border-gray-700">
+              <Link
+                to="/adminlogin"
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+              >
+                Therapist
+              </Link>
+              <Link
+                to="/adminlogin"
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+              >
+                Admin
+              </Link>
+            </div>
+          </div>
+        }
+
       </div>
 
       {/* Mobile Nav */}
@@ -136,29 +164,51 @@ max-w-6xl w-[90%]`}
             </div>
 
           </Link>
-          <a
-            href="#book"
-            className="bg-gradient-to-r from-[#f5e18c] via-[#e0a528] to-[#a66c00] hover:from-yellow-300 hover:to-yellow-500 text-black font-semibold px-4 py-2 rounded-full transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Book Now
-          </a>
+          <div className="w-full">
+            <button
+              onClick={() => setMobileLoginOpen(!mobileLoginOpen)}
+              className="w-full flex items-center justify-between px-4 py-2 rounded-md bg-primary text-black font-medium"
+            >
+              Login
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={`w-4 h-4 ml-2 transition-transform ${mobileLoginOpen ? "rotate-180" : "rotate-0"}`}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
 
-          {/* Theme Toggle - Mobile */}
-          {/* <button */}
-          {/*   onClick={toggleTheme} */}
-          {/*   className="mt-2 flex items-center gap-2 text-sm px-3 py-1 border rounded-full border-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition" */}
-          {/* > */}
-          {/*   {isDarkMode ? ( */}
-          {/*     <> */}
-          {/*       <FaSun /> Light Mode */}
-          {/*     </> */}
-          {/*   ) : ( */}
-          {/*     <> */}
-          {/*       <FaMoon /> Dark Mode */}
-          {/*     </> */}
-          {/*   )} */}
-          {/* </button> */}
+            {mobileLoginOpen && (
+              <div className="mt-2 ml-2 flex flex-col w-full text-sm rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
+                <Link
+                  to="/adminlogin"
+                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setMobileLoginOpen(false);
+                  }}
+                >
+                  Therapist
+                </Link>
+                <Link
+                  to="/adminlogin"
+                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setMobileLoginOpen(false);
+                  }}
+                >
+                  Admin
+                </Link>
+              </div>
+            )}
+          </div>
+
+
         </div>
       )}
     </nav>

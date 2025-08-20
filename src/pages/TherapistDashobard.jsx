@@ -1,15 +1,5 @@
 
 import React from "react";
-import {
-  Calendar,
-  Clock,
-  Star,
-  LogOut,
-  Bell,
-  Check,
-  X,
-  FileText,
-} from "lucide-react";
 import noiraLogo from "/noira.png"; // place noira.png in /src/assets/
 import WelcomeBar from "../components/therapistDashboard/WelcomeBar";
 import TherapistSidebar from "../components/therapistDashboard/TherapistSidebar";
