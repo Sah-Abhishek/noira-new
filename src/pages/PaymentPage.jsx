@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Lock } from "lucide-react";
 import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import PaymentDetails from "../components/PaymentPage/PaymentDetails.jsx";
+import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 
 const PaymentPage = () => {
   const [paymentComplete, setPaymentComplete] = useState(false);
@@ -48,9 +49,13 @@ const PaymentPage = () => {
   return (
     <div className="min-h-screen bg-black pt-25 p-4">
       <div className="max-w-6xl mx-auto">
+        <div>
+          <BookingStepper currentStep={3} />
+
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-yellow-400 text-4xl font-bold mb-2">Payment</h1>
+          <h1 className="text-primary text-4xl font-bold mb-2">Payment</h1>
           <p className="text-gray-400 text-lg">Securely complete your booking</p>
           <div className="flex items-center justify-center gap-2 mt-4">
             <Lock className="w-4 h-4 text-green-500" />

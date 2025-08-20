@@ -37,17 +37,17 @@ const BookingSummary = () => {
         <img
           src={avatar_url}
           alt={email}
-          className="w-12 h-12 rounded-full object-cover border-2 border-yellow-400"
+          className="w-12 h-12 rounded-full object-cover border-2 border-primary"
         />
         <div>
           <h3 className="text-white font-semibold">{title}</h3>
-          <p className="text-yellow-400 text-sm">{experience} years experience</p>
+          <p className="text-primary text-sm">{experience} years experience</p>
           <div className="flex items-center gap-1 mt-1">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className="w-3 h-3 text-yellow-400 fill-yellow-400"
+                  className="w-3 h-3 text-primary fill-primary"
                 />
               ))}
             </div>
@@ -100,7 +100,7 @@ const BookingSummary = () => {
       <div className="border-t border-gray-700 pt-4">
         <div className="flex justify-between items-center">
           <span className="text-white text-lg font-semibold">Total:</span>
-          <span className="text-yellow-400 text-2xl font-bold">${total.toFixed(2)}</span>
+          <span className="text-primary text-2xl font-bold">${total.toFixed(2)}</span>
         </div>
       </div>
     </div>

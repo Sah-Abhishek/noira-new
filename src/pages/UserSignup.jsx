@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Link from "@mui/material/Link";
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -45,30 +46,41 @@ export default function UserSignup() {
     resolver: yupResolver(schema),
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
   const onSubmit = async (data) => {
-    const endpoint = "http://192.168.1.20:3000/auth/user/signup";
+    const endpoint = `${apiUrl}/auth/user/register`;
+
+    const transformedData = {
+      name: {
+        first: data.firstName,
+        last: data.lastName,
+      },
+      email: data.email,
+      password: data.password,
+    };
 
     try {
       setIsLoading(true);
-      const response = await axios.post(endpoint, data);
+      const response = await axios.post(endpoint, transformedData);
       console.log("Signup success:", response.data);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
-        navigate("/login"); // redirect to login after signup
+        navigate("/otpinput");
       }
     } catch (error) {
       if (error.response) {
         setErrorMsg(
-          `Signup failed: ${error.response.data.message || error.response.statusText
-          }`
+          `Signup failed: ${error.response.data.message || error.response.statusText}`
         );
       } else if (error.request) {
         setErrorMsg("No response from server. Please try again later.");
       } else {
         setErrorMsg(`Error: ${error.message}`);
       }
+    } finally {
       setIsLoading(false);
+
     }
   };
 

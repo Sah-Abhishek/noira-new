@@ -2,11 +2,13 @@ import React from 'react';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const OtpInput = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = React.useState('');
   const userEmail = localStorage.getItem('userEmail');
+  const [errMsg, setErrMsg] = useState('');
 
   const handleChange = (newValue) => {
     setOtp(newValue);
@@ -19,27 +21,29 @@ const OtpInput = () => {
     }
 
     try {
-      const response = await axios.post('http://192.168.1.20:3000/verifyotp', {
-        otp,
+      const response = await axios.post('https://noira-backend.vercel.app/verifyotp', {
+
+        otpCode: otp,
         email: userEmail,
+        purpose: "email_verification"
       });
 
       console.log("This is the response: ", response.data);
 
       if (response.data.success) {
-        navigate('/admindashboard');
+        navigate('/servicespage');
       } else {
-        alert("OTP verification failed. Please try again.");
+        setErrMsg("OTP verification failed. Please try again.");
       }
     } catch (err) {
       console.error("There was an error:", err);
-      alert("Failed to verify OTP. Please check your network or try again later.");
+      setErrMsg("Failed to verify OTP. Please check your network or try again later.");
     }
   };
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-black flex flex-col items-center justify-center px-4 sm:px-6">
-      <h2 className="text-yellow-400 text-xl sm:text-2xl font-semibold mb-2">
+      <h2 className="text-primary text-xl sm:text-2xl font-semibold mb-2">
         Enter OTP
       </h2>
 
@@ -102,11 +106,14 @@ const OtpInput = () => {
         className={`mt-6 w-full max-w-xs sm:max-w-sm px-6 py-2 font-semibold rounded transition
           ${otp.length !== 6
             ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-            : 'bg-yellow-500 hover:bg-yellow-400 text-black'}
+            : 'bg-primary hover:bg-amber-500 text-black'}
         `}
       >
         Verify OTP
       </button>
+      <div>
+        {errMsg && <div className='mt-5 mb-3 text-sm text-center text-red-500'>{errMsg}</div>}
+      </div>
     </div>
   );
 };

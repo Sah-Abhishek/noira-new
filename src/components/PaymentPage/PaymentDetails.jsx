@@ -127,7 +127,7 @@ const PaymentDetails = ({ onPayment, onBack }) => {
             name="saveCard"
             checked={formData.saveCard}
             onChange={handleInputChange}
-            className="w-4 h-4 bg-gray-800 border border-gray-600 rounded focus:ring-yellow-400"
+            className="w-4 h-4 bg-gray-800 border border-gray-600 rounded focus:ring-primary"
           />
           <label className="text-gray-400 text-sm">Save card for future bookings</label>
         </div>
@@ -144,7 +144,7 @@ const PaymentDetails = ({ onPayment, onBack }) => {
         <button
           onClick={handlePayment}
           disabled={isProcessing}
-          className="flex-1 bg-yellow-500 text-black font-semibold py-3 px-6 rounded-full hover:bg-yellow-400 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+          className="flex-1 bg-primary text-black font-semibold py-3 px-6 rounded-full hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
         >
           <Lock className="w-4 h-4" />
           {isProcessing ? 'Processing...' : 'Pay $87.50'}
@@ -171,7 +171,7 @@ const Input = ({ label, name, placeholder, value, onChange }) => (
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
+      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-primary focus:outline-none"
     />
   </div>
 );

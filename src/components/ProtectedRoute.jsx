@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }) => {
   }, [token]);
 
   if (isValid === null) return <div>Loading...</div>;
-  if (!isValid) return <Navigate to="/adminlogin" replace />;
+  if (!isValid) return <Navigate to="/userlogin" replace />;
 
   return children;
 };

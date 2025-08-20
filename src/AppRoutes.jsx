@@ -39,8 +39,8 @@ const AppRoutes = () => {
 
       {/* ProtectedRoute   */}
       <Route path="/admindashboard" element={<ProtectedRoute ><AdminDashoboard /></ProtectedRoute>} />
-      <Route path="/servicespage" element={<ServicesPage />} />
-      <Route path="/cartpage" element={<CartPage />} />
+      <Route path="/servicespage" element={<ProtectedRoute > <ServicesPage /></ProtectedRoute>} />
+      < Route path="/cartpage" element={< CartPage />} />
       < Route path="/therapistdashboard" element={< TherapistDashboard />} />
       < Route path="/choosetherapist" element={< ChooseTherapistPage />} />
       < Route path="/paymentpage" element={< PaymentPage />} />
