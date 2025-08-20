@@ -11,13 +11,19 @@ import FooterSection from "../components/FooterSection.jsx";
 const ServicesPage = () => {
   const [loading, setLoading] = useState(true);
 
+  const authToken = localStorage.getItem("authToken");
   // Zustand store
   const { cart, setCart, resetCart, services, setServices } = useBookingStore();
 
   const fetchServices = async () => {
+    console.log("This is the authToken: ", authToken);
     try {
       const response = await axios.get(
-        "https://noira-backend.vercel.app/services/list"
+        "https://noira-backend.vercel.app/services/list", {
+        headers: {
+          authorization: `{Bearer ${authToken}`
+        }
+      }
       );
       setServices(response.data); // ✅ store in Zustand
     } catch (error) {
@@ -56,7 +62,7 @@ const ServicesPage = () => {
       {/* Services and Cart */}
       <div className="bg-black w-full px-4 py-12 ">
         <div
-          className={`max-w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
+          className={`max- w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
             ? "flex flex-col lg:flex-row" // show side by side
             : "flex justify-center" // center services when no cart
             }`}
@@ -64,7 +70,7 @@ const ServicesPage = () => {
           {/* Service Cards Section */}
           <div
             className={` ${hasCart ? "flex-1" : "w-full lg:w-3/4"
-              } space-y-6`}
+              } space - y - 6`}
           >
             {loading
               ? Array.from({ length: 3 }).map((_, i) => (
