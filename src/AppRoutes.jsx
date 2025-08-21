@@ -38,7 +38,7 @@ const AppRoutes = () => {
       <Route path="/userlogin" element={<UserLogin />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/loading" element={<LoaderPage />} />
-      <Route path="/paymentsucces" element={<PaymentSuccess />} />
+      <Route path="/paymentsuccess" element={<PaymentSuccess />} />
       <Route path="/paymentfail" element={<PaymentFail />} />
 
 
