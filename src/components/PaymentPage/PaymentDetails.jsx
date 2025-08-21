@@ -48,7 +48,7 @@ const PaymentDetails = ({ onPayment, onBack }) => {
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
+    <div className="bg-[#FFD700] rounded-lg p-6 border border-gray-700">
       <h2 className="text-white text-xl font-semibold mb-6">Payment Details</h2>
 
       {/* Payment Method Icons */}

@@ -11,7 +11,7 @@ import FooterSection from "../components/FooterSection.jsx";
 const ServicesPage = () => {
   const [loading, setLoading] = useState(true);
 
-  const authToken = localStorage.getItem("authToken");
+  const authToken = localStorage.getItem("userjwt");
   // Zustand store
   const { cart, setCart, resetCart, services, setServices } = useBookingStore();
 

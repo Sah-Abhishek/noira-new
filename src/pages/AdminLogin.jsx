@@ -46,6 +46,7 @@ export default function AdminLogin() {
     const endpoint = `${apiUrl}/auth/${role}/login`;
     const payload = {
       ...data,
+      role: role,
     };
 
     try {
@@ -54,7 +55,9 @@ export default function AdminLogin() {
 
       if (response.status == 200) {
         localStorage.setItem("userEmail", data.email);
-        navigate("/otpinput/login");
+        localStorage.setItem("therapistjwt", response.data.token)
+        console.log("This is the token: ", response.data);
+        navigate(`/${role}dashboard`);
       }
     } catch (error) {
       if (error.response) {

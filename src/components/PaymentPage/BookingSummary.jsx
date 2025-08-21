@@ -7,7 +7,7 @@ const BookingSummary = () => {
   const date = useBookingStore((state) => state.date);
   const time = useBookingStore((state) => state.time);
 
-  // Example fees (you can also get these from store if stored)
+  // Example fees (replace with store if available)
   const serviceFee = 85.0;
   const processingFee = 2.5;
   const duration = "60 minutes";
@@ -15,7 +15,7 @@ const BookingSummary = () => {
 
   if (!selectedTherapist) {
     return (
-      <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 text-white">
+      <div className="bg-black rounded-2xl p-6 border border-gray-800 text-white">
         No therapist selected.
       </div>
     );
@@ -29,39 +29,45 @@ const BookingSummary = () => {
   } = selectedTherapist;
 
   return (
-    <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-      <h2 className="text-white text-xl font-semibold mb-6 text-center">Booking Summary</h2>
+    <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-gray-800 shadow-lg w-full">
+      {/* Heading */}
+      <h2 className="text-yellow-400 text-lg font-semibold mb-6">
+        Booking Summary
+      </h2>
 
       {/* Therapist Info */}
-      <div className="flex items-center gap-3 mb-6">
-        <img
-          src={avatar_url}
-          alt={email}
-          className="w-12 h-12 rounded-full object-cover border-2 border-primary"
-        />
-        <div>
-          <h3 className="text-white font-semibold">{title}</h3>
-          <p className="text-primary text-sm">{experience} years experience</p>
-          <div className="flex items-center gap-1 mt-1">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className="w-3 h-3 text-primary fill-primary"
-                />
-              ))}
+      <div className="bg-[#0e1219] rounded-2xl p-4 mb-6">
+        <div className="flex items-center gap-3">
+          <img
+            src={avatar_url}
+            alt={email}
+            className="w-14 h-14 rounded-full object-cover border-2 border-yellow-400"
+          />
+          <div>
+            <h3 className="text-white font-semibold">{title}</h3>
+            <p className="text-yellow-400 text-xs">
+              {experience} years experience
+            </p>
+            <div className="flex items-center gap-1 mt-1">
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className="w-3 h-3 text-yellow-400 fill-yellow-400"
+                  />
+                ))}
+              </div>
+              <span className="text-gray-300 text-xs ml-1">{rating}</span>
             </div>
-            <span className="text-white text-sm font-medium ml-1">{rating}</span>
           </div>
         </div>
       </div>
 
-      {/* Booking Details */}
-      {/* Booking Details */}
-      <div className="space-y-3 mb-6">
-        <div className="flex justify-between border-b border-gray-700 pb-1">
-          <span className="text-gray-400">Date:</span>
-          <span className="text-white">
+      {/* Appointment Info */}
+      <div className="bg-[#0e1219] rounded-2xl p-4 mb-6 space-y-2">
+        <div className="flex justify-between">
+          <span className="text-gray-400 text-sm">Date:</span>
+          <span className="text-white text-sm">
             {date
               ? new Date(date).toLocaleDateString(undefined, {
                 year: "numeric",
@@ -71,26 +77,23 @@ const BookingSummary = () => {
               : "Not selected"}
           </span>
         </div>
-        <div className="flex justify-between border-b border-gray-700 pb-1">
-          <span className="text-gray-400">Time:</span>
-          <span className="text-white">
-            {time
-              ? new Date(time).toLocaleTimeString(undefined, {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-              : "Not selected"}
-          </span>
+        <div className="flex justify-between">
+          <span className="text-gray-400 text-sm">Time:</span>
+          <span className="text-white text-sm">{time || "Not selected"}</span>
         </div>
-        <div className="flex justify-between border-b border-gray-700 pb-1">
-          <span className="text-gray-400">Duration:</span>
-          <span className="text-white">{duration}</span>
+        <div className="flex justify-between">
+          <span className="text-gray-400 text-sm">Duration:</span>
+          <span className="text-white text-sm">{duration}</span>
         </div>
-        <div className="flex justify-between border-b border-gray-700 pb-1">
+      </div>
+
+      {/* Pricing */}
+      <div className="space-y-2 mb-4">
+        <div className="flex justify-between text-sm">
           <span className="text-gray-400">Service Fee:</span>
           <span className="text-white">${serviceFee.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between  border-gray-700 pb-1">
+        <div className="flex justify-between text-sm">
           <span className="text-gray-400">Processing Fee:</span>
           <span className="text-white">${processingFee.toFixed(2)}</span>
         </div>
@@ -99,8 +102,10 @@ const BookingSummary = () => {
       {/* Total */}
       <div className="border-t border-gray-700 pt-4">
         <div className="flex justify-between items-center">
-          <span className="text-white text-lg font-semibold">Total:</span>
-          <span className="text-primary text-2xl font-bold">${total.toFixed(2)}</span>
+          <span className="text-yellow-400 text-lg font-semibold">Total:</span>
+          <span className="text-yellow-400 text-xl font-bold">
+            ${total.toFixed(2)}
+          </span>
         </div>
       </div>
     </div>

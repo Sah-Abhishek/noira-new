@@ -49,7 +49,8 @@ export default function UserLogin() {
 
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
-        navigate("/otpinput/login");
+        localStorage.setItem("userjwt", response.data.token);
+        navigate("/servicespage");
       }
     } catch (error) {
       if (error.response) {

@@ -37,7 +37,7 @@ const OtpInput = () => {
 
         // Redirect based on purpose
         if (purpose === "login") {
-          navigate("/servicespage");
+          navigate(from, { replace: true });
         } else if (purpose === "register") {
           navigate("/welcome");
         } else if (purpose === "password_reset") {

@@ -6,7 +6,7 @@ import LoaderPage from "../pages/LoaderPage";
 
 const UserProtectedRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("userjwt");
   const email = localStorage.getItem("userEmail");
 
   useEffect(() => {

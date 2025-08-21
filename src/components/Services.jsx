@@ -79,7 +79,7 @@ const Services = () => {
   const descriptionText = isDarkMode ? 'text-gray-400' : 'text-gray-600';
 
   const handleOnClick = () => {
-    navigate('/servicespage');
+    navigate('/servicespage',);
   }
 
   return (

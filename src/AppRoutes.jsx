@@ -21,6 +21,8 @@ import PaymentPage from './pages/PaymentPage.jsx';
 import LoaderPage from './pages/LoaderPage.jsx';
 import UserProtectedRoute from './components/UserProtectedRoute.jsx';
 import TherapistProtectedRoute from './components/TherapistProtectedRoute.jsx';
+import PaymentSuccess from './pages/PaymentSuccess.jsx';
+import PaymentFail from './pages/PaymentFail.jsx';
 
 const AppRoutes = () => {
   return (
@@ -36,6 +38,9 @@ const AppRoutes = () => {
       <Route path="/userlogin" element={<UserLogin />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/loading" element={<LoaderPage />} />
+      <Route path="/paymentsucces" element={<PaymentSuccess />} />
+      <Route path="/paymentfail" element={<PaymentFail />} />
+
 
       {/* <Route path="/contact" element={<ContactPage />} /> */}
       {/* <Route path="/services" element={<ServicesPage />} /> */}

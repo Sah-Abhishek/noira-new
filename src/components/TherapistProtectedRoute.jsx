@@ -1,26 +1,30 @@
 
 // src/components/ProtectedRoute.jsx
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import LoaderPage from "../pages/LoaderPage";
 
 const TherapistProtectedRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("therapistjwt");
   const email = localStorage.getItem("userEmail");
+  const location = useLocation();
 
+  // const from = location.state?.from || "/";
   useEffect(() => {
     const verifyToken = async () => {
       if (!token || !email) {
+        console.log("This is the value of the valid variable: ", isValid);
         setIsValid(false);
         return;
       }
 
       const apiUrl = import.meta.env.VITE_API_URL;
 
+      console.log("This page was hit")
       try {
-        await axios.get(`${apiUrl}/auth/verifytoken`, {
+        const response = await axios.get(`${apiUrl}/auth/verifytoken`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "x-user-email": email, // Send email in custom header
@@ -28,7 +32,11 @@ const TherapistProtectedRoute = ({ children }) => {
 
           },
         });
-        setIsValid(true);
+        console.log("This is the response: ", response.data);
+        if (response.status === 200) {
+          setIsValid(true);
+        }
+        console.log("This is the value of the valid variable: ", isValid);
       } catch (error) {
         console.error("Token verification failed:", error);
         setIsValid(false);
