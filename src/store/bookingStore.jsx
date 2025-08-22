@@ -11,6 +11,7 @@ const useBookingStore = create(
       cart: [], // previously service
       date: null,
       time: null,
+      hasSearched: false,
 
       // services list from API
       services: [],
@@ -18,6 +19,7 @@ const useBookingStore = create(
       selectedTherapist: null, // actual state
 
       // setters
+      setHasSearched: (value) => set({ hasSearched: value }),
       setFindingTherapist: (value) => set({ findingTherapist: value }),
       setTherapists: (therapists) => set({ therapists }),
       setCart: (cart) => set({ cart }),
@@ -31,6 +33,10 @@ const useBookingStore = create(
     }),
     {
       name: "booking-storage", // key in localStorage
+      partialize: (state) => {
+        const { hasSearched, ...rest } = state;
+        return rest;
+      }
     }
   )
 );
