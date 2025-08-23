@@ -1,0 +1,66 @@
+
+import React from "react";
+import { FaEdit, FaTimes } from "react-icons/fa";
+
+export default function OverviewPanel({ availabilityData, availableDays, totalHours, openModal, setAvailabilityData }) {
+  const removeSlot = (dateKey, index) => {
+    setAvailabilityData((prev) => {
+      const newSlots = [...prev[dateKey]];
+      newSlots.splice(index, 1);
+      if (!newSlots.length) {
+        const { [dateKey]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [dateKey]: newSlots };
+    });
+  };
+
+  return (
+    <div className="glass-morphism rounded-2xl p-6 h-fit">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-semibold font-playfair text-gold">Monthly Overview</h3>
+      </div>
+      <div className="mb-6 space-y-3">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Available Days</span>
+          <span className="text-gold font-semibold">{availableDays}</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Total Hours</span>
+          <span className="text-gold font-semibold">{totalHours}h</span>
+        </div>
+      </div>
+      <div className="space-y-2 max-h-96 overflow-y-auto">
+        {Object.keys(availabilityData).length === 0 ? (
+          <div className="text-gray-400 text-sm text-center py-8">No availability set</div>
+        ) : (
+          Object.entries(availabilityData).map(([dateKey, slots]) => {
+            const [y, m, d] = dateKey.split("-");
+            const date = new Date(y, m - 1, d);
+            const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+            return (
+              <div key={dateKey} className="glass-morphism p-3 rounded-lg border border-gray-700 hover:border-gold transition-colors">
+                <div className="flex justify-between mb-2 text-sm">
+                  <span className="text-gold font-medium">{dayName}, {m}/{d}</span>
+                  <button onClick={() => openModal(dateKey)} className="text-gray-400 hover:text-gold">
+                    <FaEdit className="text-xs" />
+                  </button>
+                </div>
+                <div className="space-y-1">
+                  {slots.map((s, i) => (
+                    <div key={i} className="flex justify-between text-xs">
+                      <span>{s.start} - {s.end}</span>
+                      <button onClick={() => removeSlot(dateKey, i)} className="text-red-400 hover:text-red-300">
+                        <FaTimes />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}

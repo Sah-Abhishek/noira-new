@@ -14,7 +14,7 @@ const TherapistDashboard = () => {
     <div className="flex h-screen bg-black text-white">
       {/* Sidebar */}
       {/* Main Content */}
-      <TherapistSidebar />
+      {/* <TherapistSidebar /> */}
       <main className="flex-1 overflow-y-auto bg-[#0f0f0f] p-6">
         {/* Header */}
         <WelcomeBar />

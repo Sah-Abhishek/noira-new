@@ -14,7 +14,7 @@ const TherapistSidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 bg-[#111111] text-white flex flex-col justify-between border-r border-gray-800">
+    <div className="h-full w-64 bg-[#111111] text-white flex flex-col justify-between border-r border-gray-800">
       {/* Logo */}
       <div>
         <div className="flex items-center gap-2 px-6 py-6">

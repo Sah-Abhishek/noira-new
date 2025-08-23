@@ -33,13 +33,13 @@ const OtpInput = () => {
       });
 
       if (response.data.success) {
-        localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem("userjwt", response.data.token);
 
         // Redirect based on purpose
         if (purpose === "login") {
           navigate(from, { replace: true });
         } else if (purpose === "register") {
-          navigate("/welcome");
+          navigate("/servicespage");
         } else if (purpose === "password_reset") {
           navigate("/reset-password-success");
         } else {
