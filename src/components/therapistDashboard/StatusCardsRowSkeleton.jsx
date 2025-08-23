@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -8,15 +9,26 @@ import starIcon from "../../assets/icons/star.svg";
 
 import StatusCard from "./StatusCard.jsx";
 
+const SkeletonCard = () => {
+  return (
+    <div className="animate-pulse bg-gray-800 rounded-xl p-6 flex flex-col items-center justify-center shadow-md">
+      <div className="w-10 h-10 bg-gray-700 rounded-full mb-4"></div>
+      <div className="w-24 h-4 bg-gray-700 rounded mb-2"></div>
+      <div className="w-12 h-4 bg-gray-700 rounded"></div>
+    </div>
+  );
+};
+
 const StatusCardsRow = () => {
   const [dashboardData, setDashboardData] = useState(null);
-  const therapistId = localStorage.getItem("therapistId")
+  const therapistId = localStorage.getItem("therapistId");
   const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const res = await axios.get(`${apiUrl}/therapist/dashboard/${therapistId}`);
-        console.log("This is the resposne for status card: ", res.data);
+        console.log("This is the response for status card: ", res.data);
         setDashboardData(res.data);
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
@@ -26,10 +38,17 @@ const StatusCardsRow = () => {
     if (therapistId) {
       fetchDashboardData();
     }
-  }, [therapistId,]);
+  }, [therapistId]);
 
   if (!dashboardData) {
-    return <div>Loading...</div>; // you can replace with a skeleton/loader
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 gap-6 w-full">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    );
   }
 
   return (

@@ -6,12 +6,47 @@ export default function ScheduleModal({
   setIsModalOpen,
   selectedDay,
   availabilityData,
-  setAvailabilityData
+  setAvailabilityData,
+  refreshAvailability, // 🔑 passed from Calendar
 }) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const therapistId = localStorage.getItem("therapistId");
 
   if (!isModalOpen) return null;
+
+  const handleSave = async () => {
+    if (!availabilityData[selectedDay]) {
+      alert("No slots to save");
+      return;
+    }
+
+    const payload = {
+      therapistId,
+      date: selectedDay, // "YYYY-MM-DD"
+      blocks: availabilityData[selectedDay].map((slot) => ({
+        startTime: slot.start,
+        endTime: slot.end,
+        isAvailable: true,
+      })),
+    };
+
+    try {
+      const res = await fetch(`${apiUrl}/therapist/addAvailability`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to save schedule");
+
+      setIsModalOpen(false);
+      refreshAvailability(); // 🔑 reload data from server
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const addSlot = () => {
     if (!startTime || !endTime || startTime >= endTime) {
@@ -47,10 +82,9 @@ export default function ScheduleModal({
     });
   };
 
-  // Example function for "copy schedule" buttons
   const copySchedule = (type) => {
     alert(`Copy schedule to: ${type}`);
-    // TODO: implement logic for copying slots based on type
+    // TODO: implement logic
   };
 
   return (
@@ -71,7 +105,7 @@ export default function ScheduleModal({
         <div className="mb-6 gap-x-4">
           <h4 className="text-xl text-primary font-medium mb-4">{selectedDay}</h4>
 
-          {/* Copy Schedule Buttons */}
+          {/* Copy Schedule */}
           <div className="glass-morphism bg-[#111111] p-4 rounded-xl border border-white/10 mb-4">
             <h5 className="font-medium mb-3">Copy Schedule To:</h5>
             <div className="grid grid-cols-2 gap-3">
@@ -106,7 +140,7 @@ export default function ScheduleModal({
             )}
           </div>
 
-          {/* Add Slot Section */}
+          {/* Add Slot */}
           <div className="glass-morphism p-4 rounded-xl border border-white/10">
             <h5 className="font-medium mb-3">Add Time Slot</h5>
             <div className="grid grid-cols-2 gap-4 mb-4">
@@ -127,7 +161,7 @@ export default function ScheduleModal({
 
         {/* Footer Buttons */}
         <div className="flex space-x-3">
-          <button onClick={() => setIsModalOpen(false)} className="bg-primary hover:bg-amber-500 flex-1 py-3 rounded-xl text-black font-semibold">
+          <button onClick={handleSave} className="bg-primary hover:bg-amber-500 flex-1 py-3 rounded-xl text-black font-semibold">
             <FaSave className="inline mr-2" /> Save
           </button>
           <button onClick={clearDay} className="glass-morphism flex-1 py-3 rounded-xl border border-red-400 text-red-400 hover:bg-red-500 hover:bg-opacity-20 transition-all">

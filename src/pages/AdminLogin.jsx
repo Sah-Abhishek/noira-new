@@ -56,8 +56,12 @@ export default function AdminLogin() {
       if (response.status == 200) {
         localStorage.setItem("userEmail", data.email);
         localStorage.setItem("therapistjwt", response.data.token)
+        localStorage.setItem("therapistId", response.data.therapistId);
+        localStorage.setItem("userId", response.data.userId);
+
+
         console.log("This is the token: ", response.data);
-        navigate(`/${role}dashboard`);
+        navigate(`/therapist/${role}dashboard`);
       }
     } catch (error) {
       if (error.response) {

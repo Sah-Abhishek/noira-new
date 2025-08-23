@@ -63,7 +63,7 @@ const DateTimePicker = ({
       setMessage(null);
 
       const res = await axios.post(
-        `${apiUrl}/auth/therapist/filter`,
+        `${apiUrl}/therapist/filter`,
         bookingData
       );
 

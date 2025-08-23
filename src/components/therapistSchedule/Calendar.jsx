@@ -1,4 +1,4 @@
-
+// src/components/therapistSchedule/Calendar.jsx
 import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import CalendarDay from "./CalendarDay";
@@ -8,69 +8,94 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-export default function Calendar({ currentDate, setCurrentDate, availabilityData, openModal }) {
-  const formatDateKey = (y, m, d) => `${y}-${m + 1}-${d}`;
+export default function Calendar({
+  currentDate,
+  setCurrentDate,
+  availabilityData,
+  openModal,
+}) {
+  // Get year and month
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
 
-  const generateCalendarDays = () => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const today = new Date();
+  // First day of the month
+  const firstDay = new Date(year, month, 1).getDay();
+  // Number of days in the month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    let days = [];
-    for (let i = 0; i < firstDay; i++) days.push(null);
+  // Today's date key
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateKey = formatDateKey(year, month, day);
-      const slots = availabilityData[dateKey] || [];
-      days.push({
-        day,
-        dateKey,
-        isToday: today.getDate() === day && today.getMonth() === month && today.getFullYear() === year,
-        slots,
-      });
-    }
-    return days;
-  };
+  // Generate calendar days
+  const daysArray = [];
+  for (let i = 0; i < firstDay; i++) {
+    daysArray.push(null); // Empty slots before first day
+  }
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      i
+    ).padStart(2, "0")}`;
 
-  const days = generateCalendarDays();
+    const dayDate = new Date(year, month, i);
+    const isPast = dayDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    daysArray.push({
+      day: i,
+      dateKey,
+      slots: availabilityData[dateKey] || [],
+      isToday: dateKey === todayKey,
+      isPast,
+    });
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="glass-morphism rounded-2xl p-4 flex justify-between items-center">
+    <div className="glass-morphism border border-white/10 bg-[#0d0d0d] rounded-2xl p-6">
+      {/* Calendar Header */}
+      <div className="flex justify-between items-center mb-6">
         <button
-          onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))}
-          className="p-3 rounded-xl hover:bg-gray-700 transition-colors"
+          onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
+          className="p-2 rounded-full hover:bg-white/10"
         >
-          <FaChevronLeft className="text-gold text-xl" />
+          <FaChevronLeft />
         </button>
-        <h2 className="text-xl font-semibold font-playfair">
-          {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+        <h2 className="text-xl font-semibold">
+          {monthNames[month]} {year}
         </h2>
         <button
-          onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))}
-          className="p-3 rounded-xl hover:bg-gray-700 transition-colors"
+          onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
+          className="p-2 rounded-full hover:bg-white/10"
         >
-          <FaChevronRight className="text-gold text-xl" />
+          <FaChevronRight />
         </button>
       </div>
 
-      <div className="glass-morphism rounded-2xl p-6">
-        <div className="grid grid-cols-7 gap-2 mb-4">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-            <div key={d} className="text-center text-sm font-semibold text-gray-400 py-2">{d}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-2">
-          {days.map((day, idx) =>
-            !day ? (
-              <div key={idx} className="calendar-cell p-2" />
-            ) : (
-              <CalendarDay key={day.dateKey} day={day} openModal={openModal} />
-            )
-          )}
-        </div>
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 gap-2 text-center text-gray-400 mb-2">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+          <div key={d}>{d}</div>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-2">
+        {daysArray.map((dayData, idx) =>
+          dayData ? (
+            <CalendarDay
+              key={dayData.dateKey}
+              day={dayData.day}
+              slots={dayData.slots}
+              dateKey={dayData.dateKey}
+              openModal={openModal}
+              isToday={dayData.isToday}
+              isPast={dayData.isPast}   // ✅ pass isPast
+            />
+          ) : (
+            <div key={`empty-${idx}`} />
+          )
+        )}
       </div>
     </div>
   );

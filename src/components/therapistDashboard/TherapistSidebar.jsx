@@ -1,12 +1,14 @@
 
 import React from "react";
-import { Home, Calendar, BookOpen, MessageSquare, FileText, User } from "lucide-react";
+import { Home, Calendar, BookOpen, MessageSquare, FileText, User, } from "lucide-react";
 import logo from "/noira.png"; // adjust path as per your setup
+import { Navigate, useNavigate, Link } from "react-router-dom";
 
 const TherapistSidebar = () => {
+  const navigate = useNavigate();
   const menuItems = [
-    { name: "Dashboard", icon: <Home className="w-5 h-5" />, active: true },
-    { name: "Schedule", icon: <Calendar className="w-5 h-5" /> },
+    { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: '/therapist/therapistdashboard' },
+    { name: "Schedule", icon: <Calendar className="w-5 h-5" />, path: '/therapist/therapistschedule' },
     { name: "Bookings", icon: <BookOpen className="w-5 h-5" /> },
     { name: "Feedback", icon: <MessageSquare className="w-5 h-5" /> },
     { name: "Training", icon: <FileText className="w-5 h-5" /> },
@@ -18,7 +20,9 @@ const TherapistSidebar = () => {
       {/* Logo */}
       <div>
         <div className="flex items-center gap-2 px-6 py-6">
-          <img src={logo} alt="Noira Logo" className="w-auto h-8" />
+          <Link to="/">
+            <img src={logo} alt="Noira Logo" className="w-auto h-8" />
+          </Link>
           {/* <h1 className="text-lg font-semibold">NOIRA</h1> */}
         </div>
 
@@ -27,6 +31,7 @@ const TherapistSidebar = () => {
           {menuItems.map((item, idx) => (
             <button
               key={idx}
+              onClick={() => navigate(item.path)}
               className={`flex items-center gap-3 px-6 py-3 text-sm font-medium transition 
               ${item.active ? "bg-[#1a1a1a] text-yellow-400" : "text-gray-400 hover:bg-[#1a1a1a] hover:text-white"}`}
             >
