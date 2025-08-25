@@ -2,6 +2,7 @@
 import React from "react";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function OverviewPanel({
   availabilityData,
@@ -30,6 +31,7 @@ export default function OverviewPanel({
           ],
         },
       });
+      toast.success("Slot deleted Successfully");
 
       // ✅ Update local state after successful deletion
       setAvailabilityData((prev) => {
@@ -43,7 +45,7 @@ export default function OverviewPanel({
       });
     } catch (error) {
       console.error("Error deleting slot:", error);
-      alert("Failed to delete slot. Please try again.");
+      toast.error("Failed to delete slot. Please try again.");
     }
   };
 

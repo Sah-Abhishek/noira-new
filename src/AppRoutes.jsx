@@ -27,68 +27,81 @@ import TherapistProtectedRoute from "./components/TherapistProtectedRoute.jsx";
 import TherapistLayout from "./layouts/TherapistLayout.jsx";
 import TherapistDashboard from "./pages/TherapistDashobard.jsx";
 import TherapistSchedule from "./layouts/TherapistSchedule.jsx";
+import { Toaster } from "react-hot-toast";
 // import TherapistProfile from "./pages/TherapistProfile.jsx";
 // import TherapistAppointments from "./pages/TherapistAppointments.jsx";
 // import TherapistSettings from "./pages/TherapistSettings.jsx";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/careers" element={<CareerPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/adminlogin" element={<AdmiLogin />} />
-      <Route path="/otpinput/:purpose" element={<OtpInput />} />
-      <Route path="/usersignup" element={<UserSignup />} />
-      <Route path="/userlogin" element={<UserLogin />} />
-      <Route path="/loading" element={<LoaderPage />} />
-      <Route path="/paymentsuccess" element={<PaymentSuccess />} />
-      <Route path="/paymentfail" element={<PaymentFail />} />
-      <Route path="*" element={<NotFoundPage />} />
-
-      {/* Protected User Routes */}
-      <Route
-        path="/servicespage"
-        element={
-          <UserProtectedRoute>
-            <ServicesPage />
-          </UserProtectedRoute>
-        }
+    <>
+      <Toaster
+        position="top-center" // 👈 where the toast will show
+        toastOptions={{
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        }}
       />
-      <Route path="/cartpage" element={<CartPage />} />
-      <Route path="/choosetherapist" element={<ChooseTherapistPage />} />
-      <Route path="/paymentpage" element={<PaymentPage />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/careers" element={<CareerPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/adminlogin" element={<AdmiLogin />} />
+        <Route path="/otpinput/:purpose" element={<OtpInput />} />
+        <Route path="/usersignup" element={<UserSignup />} />
+        <Route path="/userlogin" element={<UserLogin />} />
+        <Route path="/loading" element={<LoaderPage />} />
+        <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+        <Route path="/paymentfail" element={<PaymentFail />} />
+        <Route path="*" element={<NotFoundPage />} />
 
-      {/* Admin Protected Route */}
-      <Route
-        path="/admindashboard"
-        element={
-          <TherapistProtectedRoute>
-            <AdminDashboard />
-          </TherapistProtectedRoute>
-        }
-      />
+        {/* Protected User Routes */}
+        <Route
+          path="/servicespage"
+          element={
+            <UserProtectedRoute>
+              <ServicesPage />
+            </UserProtectedRoute>
+          }
+        />
+        <Route path="/cartpage" element={<CartPage />} />
+        <Route path="/choosetherapist" element={<ChooseTherapistPage />} />
+        <Route path="/paymentpage" element={<PaymentPage />} />
 
-      {/* Therapist Nested Routes */}
-      <Route
-        path="/therapist"
-        element={
-          <TherapistProtectedRoute>
-            <TherapistLayout />
-          </TherapistProtectedRoute>
-        }
-      >
-        {/* Redirect /therapist → /therapist/dashboard */}
-        <Route index element={<Navigate to="therapistdashboard" replace />} />
+        {/* Admin Protected Route */}
+        <Route
+          path="/admindashboard"
+          element={
+            <TherapistProtectedRoute>
+              <AdminDashboard />
+            </TherapistProtectedRoute>
+          }
+        />
 
-        <Route path="therapistdashboard" element={<TherapistDashboard />} />
-        {/* <Route path="profile" element={<TherapistProfile />} /> */}
-        {/* <Route path="appointments" element={<TherapistAppointments />} /> */}
-        {/* <Route path="settings" element={<TherapistSettings />} /> */}
-        <Route path="therapistschedule" element={<TherapistSchedule />} />
-      </Route>
-    </Routes>
+        {/* Therapist Nested Routes */}
+        <Route
+          path="/therapist"
+          element={
+            <TherapistProtectedRoute>
+              <TherapistLayout />
+            </TherapistProtectedRoute>
+          }
+        >
+          {/* Redirect /therapist → /therapist/dashboard */}
+          <Route index element={<Navigate to="therapistdashboard" replace />} />
+
+          <Route path="therapistdashboard" element={<TherapistDashboard />} />
+          {/* <Route path="profile" element={<TherapistProfile />} /> */}
+          {/* <Route path="appointments" element={<TherapistAppointments />} /> */}
+          {/* <Route path="settings" element={<TherapistSettings />} /> */}
+          <Route path="therapistschedule" element={<TherapistSchedule />} />
+        </Route>
+      </Routes >
+    </>
+
   );
 };
 
