@@ -4,6 +4,8 @@ import { FaCalendarAlt, FaSave, FaTrash, FaSync } from "react-icons/fa";
 import CalendarComponent from "../components/therapistSchedule/CalendarComponent.jsx";
 import OverviewPanel from "../components/therapistSchedule/OverviewPanel.jsx";
 import ScheduleModal from "../components/therapistSchedule/ScheduleModal.jsx";
+import ResetConfirmModal from "../components/therapistSchedule/ResetConfirmModal.jsx";
+import toast from "react-hot-toast";
 
 export default function TherapistSchedule() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -11,9 +13,11 @@ export default function TherapistSchedule() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
+  // console.log("This is the value of isModalOpen: ", isResetModalOpen);
 
   // ✅ Make it reusable
   const refreshAvailability = async () => {
@@ -48,6 +52,27 @@ export default function TherapistSchedule() {
     refreshAvailability();
   }, []);
 
+  const resetMonth = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${apiUrl}/therapist/reset`, {
+        therapistId,
+      });
+
+      if (response.status === 200) {
+        toast.success("All availability for this month has been cleared.");
+        setIsResetModalOpen(false);
+        refreshAvailability(); // ✅ reload fresh data
+      } else {
+        alert("Failed to reset availability.");
+      }
+    } catch (error) {
+      console.error("Error resetting month:", error);
+      alert("An error occurred while resetting availability.");
+    } finally {
+      setLoading(false);
+    }
+  };
   // Derived stats
   const availableDays = Object.keys(availabilityData).length;
   const totalHours = Object.values(availabilityData).reduce((total, slots) => {
@@ -108,10 +133,7 @@ export default function TherapistSchedule() {
             </button>
 
             <button
-              onClick={() => {
-                if (window.confirm("Clear all availability data?"))
-                  setAvailabilityData({});
-              }}
+              onClick={() => setIsResetModalOpen(true)}
               className="glass-morphism px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl border border-red-400 text-xs sm:text-sm text-red-400 hover:bg-red-500 hover:bg-opacity-20 transition-all"
             >
               <FaTrash className="inline mr-1 sm:mr-2" />
@@ -154,6 +176,11 @@ export default function TherapistSchedule() {
         availabilityData={availabilityData}
         setAvailabilityData={setAvailabilityData}
         refreshAvailability={refreshAvailability} // ✅ pass down
+      />
+      <ResetConfirmModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirm={resetMonth}
       />
     </div>
   );

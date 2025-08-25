@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+// import jwt_decode from "jwt-decode";
 import "../index.css";
 import { zoomies } from "ldrs";
 zoomies.register();
@@ -37,6 +39,28 @@ export default function UserSignup() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const res = await axios.post(`${apiUrl}/auth/google`, {
+          token: credentialResponse.access_token, // or id_token depending on your backend
+        });
+
+        localStorage.setItem("authToken", res.data.token);
+        localStorage.setItem("userEmail", res.data.user.email);
+
+        navigate("/servicespage");
+      } catch (error) {
+        console.error("Google login error:", error);
+        setErrorMsg("Google login failed");
+      }
+    },
+    onError: () => {
+      setErrorMsg("Google Login Failed");
+    },
+  });
+
 
   const {
     register,
@@ -102,7 +126,7 @@ export default function UserSignup() {
           {/* First Name */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
+              <span className="text-primary">
                 <FaUser />
               </span>{" "}
               First Name
@@ -111,7 +135,7 @@ export default function UserSignup() {
               type="text"
               placeholder="Enter your first name"
               {...register("firstName")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.firstName ? "ring-red-500" : "focus:ring-yellow-500"
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.firstName ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
             {errors.firstName && (
@@ -124,7 +148,7 @@ export default function UserSignup() {
           {/* Last Name */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
+              <span className="text-primary">
                 <FaUser />
               </span>{" "}
               Last Name
@@ -133,7 +157,7 @@ export default function UserSignup() {
               type="text"
               placeholder="Enter your last name"
               {...register("lastName")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.lastName ? "ring-red-500" : "focus:ring-yellow-500"
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.lastName ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
             {errors.lastName && (
@@ -146,7 +170,7 @@ export default function UserSignup() {
           {/* Email Input */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
+              <span className="text-primary">
                 <FaEnvelope />
               </span>{" "}
               Email Address
@@ -155,7 +179,7 @@ export default function UserSignup() {
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-yellow-500"
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
             {errors.email && (
@@ -168,7 +192,7 @@ export default function UserSignup() {
           {/* Password Input */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-yellow-400">
+              <span className="text-primary">
                 <FaLock />
               </span>{" "}
               Password
@@ -178,7 +202,7 @@ export default function UserSignup() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password")}
-                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-yellow-500"
+                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-primary"
                   }`}
               />
               <span
@@ -198,10 +222,10 @@ export default function UserSignup() {
           {/* Sign Up Button */}
           <button
             type="submit"
-            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2
+            className={`w-full bg-primary font-semibold py-3 rounded-md flex items-center justify-center gap-2
     ${isLoading
                 ? "bg-black text-white cursor-not-allowed"
-                : "bg-yellow-500 hover:bg-yellow-400 text-black"
+                : "ring-primary hover:bg-primary text-black"
               }
   `}
             disabled={isLoading}
@@ -235,9 +259,14 @@ export default function UserSignup() {
 
         {/* Social Buttons */}
         <div className="flex gap-4">
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white">
-            <FaGoogle /> Google
+          <button
+            onClick={() => login()}
+            className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
+          >
+            <FaGoogle />
+            Google
           </button>
+
           <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white">
             <FaApple /> Apple
           </button>
@@ -248,7 +277,7 @@ export default function UserSignup() {
           Already signed up?{" "}
           <Link
             to="/userlogin"
-            className="text-yellow-400 hover:underline cursor-pointer"
+            className="text-primary hover:underline cursor-pointer"
           >
             Login
           </Link>

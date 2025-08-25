@@ -14,9 +14,9 @@ export default function CalendarDay({ day, dateKey, slots, isToday, isPast, open
         min-h-[60px] sm:min-h-[100px] transition-all cursor-pointer
         ${isPast ? "cursor-not-allowed opacity-60" : "cursor-pointer"} 
         ${isToday
-          ? "border-gold bg-primary/10 ring-1 ring-gold/30"
+          ? "border-white/30 bg-primary/10  ring-1 ring-gold/30"
           : slots.length
-            ? "border-gold border-opacity-50 bg-gold bg-opacity-5"
+            ? "border-white/60 border-opacity-50 bg-gold bg-opacity-5"
             : "border-gray-700"}
         hover:border-gold hover:bg-gold hover:bg-opacity-10`}
     >

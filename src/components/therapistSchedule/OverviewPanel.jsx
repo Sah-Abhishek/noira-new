@@ -100,7 +100,9 @@ export default function OverviewPanel({
 
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Total Hours</span>
-          <span className="text-gold font-semibold">{totalHours}h</span>
+          <span className="text-gold font-semibold">
+            {Number(totalHours).toFixed(2)}h
+          </span>
         </div>
 
         <div className="flex justify-between text-sm">

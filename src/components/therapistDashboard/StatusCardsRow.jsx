@@ -62,7 +62,7 @@ const StatusCardsRow = () => {
       />
       <StatusCard
         title="Earning"
-        value={dashboardData.averageRating?.toFixed(1) ?? "0.0"}
+        value={`£${dashboardData.totalRevenue?.toFixed(1) ?? "0.0"}`}
         color="text-yellow-300"
         icon={starIcon}
       />

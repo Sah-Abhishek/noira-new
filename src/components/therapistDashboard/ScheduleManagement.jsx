@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Ban, Calendar, Bell, Plus } from "lucide-react"; // icons
+import { Link } from "react-router-dom";
 
 const ScheduleManagement = () => {
   const availability = [
@@ -14,9 +15,12 @@ const ScheduleManagement = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold text-white">Schedule Management</h2>
-        <button className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+        <Link
+          to="/therapist/therapistschedule"   // 🔥 replace with your actual route
+          className="bg-yellow-400 cursor-pointer hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+        >
           <Plus size={18} /> Add Availability
-        </button>
+        </Link>
       </div>
 
       {/* Content: Two Columns */}
@@ -59,7 +63,7 @@ const ScheduleManagement = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

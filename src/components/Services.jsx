@@ -53,7 +53,7 @@ const services = [
     description: 'Full-body indulgence with warm oil infusion and flowing strokes — the ultimate Noira signature.',
     prices: ['60 mins – £115', '90 mins – £155', '120 mins – £195'],
     icon: cartWheel,
-    image: '/massage1.png'
+    image: '/massage2.png'
   },
   // {
   //   title: 'The Black Label Experience',
