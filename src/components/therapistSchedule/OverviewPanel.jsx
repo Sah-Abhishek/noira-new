@@ -1,8 +1,8 @@
-// src/components/therapistDashboard/OverviewPanel.jsx
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import toast from "react-hot-toast";
+import DeleteSlotModal from "./DeleteSlotModal"; // ✅ fix typo in import
 
 export default function OverviewPanel({
   availabilityData,
@@ -11,45 +11,68 @@ export default function OverviewPanel({
   openModal,
   setAvailabilityData,
 }) {
-  const therapistId = localStorage.getItem("therapistId"); // 👈 or however you store it
+  const therapistId = localStorage.getItem("therapistId");
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const removeSlot = async (dateKey, index) => {
-    const slotToRemove = availabilityData[dateKey][index];
-    if (!slotToRemove) return;
+  const [loading, setLoading] = useState(false);
+
+  // 👇 for delete modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [slotToDelete, setSlotToDelete] = useState(null); // {dateKey, index}
+
+  const handleDeleteClick = (dateKey, index) => {
+    setSlotToDelete({ dateKey, index });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSlotToDelete(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!slotToDelete) return;
+    const { dateKey, index } = slotToDelete;
+    const slot = availabilityData[dateKey][index];
 
     try {
-      await axios.delete(`${apiUrl}/therapist/blocks`, {
-        data: {
-          therapistId,
-          date: new Date(dateKey).toISOString(),
-          blocksToDelete: [
-            {
-              startTime: slotToRemove.start,
-              endTime: slotToRemove.end,
-            },
-          ],
-        },
+      await axios.post(`${apiUrl}/therapist/blocks`, {
+        therapistId,
+        date: new Date(dateKey).toISOString(),
+        blocksToDelete: [
+          {
+            startTime: slot.start,
+            endTime: slot.end,
+          },
+        ],
       });
-      toast.success("Slot deleted Successfully");
 
-      // ✅ Update local state after successful deletion
+      toast.success("Slot deleted successfully");
+
+      // Update local state
       setAvailabilityData((prev) => {
         const newSlots = [...prev[dateKey]];
         newSlots.splice(index, 1);
+
         if (!newSlots.length) {
           const { [dateKey]: _, ...rest } = prev;
           return rest;
         }
-        return { ...prev, [dateKey]: newSlots };
+
+        return {
+          ...prev,
+          [dateKey]: newSlots,
+        };
       });
     } catch (error) {
       console.error("Error deleting slot:", error);
       toast.error("Failed to delete slot. Please try again.");
+    } finally {
+      closeModal();
     }
   };
 
-  // --- Extra Info ---
+  // Summary data
   const totalSlots = Object.values(availabilityData).reduce(
     (acc, slots) => acc + slots.length,
     0
@@ -74,14 +97,17 @@ export default function OverviewPanel({
           <span className="text-gray-400">Available Days</span>
           <span className="text-gold font-semibold">{availableDays}</span>
         </div>
+
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Total Hours</span>
           <span className="text-gold font-semibold">{totalHours}h</span>
         </div>
+
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Total Slots</span>
           <span className="text-gold font-semibold">{totalSlots}</span>
         </div>
+
         {earliestDate && (
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Earliest Availability</span>
@@ -90,6 +116,7 @@ export default function OverviewPanel({
             </span>
           </div>
         )}
+
         {latestDate && (
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Latest Availability</span>
@@ -136,7 +163,7 @@ export default function OverviewPanel({
                         {s.start} - {s.end}
                       </span>
                       <button
-                        onClick={() => removeSlot(dateKey, i)}
+                        onClick={() => handleDeleteClick(dateKey, i)}
                         className="text-red-400 hover:text-red-300"
                       >
                         <FaTimes />
@@ -149,6 +176,13 @@ export default function OverviewPanel({
           })
         )}
       </div>
+
+      {/* Confirm Delete Modal */}
+      <DeleteSlotModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }

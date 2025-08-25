@@ -1,25 +1,55 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FaCalendarAlt, FaSave, FaTrash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import logo from '/noira.png'
-import { BookOpen, Calendar, FileText, Home, MessageSquare, User } from "lucide-react";
-import { Link } from "react-router-dom";
-const TherapistSidebar = ({ variant }) => {
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
+import logo from "/noira.png";
+import {
+  BookOpen,
+  Calendar,
+  FileText,
+  Home,
+  MessageSquare,
+  User,
+} from "lucide-react";
+
+const TherapistSidebar = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/therapist/therapistdashboard" },
-    { name: "Schedule", icon: <Calendar className="w-5 h-5" />, path: "/therapist/therapistschedule" },
-    { name: "Bookings", icon: <BookOpen className="w-5 h-5" />, path: "/therapist/bookings" },
-    { name: "Feedback", icon: <MessageSquare className="w-5 h-5" />, path: "/therapist/feedback" },
-    { name: "Training", icon: <FileText className="w-5 h-5" />, path: "/therapist/training" },
-    { name: "Profile", icon: <User className="w-5 h-5" />, path: "/therapist/profile" },
+    {
+      name: "Dashboard",
+      icon: <Home className="w-5 h-5" />,
+      path: "/therapist/therapistdashboard",
+    },
+    {
+      name: "Schedule",
+      icon: <Calendar className="w-5 h-5" />,
+      path: "/therapist/therapistschedule",
+    },
+    {
+      name: "Bookings",
+      icon: <BookOpen className="w-5 h-5" />,
+      path: "/therapist/bookings",
+    },
+    {
+      name: "Feedback",
+      icon: <MessageSquare className="w-5 h-5" />,
+      path: "/therapist/feedback",
+    },
+    {
+      name: "Training",
+      icon: <FileText className="w-5 h-5" />,
+      path: "/therapist/training",
+    },
+    {
+      name: "Profile",
+      icon: <User className="w-5 h-5" />,
+      path: "/therapist/profile",
+    },
   ];
 
-  if (variant === "desktop") {
-    return (
-      <div className="h-full w-64 bg-[#111111] text-white flex flex-col justify-between border-r border-gray-800">
+  return (
+    <>
+      {/* Desktop Sidebar (hidden on mobile + tablet) */}
+      <div className="hidden lg:flex h-full w-64 bg-[#111111] text-white flex-col justify-between border-r border-gray-800">
         {/* Logo */}
         <div>
           <div className="flex items-center gap-2 px-6 py-6">
@@ -57,12 +87,9 @@ const TherapistSidebar = ({ variant }) => {
           </div>
         </div>
       </div>
-    );
-  }
 
-  if (variant === "mobile") {
-    return (
-      <div className="fixed bottom-0 left-0 right-0 bg-[#111111] border-t border-gray-800 flex justify-around py-2 z-50">
+      {/* Mobile & Tablet Bottom Nav (shown below lg) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#111111] border-t border-gray-800 flex justify-around py-2 z-50">
         {menuItems.map((item, idx) => (
           <button
             key={idx}
@@ -74,10 +101,8 @@ const TherapistSidebar = ({ variant }) => {
           </button>
         ))}
       </div>
-    );
-  }
-
-  return null;
+    </>
+  );
 };
 
 export default TherapistSidebar;
