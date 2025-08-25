@@ -33,9 +33,11 @@ export default function CalendarDay({ day, dateKey, slots, isToday, isPast, open
         {!isPast && slots.length > 0 && (
           <div className="flex-1 flex flex-col items-center justify-center">
             {/* Show slot count on mobile, times on desktop */}
-            <div className="text-[8px] sm:text-xs text-gold opacity-80 hidden sm:block truncate">
-              {slots.slice(0, 2).map((s) => `${s.start}-${s.end}`).join(", ")}
-              {slots.length > 2 && "..."}
+            <div className="text-[8px] sm:text-xs text-gold opacity-80 hidden sm:flex flex-col items-center text-center leading-tight">
+              {slots.slice(0, 2).map((s, i) => (
+                <span key={i}>{s.start}-{s.end}</span>
+              ))}
+              {slots.length > 2 && <span>+{slots.length - 2} more</span>}
             </div>
 
             {/* Mobile: Show just the count */}
