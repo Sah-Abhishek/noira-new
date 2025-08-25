@@ -61,7 +61,7 @@ const StatusCardsRow = () => {
         icon={chartIcon}
       />
       <StatusCard
-        title="Rating"
+        title="Earning"
         value={dashboardData.averageRating?.toFixed(1) ?? "0.0"}
         color="text-yellow-300"
         icon={starIcon}

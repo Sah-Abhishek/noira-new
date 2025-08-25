@@ -30,12 +30,12 @@ const TherapistDashboard = () => {
         </div>
 
         {/* Booking Requests */}
-        <div className="mb-6 border border-white/10 rounded-2xl">
-          <BookingRequests />
-        </div>
+
+        {/*   <BookingRequests /> */}
+        {/* </div> */}
 
         {/* Recent Feedback */}
-        <RecentFeedback />
+        {/* <RecentFeedback /> */}
 
         {/* Training & Policies */}
         <div>

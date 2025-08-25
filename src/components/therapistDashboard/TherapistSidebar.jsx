@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "/noira.png";
 import {
   BookOpen,
@@ -12,6 +12,7 @@ import {
 
 const TherapistSidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     {
@@ -48,7 +49,7 @@ const TherapistSidebar = () => {
 
   return (
     <>
-      {/* Desktop Sidebar (hidden on mobile + tablet) */}
+      {/* Desktop Sidebar */}
       <div className="hidden lg:flex h-full w-64 bg-[#111111] text-white flex-col justify-between border-r border-gray-800">
         {/* Logo */}
         <div>
@@ -60,16 +61,23 @@ const TherapistSidebar = () => {
 
           {/* Menu */}
           <nav className="flex flex-col mt-4">
-            {menuItems.map((item, idx) => (
-              <button
-                key={idx}
-                onClick={() => navigate(item.path)}
-                className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-gray-400 hover:bg-[#1a1a1a] hover:text-white transition"
-              >
-                {item.icon}
-                {item.name}
-              </button>
-            ))}
+            {menuItems.map((item, idx) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => navigate(item.path)}
+                  className={`flex items-center gap-3 px-6 py-3 text-sm font-medium transition
+                    ${isActive
+                      ? "bg-[#1a1a1a] text-white"
+                      : "text-gray-400 hover:bg-[#1a1a1a] hover:text-white"
+                    }`}
+                >
+                  {item.icon}
+                  {item.name}
+                </button>
+              );
+            })}
           </nav>
         </div>
 
@@ -88,18 +96,22 @@ const TherapistSidebar = () => {
         </div>
       </div>
 
-      {/* Mobile & Tablet Bottom Nav (shown below lg) */}
+      {/* Mobile Bottom Nav */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#111111] border-t border-gray-800 flex justify-around py-2 z-50">
-        {menuItems.map((item, idx) => (
-          <button
-            key={idx}
-            onClick={() => navigate(item.path)}
-            className="flex flex-col items-center text-gray-400 hover:text-white transition"
-          >
-            {item.icon}
-            <span className="text-[10px] mt-1">{item.name}</span>
-          </button>
-        ))}
+        {menuItems.map((item, idx) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <button
+              key={idx}
+              onClick={() => navigate(item.path)}
+              className={`flex flex-col items-center transition ${isActive ? "text-white" : "text-gray-400 hover:text-white"
+                }`}
+            >
+              {item.icon}
+              <span className="text-[10px] mt-1">{item.name}</span>
+            </button>
+          );
+        })}
       </div>
     </>
   );
