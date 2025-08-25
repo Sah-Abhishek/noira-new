@@ -1,23 +1,32 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
+import React, { useState } from "react";
+import { Menu, X, ShoppingBag, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import noira from "/noira.svg";
-import { useTheme } from "../context/ThemeContext"; // adjust the path if needed
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isDarkMode, toggleTheme } = useTheme();
-  const userEmail = localStorage.getItem('userEmail');
+  const [isDarkMode, setIsDarkMode] = useState(true); // Mock theme state
   const [mobileLoginOpen, setMobileLoginOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const userEmail = null; // Mock user state
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
+  const handleLinkClick = (href) => {
+    navigate('/adminlogin')
+    setIsOpen(false);
+  };
 
   return (
     <nav
-      className={`z-99 fixed top-4 left-1/2 transform -translate-x-1/2 
-px-4 sm:px-6 py-2 flex justify-between items-center 
-backdrop-blur-md bg-opacity-40 shadow-lg rounded-full 
-transition-all duration-300 
-${isDarkMode ? "bg-[#111]/60 text-white" : "bg-white/60 text-black"} 
-max-w-6xl w-[90%]`}
+      className={`z-50 fixed top-4 left-1/2 transform -translate-x-1/2 
+        px-3 sm:px-4 md:px-6 py-2 flex justify-between items-center 
+        backdrop-blur-md bg-opacity-40 shadow-lg rounded-full 
+        transition-all duration-300 
+        ${isDarkMode ? "bg-[#111]/60 text-white" : "bg-white/60 text-black"} 
+        max-w-6xl w-[95%] sm:w-[90%]`}
     >
       {/* Logo */}
       <Link to="/">
@@ -26,190 +35,195 @@ max-w-6xl w-[90%]`}
         </div>
       </Link>
 
-      {/* Hamburger Icon - Mobile */}
+      {/* Hamburger Icon - Mobile & Tablet */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden focus:outline-none"
+        className="xl:hidden focus:outline-none z-50 relative"
       >
         {isOpen ? (
-          <FaTimes className="text-[#95793e] w-6 h-6" />
+          <X className="text-[#95793e] w-5 h-5 sm:w-6 sm:h-6" />
         ) : (
-          <FaBars className="text-[#95793e] w-6 h-6" />
+          <Menu className="text-[#95793e] w-5 h-5 sm:w-6 sm:h-6" />
         )}
       </button>
 
-      {/* Desktop Nav */}
-      <div className="hidden md:flex gap-6 text-sm items-center">
-        <a href="/" className="hover:text-[#95793e] transition">
+      {/* Desktop Nav - Only visible on XL screens */}
+      <div className="hidden xl:flex gap-6 text-sm items-center">
+        <button onClick={() => handleLinkClick('/')} className="hover:text-[#95793e] transition">
           Home
-        </a>
-        <a href="#services" className="hover:text-[#95793e] transition">
+        </button>
+        <button onClick={() => handleLinkClick('#services')} className="hover:text-[#95793e] transition">
           Services
-        </a>
-        <a href="#therapists" className="hover:text-[#C49E5B] transition">
+        </button>
+        <button onClick={() => handleLinkClick('#therapists')} className="hover:text-[#C49E5B] transition">
           Therapists
-        </a>
-        <Link
-          to="/about"
-          className="hover:text-yellow-400 transition"
-          onClick={() => setIsOpen(false)}
+        </button>
+        <button
+          onClick={() => handleLinkClick('/about')}
+          className="hover:text-primary transition"
         >
           About
-        </Link>
-
-        <Link
-          to="/careers"
-          className="hover:text-yellow-400 transition"
-          onClick={() => setIsOpen(false)}
+        </button>
+        <button
+          onClick={() => handleLinkClick('/careers')}
+          className="hover:text-primary transition"
         >
           Careers
-        </Link>
-
-        <Link
-          to="/careers"
-          className="hover:text-yellow-400 transition"
-          onClick={() => setIsOpen(false)}
+        </button>
+        <button
+          onClick={() => handleLinkClick('/cart')}
+          className="hover:text-priamry transition"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-          </svg>
-        </Link>
-        {/* <a */}
-        {/*   href="#book" */}
-        {/*   className="hidden bg-gradient-to-r from-[#f5e18c] via-[#e0a528] to-[#a66c00] hover:from-yellow-300 hover:to-yellow-500 text-black font-semibold px-4 py-2 rounded-full transition" */}
-        {/* > */}
-        {/*   Book Now */}
-        {/* </a> */}
-        {!userEmail &&
+          <ShoppingBag className="w-5 h-5" />
+        </button>
 
+        {!userEmail && (
           <div className="relative group">
             <div className="inline-flex items-center px-3 py-2 rounded-full text-black font-medium bg-primary cursor-pointer">
               Login
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-4 h-4 ml-1"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-              </svg>
+              <ChevronDown className="w-4 h-4 ml-1" />
             </div>
 
             {/* Dropdown menu */}
             <div className="absolute right-0 z-50 w-40 hidden group-hover:flex flex-col bg-white dark:bg-[#222] shadow-lg rounded-md overflow-hidden text-sm border border-gray-200 dark:border-gray-700">
-              <Link
-                to="/adminlogin"
-                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+              <button
+                onClick={() => handleLinkClick('/adminlogin')}
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition text-left"
               >
                 Therapist
-              </Link>
-              <Link
-                to="/adminlogin"
-                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+              </button>
+              <button
+                onClick={() => handleLinkClick('/adminlogin')}
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition text-left"
               >
                 Admin
-              </Link>
+              </button>
             </div>
           </div>
-        }
-
+        )}
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile & Tablet Nav Menu */}
       {isOpen && (
-        <div
-          className={`absolute rounded-xl backdrop-blur-md bg-opacity-40 mt-5 top-14 left-0 w-full px-6 py-4 flex flex-col items-start gap-4 md:hidden transition-all duration-300 ${isDarkMode ? "bg-[#111] text-white" : "bg-white text-black"
-            }`}
-        >
-          <a
-            href="#services"
-            className="hover:text-yellow-400 transition"
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm xl:hidden"
             onClick={() => setIsOpen(false)}
+          />
+
+          {/* Menu Content */}
+          <div
+            className={`fixed top-20 left-1/2 transform -translate-x-1/2 w-[90%] max-w-md
+              rounded-2xl backdrop-blur-md bg-opacity-95 shadow-xl
+              px-6 py-6 flex flex-col gap-4 xl:hidden transition-all duration-300 z-50
+              ${isDarkMode ? "bg-[#111] text-white border border-white/10" : "bg-white text-black border border-black/10"}`}
           >
-            Services
-          </a>
-          <a
-            href="#therapists"
-            className="hover:text-[#C49E5B] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Therapists
-          </a>
-          <Link
-            to="/about"
-            className="hover:text-yellow-400 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            About
-          </Link>
-          <Link
-            to="/careers"
-            className="hover:text-yellow-400 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Careers
-          </Link>
-          <Link
-            to="/careers"
-            className="hover:text-yellow-400 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-              </svg>
-              <span>Cart</span>
+            {/* Navigation Links */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => handleLinkClick('/')}
+                className="text-base font-medium hover:text-primary transition px-2 py-1 text-left"
+              >
+                Home
+              </button>
+              <button
+                onClick={() => handleLinkClick('#services')}
+                className="text-base font-medium hover:text-primary transition px-2 py-1 text-left"
+              >
+                Services
+              </button>
+              <button
+                onClick={() => handleLinkClick('#therapists')}
+                className="text-base font-medium hover:text-[#C49E5B] transition px-2 py-1 text-left"
+              >
+                Therapists
+              </button>
+              <button
+                onClick={() => handleLinkClick('/about')}
+                className="text-base font-medium hover:text-primary transition px-2 py-1 text-left"
+              >
+                About
+              </button>
+              <button
+                onClick={() => handleLinkClick('/careers')}
+                className="text-base font-medium hover:text-primary transition px-2 py-1 text-left"
+              >
+                Careers
+              </button>
+              <button
+                onClick={() => handleLinkClick('/cart')}
+                className="text-base font-medium hover:text-primary transition px-2 py-1 flex items-center gap-2"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                <span>Cart</span>
+              </button>
             </div>
 
-          </Link>
-          <div className="w-full">
-            <button
-              onClick={() => setMobileLoginOpen(!mobileLoginOpen)}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-md bg-primary text-black font-medium"
-            >
-              Login
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={`w-4 h-4 ml-2 transition-transform ${mobileLoginOpen ? "rotate-180" : "rotate-0"}`}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-              </svg>
-            </button>
+            {/* Divider */}
+            <div className={`border-t ${isDarkMode ? "border-gray-600" : "border-gray-300"} my-2`} />
 
-            {mobileLoginOpen && (
-              <div className="mt-2 ml-2 flex flex-col w-full text-sm rounded-md border border-gray-300 dark:border-gray-600 overflow-hidden">
-                <Link
-                  to="/adminlogin"
-                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setMobileLoginOpen(false);
-                  }}
+            {/* Login Section */}
+            {!userEmail && (
+              <div className="w-full">
+                <button
+                  onClick={() => setMobileLoginOpen(!mobileLoginOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-primary text-black font-medium hover:from-yellow-300 hover:to-yellow-400 transition"
                 >
-                  Therapist
-                </Link>
-                <Link
-                  to="/adminlogin"
-                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setMobileLoginOpen(false);
-                  }}
-                >
-                  Admin
-                </Link>
+                  Login
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${mobileLoginOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                  />
+                </button>
+
+                {/* Login Dropdown */}
+                {mobileLoginOpen && (
+                  <div className="mt-3 flex flex-col gap-2">
+                    <button
+                      onClick={() => {
+                        handleLinkClick('/adminlogin');
+                        setMobileLoginOpen(false);
+                      }}
+                      className={`px-4 py-3 rounded-lg font-medium transition text-center
+                        ${isDarkMode
+                          ? "bg-gray-800 hover:bg-gray-700 text-white"
+                          : "bg-gray-100 hover:bg-gray-200 text-black"
+                        }`}
+                    >
+                      Therapist Login
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleLinkClick('/adminlogin');
+                        setMobileLoginOpen(false);
+                      }}
+                      className={`px-4 py-3 rounded-lg font-medium transition text-center
+                        ${isDarkMode
+                          ? "bg-gray-800 hover:bg-gray-700 text-white"
+                          : "bg-gray-100 hover:bg-gray-200 text-black"
+                        }`}
+                    >
+                      Admin Login
+                    </button>
+                  </div>
+                )}
               </div>
             )}
+
+            {/* Theme Toggle (Optional) */}
+            {/* <button */}
+            {/*   onClick={toggleTheme} */}
+            {/*   className={`w-full px-4 py-2 rounded-lg transition text-sm font-medium */}
+            {/*     ${isDarkMode */}
+            {/*       ? "bg-gray-800 hover:bg-gray-700 text-gray-300" */}
+            {/*       : "bg-gray-100 hover:bg-gray-200 text-gray-700" */}
+            {/*     }`} */}
+            {/* > */}
+            {/*   Switch to {isDarkMode ? 'Light' : 'Dark'} Mode */}
+            {/* </button> */}
           </div>
-
-
-        </div>
+        </>
       )}
     </nav>
   );
