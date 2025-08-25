@@ -9,12 +9,35 @@ import starIcon from "../../assets/icons/star.svg";
 
 import StatusCard from "./StatusCard.jsx";
 
-const SkeletonCard = () => {
+const StatusCardsRowSkeleton = () => {
   return (
-    <div className="animate-pulse bg-gray-800 rounded-xl p-6 flex flex-col items-center justify-center shadow-md">
-      <div className="w-10 h-10 bg-gray-700 rounded-full mb-4"></div>
-      <div className="w-24 h-4 bg-gray-700 rounded mb-2"></div>
-      <div className="w-12 h-4 bg-gray-700 rounded"></div>
+    <div className="bg-[#111] border border-white/10 w-full min-h-[120px] p-6 rounded-2xl flex justify-between items-center shadow-md overflow-hidden relative">
+      {/* Shimmer overlay */}
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+
+      {/* Left: Title + Value Skeleton */}
+      <div className="space-y-3">
+        {/* Title skeleton */}
+        <div className="h-4 bg-gray-700/50 rounded-md w-24"></div>
+        {/* Value skeleton */}
+        <div className="h-7 bg-gray-600/60 rounded-md w-16"></div>
+      </div>
+
+      {/* Right: Icon Skeleton */}
+      <div className="p-4 bg-[#1a1a1a] rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-gray-700/50 rounded"></div>
+      </div>
+
+      <style jsx>{`
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}</style>
     </div>
   );
 };
@@ -81,4 +104,4 @@ const StatusCardsRow = () => {
   );
 };
 
-export default StatusCardsRow;
+export default StatusCardsRowSkeleton;

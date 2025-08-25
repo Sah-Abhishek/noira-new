@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaCalendarAlt, FaSave, FaTrash } from "react-icons/fa";
-import Calendar from "../components/therapistSchedule/Calendar.jsx";
+import CalendarComponent from "../components/therapistSchedule/CalendarComponent.jsx";
 import OverviewPanel from "../components/therapistSchedule/OverviewPanel.jsx";
 import ScheduleModal from "../components/therapistSchedule/ScheduleModal.jsx";
 
@@ -70,37 +70,40 @@ export default function TherapistSchedule() {
   return (
     <div className="bg-black text-white font-sans min-h-screen p-4 lg:p-8">
       {/* Header */}
-      <header className="glass-morphism border border-white/10 bg-[#0d0d0d] rounded-2xl p-6 mb-6">
+      <header className="glass-morphism border border-white/10 bg-[#0d0d0d] rounded-2xl p-4 sm:p-6 mb-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-              <FaCalendarAlt className="text-black text-xl" />
+          {/* Left side - Icon + Title */}
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center">
+              <FaCalendarAlt className="text-black text-lg sm:text-xl" />
             </div>
             <div>
-              <h1 className="text-2xl font-playfair font-bold text-primary">
+              <h1 className="text-lg sm:text-2xl font-playfair font-bold text-primary">
                 Advanced Availability Scheduler
               </h1>
-              <p className="text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-400">
                 Manage your therapy sessions and availability
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
+
+          {/* Right side - Buttons */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <button
               onClick={() => alert("Availability plan saved successfully!")}
-              className="bg-primary px-6 py-3 rounded-xl text-black font-semibold hover:opacity-90 transition-opacity"
+              className="bg-primary px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm text-black font-semibold hover:opacity-90 transition-opacity"
             >
-              <FaSave className="inline mr-2" />
-              Save Plan
+              <FaSave className="inline mr-1 sm:mr-2" />
+              Save
             </button>
             <button
               onClick={() => {
                 if (window.confirm("Clear all availability data?"))
                   setAvailabilityData({});
               }}
-              className="glass-morphism px-6 py-3 rounded-xl border border-red-400 text-red-400 hover:bg-red-500 hover:bg-opacity-20 transition-all"
+              className="glass-morphism px-3 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl border border-red-400 text-xs sm:text-sm text-red-400 hover:bg-red-500 hover:bg-opacity-20 transition-all"
             >
-              <FaTrash className="inline mr-2" />
+              <FaTrash className="inline mr-1 sm:mr-2" />
               Reset
             </button>
           </div>
@@ -109,7 +112,7 @@ export default function TherapistSchedule() {
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         <div className="xl:col-span-3">
-          <Calendar
+          <CalendarComponent
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
             availabilityData={availabilityData} // ✅ passed here

@@ -7,6 +7,7 @@ import chartIcon from "../../assets/icons/chart.svg";
 import starIcon from "../../assets/icons/star.svg";
 
 import StatusCard from "./StatusCard.jsx";
+import StatusCardsRowSkeleton from "./StatusCardsRowSkeleton.jsx";
 
 const StatusCardsRow = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -29,7 +30,14 @@ const StatusCardsRow = () => {
   }, [therapistId,]);
 
   if (!dashboardData) {
-    return <div>Loading...</div>; // you can replace with a skeleton/loader
+    return (
+      < div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 gap-6 w-full" >
+        <StatusCardsRowSkeleton />
+        <StatusCardsRowSkeleton />
+        <StatusCardsRowSkeleton />
+        <StatusCardsRowSkeleton />
+      </div > // you can replace with a skeleton/loader
+    )
   }
 
   return (

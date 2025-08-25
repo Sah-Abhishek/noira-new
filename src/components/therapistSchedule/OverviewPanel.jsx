@@ -1,5 +1,7 @@
+// src/components/therapistDashboard/OverviewPanel.jsx
 import React from "react";
 import { FaEdit, FaTimes } from "react-icons/fa";
+import axios from "axios";
 
 export default function OverviewPanel({
   availabilityData,
@@ -8,16 +10,41 @@ export default function OverviewPanel({
   openModal,
   setAvailabilityData,
 }) {
-  const removeSlot = (dateKey, index) => {
-    setAvailabilityData((prev) => {
-      const newSlots = [...prev[dateKey]];
-      newSlots.splice(index, 1);
-      if (!newSlots.length) {
-        const { [dateKey]: _, ...rest } = prev;
-        return rest;
-      }
-      return { ...prev, [dateKey]: newSlots };
-    });
+  const therapistId = localStorage.getItem("therapistId"); // 👈 or however you store it
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const removeSlot = async (dateKey, index) => {
+    const slotToRemove = availabilityData[dateKey][index];
+    if (!slotToRemove) return;
+
+    try {
+      await axios.delete(`${apiUrl}/therapist/blocks`, {
+        data: {
+          therapistId,
+          date: new Date(dateKey).toISOString(),
+          blocksToDelete: [
+            {
+              startTime: slotToRemove.start,
+              endTime: slotToRemove.end,
+            },
+          ],
+        },
+      });
+
+      // ✅ Update local state after successful deletion
+      setAvailabilityData((prev) => {
+        const newSlots = [...prev[dateKey]];
+        newSlots.splice(index, 1);
+        if (!newSlots.length) {
+          const { [dateKey]: _, ...rest } = prev;
+          return rest;
+        }
+        return { ...prev, [dateKey]: newSlots };
+      });
+    } catch (error) {
+      console.error("Error deleting slot:", error);
+      alert("Failed to delete slot. Please try again.");
+    }
   };
 
   // --- Extra Info ---

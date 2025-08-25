@@ -56,7 +56,7 @@ const CareerPage = () => {
               </div>
               <div className="flex items-center gap-2 bg-primary backdrop-blur-md px-4 py-2 rounded text-sm sm:text-base text-black">
                 <img src={location} alt="Location" className="w-3 h-4" />
-                <Link to="/therapistdashboard" >Therapist Dashboard</Link>
+                <Link to="/therapist/therapistdashboard" >Therapist Dashboard</Link>
               </div>
             </div>
           </div>

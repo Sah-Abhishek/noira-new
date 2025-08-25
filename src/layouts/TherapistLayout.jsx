@@ -1,20 +1,24 @@
-
 // src/layouts/TherapistLayout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
-import TherapistSidebar from "../components/therapistDashboard/TherapistSidebar.jsx"; // your sidebar
+import TherapistSidebar from "../components/therapistDashboard/TherapistSidebar.jsx";
 
 const TherapistLayout = () => {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      {/* Sidebar (fixed width) */}
-      <div className="w-64 h-full">
-        <TherapistSidebar />
+      {/* Sidebar (desktop only, handled inside TherapistSidebar) */}
+      <div className="w-64 h-full hidden md:block">
+        <TherapistSidebar variant="desktop" />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-[#111111] overflow-y-auto ">
-        <Outlet /> {/* This renders the nested route's component */}
+      <div className="flex-1 bg-[#111111] overflow-y-auto pb-14 md:pb-0">
+        <Outlet />
+      </div>
+
+      {/* Mobile Bottom Navbar (visible only on mobile) */}
+      <div className="md:hidden">
+        <TherapistSidebar variant="mobile" />
       </div>
     </div>
   );
