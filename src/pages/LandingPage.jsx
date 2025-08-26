@@ -9,6 +9,7 @@ import Galleryhome from '../components/Galleryhome.jsx'
 import LandingVideoSection from '../components/VideoHome.jsx'
 import WhyChooseNoira from '../components/WhyChooseNoira.jsx'
 import MembershipSection from '../components/MembershipSection.jsx'
+import AtHomeTreatment from '../components/AtHomeTreatment.jsx'
 
 const LandingPage = () => {
   return (
@@ -21,9 +22,11 @@ const LandingPage = () => {
       <HowItWorks />
       <MembershipSection />
 
+      <LandingVideoSection />
       <Featuredtherapists />
 
-      <LandingVideoSection />
+      <AtHomeTreatment />
+
       <CtaSection />
       <Footer />
     </div>

@@ -21,6 +21,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Link from "@mui/material/Link";
+import toast from "react-hot-toast";
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -47,7 +48,9 @@ export default function UserSignup() {
           token: credentialResponse.access_token, // or id_token depending on your backend
         });
 
-        localStorage.setItem("authToken", res.data.token);
+        toast.success("Signin successfull")
+
+        localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
 
         navigate("/servicespage");

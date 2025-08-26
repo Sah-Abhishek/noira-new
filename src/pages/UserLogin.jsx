@@ -16,8 +16,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import toast from "react-hot-toast";
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -40,6 +41,29 @@ export default function UserLogin() {
     resolver: yupResolver(schema),
   });
 
+  // 🔹 Google login
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const res = await axios.post(`${apiUrl}/auth/google`, {
+          token: credentialResponse.access_token, // or id_token depending on backend
+        });
+
+        toast.success("Login successful");
+        localStorage.setItem("userjwt", res.data.token);
+        localStorage.setItem("userEmail", res.data.user.email);
+        navigate("/servicespage");
+      } catch (error) {
+        console.error("Google login error:", error);
+        setErrorMsg("Google login failed");
+      }
+    },
+    onError: () => {
+      setErrorMsg("Google Login Failed");
+    },
+  });
+
+  // 🔹 Normal login
   const onSubmit = async (data) => {
     const endpoint = `${apiUrl}/auth/user/login`;
     try {
@@ -88,7 +112,8 @@ export default function UserLogin() {
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-primary"}`}
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-primary"
+                }`}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -106,7 +131,8 @@ export default function UserLogin() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password")}
-                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-primary"}`}
+                className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.password ? "ring-red-500" : "focus:ring-primary"
+                  }`}
               />
               <span
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 cursor-pointer"
@@ -122,9 +148,9 @@ export default function UserLogin() {
 
           {/* Forgot Password */}
           <div className="text-right">
-            <a href="#" className="text-sm text-primary hover:underline">
+            <Link to="/auth/forgotpassword" className="text-sm text-primary hover:underline">
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
           {/* Login Button */}
@@ -137,16 +163,15 @@ export default function UserLogin() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <span>              <l-zoomies
-                size="80"
-                stroke="5"
-                bg-opacity="0.1"
-                speed="1.4"
-                color="yellow"
-
-              ></l-zoomies>
+              <span>
+                <l-zoomies
+                  size="80"
+                  stroke="5"
+                  bg-opacity="0.1"
+                  speed="1.4"
+                  color="yellow"
+                ></l-zoomies>
               </span>
-
             ) : (
               <>
                 <FaSignInAlt /> Login
@@ -165,7 +190,10 @@ export default function UserLogin() {
 
         {/* Social Buttons */}
         <div className="flex gap-4">
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600">
+          <button
+            onClick={() => googleLogin()}
+            className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
+          >
             <FaGoogle /> Google
           </button>
           <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600">
@@ -179,7 +207,6 @@ export default function UserLogin() {
           <Link to="/usersignup" className="text-primary hover:underline">
             Sign Up
           </Link>
-
         </div>
       </div>
     </div>

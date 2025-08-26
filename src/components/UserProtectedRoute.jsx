@@ -21,7 +21,7 @@ const UserProtectedRoute = ({ children }) => {
       try {
         await axios.get(`${apiUrl}/auth/verifytoken`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
             "x-user-email": email, // Send email in custom header
           },
         });

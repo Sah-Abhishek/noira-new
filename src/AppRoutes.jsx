@@ -28,6 +28,8 @@ import TherapistLayout from "./layouts/TherapistLayout.jsx";
 import TherapistDashboard from "./pages/TherapistDashobard.jsx";
 import TherapistSchedule from "./layouts/TherapistSchedule.jsx";
 import { Toaster } from "react-hot-toast";
+import ForgotPassword from "./components/therapistSchedule/forgotPassword/forgotPassword.jsx";
+import ResetPasswordPage from "./components/therapistSchedule/forgotPassword/ResetPasswordPage.jsx";
 // import TherapistProfile from "./pages/TherapistProfile.jsx";
 // import TherapistAppointments from "./pages/TherapistAppointments.jsx";
 // import TherapistSettings from "./pages/TherapistSettings.jsx";
@@ -57,6 +59,8 @@ const AppRoutes = () => {
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
         <Route path="/paymentfail" element={<PaymentFail />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
 
         {/* Protected User Routes */}
         <Route
