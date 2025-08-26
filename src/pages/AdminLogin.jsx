@@ -58,6 +58,7 @@ export default function AdminLogin() {
         localStorage.setItem("therapistjwt", response.data.token)
         localStorage.setItem("therapistId", response.data.therapistId);
         localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("firstname", response.data.name.first);
 
 
         console.log("This is the token: ", response.data);

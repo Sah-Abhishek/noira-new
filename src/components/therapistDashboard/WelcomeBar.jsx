@@ -6,12 +6,14 @@ const WelcomeBar = () => {
   const today = new Date();
   const options = { year: "numeric", month: "long", day: "numeric" };
   const formattedDate = today.toLocaleDateString("en-US", options);
+  const firstName = localStorage.getItem('firstname')
+  // console.log("This is the firstName: ", firstName);
 
   return (
     <div className="flex  border border-white/10 items-center justify-between bg-[#111111] text-white px-6 py-4 rounded-2xl shadow">
       {/* Left - Greeting */}
       <div>
-        <h2 className="text-lg font-semibold">Welcome back, Sarah</h2>
+        <h2 className="text-lg font-semibold">Welcome back, {firstName}</h2>
         <p className="text-sm text-gray-400">Today is {formattedDate}</p>
       </div>
 

@@ -5,6 +5,7 @@ import sessionIcon from "../../assets/icons/sessions.svg";
 import clockIcon from "../../assets/icons/clock.svg";
 import chartIcon from "../../assets/icons/chart.svg";
 import starIcon from "../../assets/icons/star.svg";
+import pound from "../../assets/icons/pound.png"
 
 import StatusCard from "./StatusCard.jsx";
 import StatusCardsRowSkeleton from "./StatusCardsRowSkeleton.jsx";
@@ -64,7 +65,7 @@ const StatusCardsRow = () => {
         title="Earning"
         value={`£${dashboardData.totalRevenue?.toFixed(1) ?? "0.0"}`}
         color="text-yellow-300"
-        icon={starIcon}
+        icon={pound}
       />
     </div>
   );
