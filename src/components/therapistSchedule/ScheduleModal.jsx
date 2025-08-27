@@ -19,6 +19,41 @@ export default function ScheduleModal({
 
   if (!isModalOpen) return null;
 
+  // Generate hours for dropdown
+  const generateHours = () => {
+    const hours = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const hourStr = hour.toString().padStart(2, '0');
+      const displayHour = hour === 0 ? '12 AM' :
+        hour < 12 ? `${hour} AM` :
+          hour === 12 ? '12 PM' :
+            `${hour - 12} PM`;
+      hours.push({ value: hourStr, label: displayHour });
+    }
+    return hours;
+  };
+
+  const hourOptions = generateHours();
+  const minuteOptions = [
+    { value: '00', label: ':00' },
+    { value: '30', label: ':30' }
+  ];
+
+  // Parse time components
+  const parseTime = (timeStr) => {
+    if (!timeStr) return { hour: '', minute: '' };
+    const [hour, minute] = timeStr.split(':');
+    return { hour, minute };
+  };
+
+  const formatTime = (hour, minute) => {
+    if (!hour || !minute) return '';
+    return `${hour}:${minute}`;
+  };
+
+  const startTimeParts = parseTime(startTime);
+  const endTimeParts = parseTime(endTime);
+
   const handleSave = async () => {
     if (!availabilityData[selectedDay]) {
       toast.error("No slots to save");
@@ -213,27 +248,70 @@ export default function ScheduleModal({
           <div className="glass-morphism p-4 rounded-xl border border-white/10">
             <h5 className="font-medium mb-3">Add Time Slot</h5>
             <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* Start Time */}
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-gray-400 mb-2">
                   Start Time
                 </label>
-                <input
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white"
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={startTimeParts.hour}
+                    onChange={(e) => setStartTime(formatTime(e.target.value, startTimeParts.minute || '00'))}
+                    className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm"
+                  >
+                    <option value="">Hour</option>
+                    {hourOptions.map((hour) => (
+                      <option key={hour.value} value={hour.value}>
+                        {hour.label}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={startTimeParts.minute}
+                    onChange={(e) => setStartTime(formatTime(startTimeParts.hour || '00', e.target.value))}
+                    className="w-20 bg-gray-800 border border-gray-600 rounded-lg px-2 py-2 text-white text-sm"
+                  >
+                    <option value="">Min</option>
+                    {minuteOptions.map((minute) => (
+                      <option key={minute.value} value={minute.value}>
+                        {minute.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
+              {/* End Time */}
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-gray-400 mb-2">
                   End Time
                 </label>
-                <input
-                  type="time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white"
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={endTimeParts.hour}
+                    onChange={(e) => setEndTime(formatTime(e.target.value, endTimeParts.minute || '00'))}
+                    className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm"
+                  >
+                    <option value="">Hour</option>
+                    {hourOptions.map((hour) => (
+                      <option key={hour.value} value={hour.value}>
+                        {hour.label}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={endTimeParts.minute}
+                    onChange={(e) => setEndTime(formatTime(endTimeParts.hour || '00', e.target.value))}
+                    className="w-20 bg-gray-800 border border-gray-600 rounded-lg px-2 py-2 text-white text-sm"
+                  >
+                    <option value="">Min</option>
+                    {minuteOptions.map((minute) => (
+                      <option key={minute.value} value={minute.value}>
+                        {minute.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
             <button

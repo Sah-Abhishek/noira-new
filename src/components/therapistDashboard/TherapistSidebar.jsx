@@ -13,6 +13,7 @@ import {
 const TherapistSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const firstname = localStorage.getItem('firstname');
 
   const menuItems = [
     {
@@ -82,16 +83,32 @@ const TherapistSidebar = () => {
         </div>
 
         {/* Profile */}
-        <div className="px-6 py-4 flex items-center gap-3 border-t border-gray-800">
-          <img
-            src="https://randomuser.me/api/portraits/women/44.jpg"
-            alt="Sarah Johnson"
-            className="w-10 h-10 rounded-full"
-          />
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">Sarah Johnson</span>
+        <div className="px-6 py-4 flex items-center gap-4 border-t border-gray-800 ">
+          {/* Profile Icon */}
+          <div className="flex-shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-8 h-8 text-gray-300"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+              />
+            </svg>
+          </div>
+
+          {/* User Info */}
+          <div className="flex flex-col text-white">
+            <span className="text-sm font-semibold capitalize">
+              {firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase()}
+            </span>
             <span className="text-xs text-gray-400">Massage Therapist</span>
-            <button className="text-xs text-red-500 mt-1">Logout</button>
+            <button className="text-xs text-red-500 mt-1 hover:underline">Logout</button>
           </div>
         </div>
       </div>
