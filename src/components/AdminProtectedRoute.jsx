@@ -8,7 +8,7 @@ import LoaderPage from "../pages/LoaderPage";
 
 const AdminProtectedRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
-  const token = localStorage.getItem("therapistjwt");
+  const token = localStorage.getItem('adminjwt');
   const email = localStorage.getItem("userEmail");
   const location = useLocation();
 
@@ -27,9 +27,8 @@ const AdminProtectedRoute = ({ children }) => {
       try {
         const response = await axios.get(`${apiUrl}/auth/verifytoken`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
             "x-user-email": email, // Send email in custom header
-            "role": "admin"
 
           },
         });

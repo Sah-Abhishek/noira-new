@@ -25,7 +25,7 @@ const TherapistSelectionCard = ({ therapist }) => {
         <img
           src={therapist?.userId?.avatar_url || "https://via.placeholder.com/80"}
           alt={therapist?.title || "Therapist"}
-          className="w-20 h-20 rounded-full border-4 border-yellow-500 object-cover"
+          className="w-20 h-20 rounded-full border-4 border-primary object-cover"
         />
         <span
           className={`absolute top-0 right-0 w-3 h-3 rounded-full border-2 border-black ${therapist?.acceptingNewClients ? "bg-green-500" : "bg-gray-400"
@@ -39,7 +39,7 @@ const TherapistSelectionCard = ({ therapist }) => {
       </h2>
 
       {/* Title */}
-      <p className="text-yellow-400 text-sm font-medium">Massage Therapist</p>
+      <p className="text-primary text-sm font-medium">Massage Therapist</p>
 
       {/* Rating */}
       <div className="flex items-center gap-1 text-sm">
@@ -47,7 +47,7 @@ const TherapistSelectionCard = ({ therapist }) => {
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
-              className="w-4 h-4 text-yellow-400 fill-yellow-400"
+              className="w-4 h-4 text-primary fill-primary"
             />
           ))}
         </div>
@@ -64,7 +64,7 @@ const TherapistSelectionCard = ({ therapist }) => {
         {(therapist?.specializations || []).map((spec, idx) => (
           <span
             key={spec._id || idx}
-            className="px-3 py-1 text-xs rounded-full bg-yellow-600 text-white font-medium"
+            className="px-3 py-1 text-xs rounded-full bg-primary text-white font-medium"
           >
             {spec.name}
           </span>
@@ -73,21 +73,21 @@ const TherapistSelectionCard = ({ therapist }) => {
 
       {/* Location + Experience */}
       <div className="flex items-center gap-1 text-gray-400 text-sm">
-        <MapPin className="w-4 h-4 text-yellow-400" />
+        <MapPin className="w-4 h-4 text-primary" />
         <span>Manhattan • {therapist?.experience || "5"} years exp</span>
       </div>
 
       {/* Languages */}
       <div className="flex items-center gap-1 text-gray-400 text-sm">
-        <Globe className="w-4 h-4 text-yellow-400" />
+        <Globe className="w-4 h-4 text-primary" />
         <span>{therapist?.languages?.join(", ") || "English, Spanish"}</span>
       </div>
 
       {/* Select Button */}
       <button
         onClick={handleSelect}
-        className="bg-yellow-500 text-black font-semibold py-3 px-8 rounded-full 
-                   hover:bg-yellow-400 transition-colors w-full mt-2"
+        className="bg-primary text-black font-semibold py-3 px-8 rounded-full 
+                   hover:bg-amber-400 transition-colors w-full mt-2"
       >
         Select Therapist
       </button>

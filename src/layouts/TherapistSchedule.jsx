@@ -5,7 +5,6 @@ import CalendarComponent from "../components/therapistSchedule/CalendarComponent
 import OverviewPanel from "../components/therapistSchedule/OverviewPanel.jsx";
 import ScheduleModal from "../components/therapistSchedule/ScheduleModal.jsx";
 import ResetConfirmModal from "../components/therapistSchedule/ResetConfirmModal.jsx";
-import CalendarLegend from "../components/therapistSchedule/CalendarLegend.jsx";
 import toast from "react-hot-toast";
 
 export default function TherapistSchedule() {
@@ -18,7 +17,9 @@ export default function TherapistSchedule() {
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
+  // console.log("This is the value of isModalOpen: ", isResetModalOpen);
 
+  // ✅ Make it reusable
   const refreshAvailability = async () => {
     try {
       setLoading(true);
@@ -26,6 +27,7 @@ export default function TherapistSchedule() {
         `${apiUrl}/therapist/availability/${therapistId}`
       );
 
+      // Transform API response into { "YYYY-MM-DD": [ { start, end } ] }
       const formattedData = {};
       res.data.availability.forEach((entry) => {
         const dateKey = entry.date.split("T")[0];
@@ -45,6 +47,7 @@ export default function TherapistSchedule() {
     }
   };
 
+  // Run on mount
   useEffect(() => {
     refreshAvailability();
   }, []);
@@ -59,7 +62,7 @@ export default function TherapistSchedule() {
       if (response.status === 200) {
         toast.success("All availability for this month has been cleared.");
         setIsResetModalOpen(false);
-        refreshAvailability();
+        refreshAvailability(); // ✅ reload fresh data
       } else {
         alert("Failed to reset availability.");
       }
@@ -70,7 +73,7 @@ export default function TherapistSchedule() {
       setLoading(false);
     }
   };
-
+  // Derived stats
   const availableDays = Object.keys(availabilityData).length;
   const totalHours = Object.values(availabilityData).reduce((total, slots) => {
     return (
@@ -140,7 +143,6 @@ export default function TherapistSchedule() {
         </div>
       </header>
 
-      {/* Main content */}
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         <div className="xl:col-span-3">
           <CalendarComponent
@@ -152,11 +154,7 @@ export default function TherapistSchedule() {
               setIsModalOpen(true);
             }}
           />
-
-          {/* ✅ Legend directly under calendar */}
-          <CalendarLegend />
         </div>
-
         <div className="xl:col-span-1">
           <OverviewPanel
             availabilityData={availabilityData}
@@ -177,9 +175,8 @@ export default function TherapistSchedule() {
         selectedDay={selectedDay}
         availabilityData={availabilityData}
         setAvailabilityData={setAvailabilityData}
-        refreshAvailability={refreshAvailability}
+        refreshAvailability={refreshAvailability} // ✅ pass down
       />
-
       <ResetConfirmModal
         isOpen={isResetModalOpen}
         onClose={() => setIsResetModalOpen(false)}

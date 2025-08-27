@@ -31,7 +31,7 @@ const BookingSummary = () => {
   return (
     <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-gray-800 shadow-lg w-full">
       {/* Heading */}
-      <h2 className="text-yellow-400 text-lg font-semibold mb-6">
+      <h2 className="text-primary text-lg font-semibold mb-6">
         Booking Summary
       </h2>
 
@@ -41,11 +41,11 @@ const BookingSummary = () => {
           <img
             src={avatar_url}
             alt={email}
-            className="w-14 h-14 rounded-full object-cover border-2 border-yellow-400"
+            className="w-14 h-14 rounded-full object-cover border-2 border-primary"
           />
           <div>
             <h3 className="text-white font-semibold">{title}</h3>
-            <p className="text-yellow-400 text-xs">
+            <p className="text-primary text-xs">
               {experience} years experience
             </p>
             <div className="flex items-center gap-1 mt-1">
@@ -53,7 +53,7 @@ const BookingSummary = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    className="w-3 h-3 text-yellow-400 fill-yellow-400"
+                    className="w-3 h-3 text-primary fill-primary-400"
                   />
                 ))}
               </div>
@@ -102,8 +102,8 @@ const BookingSummary = () => {
       {/* Total */}
       <div className="border-t border-gray-700 pt-4">
         <div className="flex justify-between items-center">
-          <span className="text-yellow-400 text-lg font-semibold">Total:</span>
-          <span className="text-yellow-400 text-xl font-bold">
+          <span className="text-primary text-lg font-semibold">Total:</span>
+          <span className="text-primary text-xl font-bold">
             ${total.toFixed(2)}
           </span>
         </div>

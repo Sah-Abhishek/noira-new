@@ -55,8 +55,8 @@ export default function AdminLogin() {
 
       if (response.status == 200) {
         localStorage.setItem("userEmail", data.email);
-        localStorage.setItem("therapistjwt", response.data.token)
-        localStorage.setItem("therapistId", response.data.therapistId);
+        localStorage.setItem(`${role}jwt`, response.data.token)
+        localStorage.setItem(`${role}Id`, response.data.therapistId);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("firstname", response.data.name.first);
 

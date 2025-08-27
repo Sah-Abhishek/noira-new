@@ -24,12 +24,8 @@ export default function ScheduleModal({
   const generateHours = () => {
     const hours = [];
     for (let hour = 0; hour < 24; hour++) {
-      const hourStr = hour.toString().padStart(2, '0');
-      const displayHour = hour === 0 ? '12 AM' :
-        hour < 12 ? `${hour} AM` :
-          hour === 12 ? '12 PM' :
-            `${hour - 12} PM`;
-      hours.push({ value: hourStr, label: displayHour });
+      const hourStr = hour.toString().padStart(2, "0");
+      hours.push({ value: hourStr, label: hourStr }); // ✅ 24-hour format
     }
     return hours;
   };
@@ -113,12 +109,28 @@ export default function ScheduleModal({
       toast.error("Please enter a valid time slot");
       return;
     }
+
     setAvailabilityData((prev) => {
       const newDaySlots = prev[selectedDay] ? [...prev[selectedDay]] : [];
+
+      // ✅ Check for overlaps
+      const overlap = newDaySlots.some((slot) => {
+        return (
+          (startTime < slot.end && endTime > slot.start) // overlap condition
+        );
+      });
+
+      if (overlap) {
+        toast.error("This slot overlaps with an existing slot");
+        return prev; // 🚫 don't add the slot
+      }
+
+      // ✅ Add only if no overlap
       newDaySlots.push({ start: startTime, end: endTime });
       newDaySlots.sort((a, b) => a.start.localeCompare(b.start));
       return { ...prev, [selectedDay]: newDaySlots };
     });
+
     setStartTime("");
     setEndTime("");
   };
