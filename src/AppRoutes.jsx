@@ -22,6 +22,7 @@ import PaymentFail from "./pages/PaymentFail.jsx";
 // Protected routes
 import UserProtectedRoute from "./components/UserProtectedRoute.jsx";
 import TherapistProtectedRoute from "./components/TherapistProtectedRoute.jsx";
+import AdminProtectedRoute from "./components/AdminProtectedRoute.jsx";
 
 // Therapist layout + pages
 import TherapistLayout from "./layouts/TherapistLayout.jsx";
@@ -30,6 +31,7 @@ import TherapistSchedule from "./layouts/TherapistSchedule.jsx";
 import { Toaster } from "react-hot-toast";
 import ForgotPassword from "./components/therapistSchedule/forgotPassword/forgotPassword.jsx";
 import ResetPasswordPage from "./components/therapistSchedule/forgotPassword/ResetPasswordPage.jsx";
+import AdminLayout from "./layouts/AdminLayout.jsx";
 // import TherapistProfile from "./pages/TherapistProfile.jsx";
 // import TherapistAppointments from "./pages/TherapistAppointments.jsx";
 // import TherapistSettings from "./pages/TherapistSettings.jsx";
@@ -77,13 +79,18 @@ const AppRoutes = () => {
 
         {/* Admin Protected Route */}
         <Route
-          path="/admindashboard"
+          path="/admin"
           element={
-            <TherapistProtectedRoute>
-              <AdminDashboard />
-            </TherapistProtectedRoute>
+            <AdminProtectedRoute>
+              <AdminLayout />
+            </AdminProtectedRoute>
           }
-        />
+        >
+          {/* Admin Routes */}
+          <Route index element={<Navigate to="admindashboard" replace />} />
+          <Route path="admindashboard" element={<AdminDashboard />} />
+
+        </Route>
 
         {/* Therapist Nested Routes */}
         <Route
@@ -102,6 +109,9 @@ const AppRoutes = () => {
           {/* <Route path="appointments" element={<TherapistAppointments />} /> */}
           {/* <Route path="settings" element={<TherapistSettings />} /> */}
           <Route path="therapistschedule" element={<TherapistSchedule />} />
+
+
+
         </Route>
       </Routes >
     </>

@@ -16,6 +16,7 @@ export default function ScheduleModal({
   const [copyType, setCopyType] = useState(null); // 👈 track if user chose a copy option
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
+  const [newSlots, setNewSlots] = useState([]);
 
   if (!isModalOpen) return null;
 

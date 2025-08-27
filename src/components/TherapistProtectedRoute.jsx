@@ -1,5 +1,5 @@
 
-// src/components/ProtectedRoute.jsx
+// src/components/AdminProtectedRoute.jsx
 import React, { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import axios from "axios";

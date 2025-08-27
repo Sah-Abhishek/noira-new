@@ -62,7 +62,7 @@ export default function AdminLogin() {
 
 
         console.log("This is the token: ", response.data);
-        navigate(`/therapist/${role}dashboard`);
+        navigate(`/${role}/${role}dashboard`);
       }
     } catch (error) {
       if (error.response) {
