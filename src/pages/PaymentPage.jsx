@@ -4,12 +4,14 @@ import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 import useBookingStore from "../store/bookingStore.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
   const { date, time, selectedTherapist, cart } = useBookingStore();
   const [loading, setLoading] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   // Sample booking data
   const bookingData = {
@@ -71,6 +73,15 @@ const PaymentPage = () => {
 
             {/* Payment Button */}
             <div className="mt-8">
+              <button
+                onClick={() => navigate('/choosetherapist')}
+                disabled={loading}
+                className="cursor-pointer mb-5 w-full bg-black border border-primary text-primary hover:text-black font-semibold py-3 px-6 rounded-full bg-black hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Lock className="w-4 h-4" />
+                Back to therapist
+              </button>
+
               <button
                 onClick={handlePayment}
                 disabled={loading}

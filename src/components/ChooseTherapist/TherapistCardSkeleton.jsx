@@ -1,6 +1,6 @@
 const TherapistSkeletonCard = () => {
   return (
-    <div className="animate-pulse bg-[#0f172a] rounded-xl p-6 w-full max-w-xs shadow-md flex flex-col items-center space-y-4">
+    <div className="animate-pulse bg-[#111] rounded-xl p-6 w-full max-w-xs shadow-md flex flex-col items-center space-y-4">
       {/* Avatar */}
       <div className="w-20 h-20 bg-gray-700 rounded-full relative">
         <div className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-green-500 ring-2 ring-[#0f172a]" />
@@ -37,7 +37,7 @@ const TherapistSkeletonCard = () => {
 
 const TherapistSkeletonList = () => {
   return (
-    <div className="flex inline-flex px-10 rounded-lg justify-center gap-6 py-12 bg-slate-800 text-white">
+    <div className="flex inline-flex px-10 rounded-lg justify-center gap-6 py-12 bg-black text-white">
       <TherapistSkeletonCard />
       <TherapistSkeletonCard />
       <TherapistSkeletonCard />

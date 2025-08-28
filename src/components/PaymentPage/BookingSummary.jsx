@@ -15,7 +15,7 @@ const BookingSummary = () => {
 
   if (!selectedTherapist) {
     return (
-      <div className="bg-black rounded-2xl p-6 border border-gray-800 text-white">
+      <div className="bg-black rounded-2xl p-6 border border-white/10 text-white">
         No therapist selected.
       </div>
     );
@@ -29,7 +29,7 @@ const BookingSummary = () => {
   } = selectedTherapist;
 
   return (
-    <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-gray-800 shadow-lg w-full">
+    <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full">
       {/* Heading */}
       <h2 className="text-primary text-lg font-semibold mb-6">
         Booking Summary
@@ -100,7 +100,7 @@ const BookingSummary = () => {
       </div>
 
       {/* Total */}
-      <div className="border-t border-gray-700 pt-4">
+      <div className="border-t border-white/10 pt-4">
         <div className="flex justify-between items-center">
           <span className="text-primary text-lg font-semibold">Total:</span>
           <span className="text-primary text-xl font-bold">

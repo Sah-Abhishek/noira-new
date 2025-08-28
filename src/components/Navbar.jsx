@@ -15,7 +15,7 @@ const Navbar = () => {
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
   const handleLinkClick = (href) => {
-    navigate('/adminlogin')
+    navigate(`/${href}`)
     setIsOpen(false);
   };
 
@@ -52,7 +52,7 @@ const Navbar = () => {
         <button onClick={() => handleLinkClick('/')} className="hover:text-[#95793e] transition">
           Home
         </button>
-        <button onClick={() => handleLinkClick('#services')} className="hover:text-[#95793e] transition">
+        <button onClick={() => handleLinkClick('allservicespage')} className="hover:text-[#95793e] transition">
           Services
         </button>
         <button onClick={() => handleLinkClick('#therapists')} className="hover:text-[#C49E5B] transition">
@@ -70,12 +70,12 @@ const Navbar = () => {
         >
           Careers
         </button>
-        <button
-          onClick={() => handleLinkClick('/cart')}
-          className="hover:text-priamry transition"
-        >
-          <ShoppingBag className="w-5 h-5" />
-        </button>
+        {/* <button */}
+        {/*   onClick={() => handleLinkClick('/cart')} */}
+        {/*   className="hover:text-priamry transition" */}
+        {/* > */}
+        {/*   <ShoppingBag className="w-5 h-5" /> */}
+        {/* </button> */}
 
         {!userEmail && (
           <div className="relative group">

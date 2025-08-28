@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import FloatingCartButton from "../components/ServicesPage/FoatingActionButton.jsx";
+import FloatingCartButton from "../components/ServicesPage/FloatingActionButton.jsx";
 import useBookingStore from "../store/bookingStore.jsx";
 import CartPage from "./CartPage.jsx";
 import HeroSectionServices from "../components/ServicesPage/HeroSectionServices.jsx";
@@ -12,19 +12,19 @@ const ServicesPage = () => {
   const [loading, setLoading] = useState(true);
 
   const authToken = localStorage.getItem("userjwt");
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // Zustand store
   const { cart, setCart, resetCart, services, setServices } = useBookingStore();
 
   const fetchServices = async () => {
     console.log("This is the authToken: ", authToken);
     try {
-      const response = await axios.get(
-        "https://noira-backend.vercel.app/services/list", {
+      const response = await axios.get(`${apiUrl}/services/list`, {
         headers: {
-          authorization: `{Bearer ${authToken}`
-        }
-      }
-      );
+          authorization: `{Bearer ${authToken}`,
+        },
+      });
       setServices(response.data); // ✅ store in Zustand
     } catch (error) {
       console.error("Failed to fetch services:", error);
@@ -52,7 +52,6 @@ const ServicesPage = () => {
   };
 
   const hasCart = cart && Object.keys(cart).length > 0;
-  console.log("This is the value of hascart: ", hasCart);
 
   return (
     <div className="bg-black w-full text-white">
@@ -62,15 +61,14 @@ const ServicesPage = () => {
       {/* Services and Cart */}
       <div className="bg-black w-full px-4 py-12 ">
         <div
-          className={`max- w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
-            ? "flex flex-col lg:flex-row" // show side by side
-            : "flex justify-center" // center services when no cart
+          className={`max-w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
+              ? "flex flex-col lg:flex-row" // show side by side
+              : "flex justify-center" // center services when no cart
             }`}
         >
           {/* Service Cards Section */}
           <div
-            className={` ${hasCart ? "flex-1" : "w-full lg:w-3/4"
-              } space - y - 6`}
+            className={` ${hasCart ? "flex-1" : "w-full lg:w-3/4"} space-y-6`}
           >
             {loading
               ? Array.from({ length: 3 }).map((_, i) => (
@@ -104,6 +102,7 @@ const ServicesPage = () => {
       {/* Floating Cart Button */}
       <FloatingCartButton
         cart={cart ? [cart] : []}
+        disabled={!hasCart} // ✅ disable if no service selected
         onChooseTherapist={() =>
           console.log("Go to date & time picker")
         }

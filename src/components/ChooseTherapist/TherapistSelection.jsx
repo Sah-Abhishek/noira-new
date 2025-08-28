@@ -30,7 +30,7 @@ const TherapistSelection = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 roundedxl md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-slate-800 ">
+    <div className="grid grid-cols-1 roundedxl md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-black">
       {therapists.map((therapist) => (
         <TherapistSelectionCard key={therapist._id} therapist={therapist} />
       ))}

@@ -16,9 +16,9 @@ const TherapistSelectionCard = ({ therapist }) => {
 
   return (
     <div
-      className="bg-slate-900 text-white rounded-xl shadow-md p-6 flex flex-col items-center gap-3 
+      className="bg-[#111] text-white rounded-xl shadow-md p-6 flex flex-col items-center gap-3 
                  hover:scale-[1.02] transition-transform duration-300 
-                 w-full max-w-xs mx-auto border border-gray-800"
+                 w-full max-w-xs mx-auto border border-white/10"
     >
       {/* Avatar */}
       <div className="relative">
@@ -64,7 +64,7 @@ const TherapistSelectionCard = ({ therapist }) => {
         {(therapist?.specializations || []).map((spec, idx) => (
           <span
             key={spec._id || idx}
-            className="px-3 py-1 text-xs rounded-full bg-primary text-white font-medium"
+            className="px-3 py-1 text-xs rounded-full bg-primary text-black font-medium"
           >
             {spec.name}
           </span>

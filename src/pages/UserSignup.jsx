@@ -20,7 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // Validation schema
@@ -89,9 +89,9 @@ export default function UserSignup() {
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, transformedData);
-      console.log("Signup success:", response.data);
+      console.log("Signup success:", response);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         localStorage.setItem("userEmail", data.email);
         navigate("/otpinput/register");
       }
@@ -225,10 +225,10 @@ export default function UserSignup() {
           {/* Sign Up Button */}
           <button
             type="submit"
-            className={`w-full bg-primary font-semibold py-3 rounded-md flex items-center justify-center gap-2
+            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2
     ${isLoading
                 ? "bg-black text-white cursor-not-allowed"
-                : "ring-primary hover:bg-primary text-black"
+                : "bg-primary text-black hover:bg-primary/90"
               }
   `}
             disabled={isLoading}
@@ -244,7 +244,7 @@ export default function UserSignup() {
                 ></l-zoomies>
               </span>
             ) : (
-              <span className="inline-flex items-center ">
+              <span className="inline-flex items-center">
                 <FaUserPlus className="mr-2" />
                 Sign Up
               </span>

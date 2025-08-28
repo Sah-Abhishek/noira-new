@@ -26,7 +26,10 @@ const generateMonthDays = (year, month) => {
 };
 
 const DateTimePicker = ({
-  availableTimes = ["09:00", "10:00", "10:30", "12:00", "14:00", "15:30", "17:00"],
+  availableTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"],
 }) => {
   const today = new Date();
   const { hasSearched, setHasSearched, cart, setTherapists, date, time, setDate, setTime, findingTherapist, setFindingTherapist } = useBookingStore();
@@ -140,14 +143,19 @@ const DateTimePicker = ({
                 date.getMonth() === d.fullDate.getMonth() &&
                 date.getFullYear() === d.fullDate.getFullYear();
 
+              const isPastDay = d.fullDate < new Date(new Date().setHours(0, 0, 0, 0));
+
               return (
                 <button
                   key={idx}
-                  onClick={() => setDate(d.fullDate)}
+                  onClick={() => !isPastDay && setDate(d.fullDate)}
+                  disabled={isPastDay}
                   className={`flex flex-col items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-lg transition
-                    ${isSelected
-                      ? "bg-primary text-black font-bold"
-                      : "text-gray-300 border border-transparent hover:border-white/20 transition-all duration-300 ease-in-out"
+          ${isPastDay
+                      ? " text-gray-500 cursor-not-allowed"
+                      : isSelected
+                        ? "bg-primary text-black font-bold"
+                        : "text-gray-300 border border-transparent hover:border-white/20 transition-all duration-300 ease-in-out"
                     }`}
                 >
                   <span className="text-xs sm:text-sm">{d.day}</span>
@@ -159,25 +167,85 @@ const DateTimePicker = ({
         </div>
 
         {/* Time Picker */}
+        {/* Time Picker */}
         <div className="bg-[#0d0d0d] p-6 rounded-2xl">
           <h3 className="text-sm md:text-lg font-medium mb-4 text-primary">
             Available Times
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {availableTimes.map((t) => (
-              <button
-                key={t}
-                onClick={() => setTime(t)}
-                className={`py-3 rounded-lg font-medium transition-all duration-300 ease-in-out
-                  ${time === t
-                    ? "bg-primary text-black font-bold"
-                    : "bg-[#0d0d0d] border border-white/20 hover:border-white text-gray-200 "
-                  }`}
-              >
-                <span className="text-xs sm:text-sm">{t}</span>
-              </button>
-            ))}
+          {/* Morning Section */}
+          <div className="mb-6">
+            <h4 className="flex items-center text-primary text-sm font-semibold mb-2">
+              ☀️ Morning (9:00 AM - 12:00 PM)
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              {["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTime(t)}
+                  disabled={!availableTimes.includes(t)}
+                  className={`py-3 rounded-full font-medium transition-all duration-300 ease-in-out
+            ${time === t
+                      ? "bg-primary text-black font-bold"
+                      : availableTimes.includes(t)
+                        ? "bg-[#0d0d0d] border border-white/20 hover:border-white text-gray-200"
+                        : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                    }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Afternoon Section */}
+          <div className="mb-6">
+            <h4 className="flex items-center text-primary text-sm font-semibold mb-2">
+              🌞 Afternoon (1:00 PM - 5:00 PM)
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              {["13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTime(t)}
+                  disabled={!availableTimes.includes(t)}
+                  className={`py-3 rounded-full font-medium transition-all duration-300 ease-in-out
+            ${time === t
+                      ? "bg-primary text-black font-bold"
+                      : availableTimes.includes(t)
+                        ? "bg-[#0d0d0d] border border-white/20 hover:border-white text-gray-200"
+                        : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                    }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Evening Section */}
+          <div>
+            <h4 className="flex items-center text-primary text-sm font-semibold mb-2">
+              🌙 Evening (6:00 PM - 9:00 PM)
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              {["18:00", "18:30", "19:00", "19:30", "20:00", "20:30"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTime(t)}
+                  disabled={!availableTimes.includes(t)}
+                  className={`py-3 rounded-full font-medium transition-all duration-300 ease-in-out
+            ${time === t
+                      ? "bg-priamry to-amber-500 text-black font-bold"
+                      : availableTimes.includes(t)
+                        ? "bg-[#0d0d0d] border border-white/20 hover:border-white text-gray-200"
+                        : "bg-gray-800 text-gray-500 cursor-not-allowed"
+                    }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -32,6 +32,7 @@ import { Toaster } from "react-hot-toast";
 import ForgotPassword from "./components/therapistSchedule/forgotPassword/forgotPassword.jsx";
 import ResetPasswordPage from "./components/therapistSchedule/forgotPassword/ResetPasswordPage.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
+import AllServicesPage from "./pages/AllServicesPage.jsx";
 // import TherapistProfile from "./pages/TherapistProfile.jsx";
 // import TherapistAppointments from "./pages/TherapistAppointments.jsx";
 // import TherapistSettings from "./pages/TherapistSettings.jsx";
@@ -73,8 +74,18 @@ const AppRoutes = () => {
             </UserProtectedRoute>
           }
         />
+        <Route
+          path="/allservicespage"
+          element={
+            <AllServicesPage />
+          }
+        />
         <Route path="/cartpage" element={<CartPage />} />
-        <Route path="/choosetherapist" element={<ChooseTherapistPage />} />
+        <Route path="/choosetherapist" element={
+          <UserProtectedRoute>
+            <ChooseTherapistPage />
+          </UserProtectedRoute>
+        } />
         <Route path="/paymentpage" element={<PaymentPage />} />
 
         {/* Admin Protected Route */}
