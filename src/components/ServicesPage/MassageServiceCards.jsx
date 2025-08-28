@@ -12,7 +12,7 @@ const MassageServiceCard = ({ service, cart, addToCart, removeFromCart }) => {
   };
 
   return (
-    <div className="bg-slate-800 rounded-lg p-6 mb-6">
+    <div className="bg-[#0f172a] rounded-lg p-6 mb-6">
       <h3 className="text-white text-2xl font-bold mb-4">{service.name}</h3>
       <p className="text-gray-300 text-base mb-6 leading-relaxed">
         {service.description}

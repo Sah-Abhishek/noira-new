@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Lock } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 import useBookingStore from "../store/bookingStore.jsx";
@@ -78,7 +78,7 @@ const PaymentPage = () => {
                 disabled={loading}
                 className="cursor-pointer mb-5 w-full bg-black border border-primary text-primary hover:text-black font-semibold py-3 px-6 rounded-full bg-black hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Lock className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4" />
                 Back to therapist
               </button>
 

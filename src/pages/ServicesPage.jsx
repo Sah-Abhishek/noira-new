@@ -25,6 +25,7 @@ const ServicesPage = () => {
           authorization: `{Bearer ${authToken}`,
         },
       });
+      console.log("These are the services: ", response.data);
       setServices(response.data); // ✅ store in Zustand
     } catch (error) {
       console.error("Failed to fetch services:", error);
@@ -44,7 +45,14 @@ const ServicesPage = () => {
 
   // Add only one service
   const addToCart = (service, optionIndex) => {
-    setCart({ serviceId: service._id, optionIndex });
+    const option = service.options[optionIndex]; // 👈 get chosen option
+    setCart({
+      serviceId: service._id,
+      serviceName: service.name,
+      optionIndex,
+      duration: option.durationMinutes,
+      price: option.price.amount,
+    });
   };
 
   const removeFromCart = () => {
@@ -54,7 +62,7 @@ const ServicesPage = () => {
   const hasCart = cart && Object.keys(cart).length > 0;
 
   return (
-    <div className="bg-black w-full text-white">
+    <div className="bg-[#0f172a] w-full text-white">
       {/* Hero Section */}
       <HeroSectionServices />
 
@@ -62,8 +70,8 @@ const ServicesPage = () => {
       <div className="bg-black w-full px-4 py-12 ">
         <div
           className={`max-w-7xl transition-all duration-500 ease-in-out mx-auto gap-6 ${hasCart
-              ? "flex flex-col lg:flex-row" // show side by side
-              : "flex justify-center" // center services when no cart
+            ? "flex flex-col lg:flex-row" // show side by side
+            : "flex justify-center" // center services when no cart
             }`}
         >
           {/* Service Cards Section */}

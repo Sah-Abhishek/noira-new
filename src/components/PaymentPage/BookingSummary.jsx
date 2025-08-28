@@ -1,17 +1,12 @@
 import React from "react";
 import { Star } from "lucide-react";
-import useBookingStore from "../../store/bookingStore"; // adjust path if needed
+import useBookingStore from "../../store/bookingStore";
 
 const BookingSummary = () => {
   const selectedTherapist = useBookingStore((state) => state.selectedTherapist);
   const date = useBookingStore((state) => state.date);
   const time = useBookingStore((state) => state.time);
-
-  // Example fees (replace with store if available)
-  const serviceFee = 85.0;
-  const processingFee = 2.5;
-  const duration = "60 minutes";
-  const total = serviceFee + processingFee;
+  const { cart } = useBookingStore();
 
   if (!selectedTherapist) {
     return (
@@ -27,6 +22,13 @@ const BookingSummary = () => {
     rating,
     experience,
   } = selectedTherapist;
+
+  // Extract cart details safely
+  const serviceName = cart?.serviceName || "Not selected";
+  const serviceDuration = cart?.duration ? `${cart.duration} minutes` : "Not selected";
+  const serviceFee = cart?.price || 0;
+  const processingFee = 2.5;
+  const total = serviceFee + processingFee;
 
   return (
     <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full">
@@ -82,8 +84,12 @@ const BookingSummary = () => {
           <span className="text-white text-sm">{time || "Not selected"}</span>
         </div>
         <div className="flex justify-between">
+          <span className="text-gray-400 text-sm">Service:</span>
+          <span className="text-white text-sm">{serviceName}</span>
+        </div>
+        <div className="flex justify-between">
           <span className="text-gray-400 text-sm">Duration:</span>
-          <span className="text-white text-sm">{duration}</span>
+          <span className="text-white text-sm">{serviceDuration}</span>
         </div>
       </div>
 

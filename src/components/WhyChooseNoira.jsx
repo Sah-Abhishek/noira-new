@@ -20,7 +20,7 @@ const WhyChooseNoira = () => {
     },
     {
       icon: <FaClock size={28} />,
-      title: "Tailored to Your Rhythm",
+      title: "Tailored to Your Energy",
       description:
         "We adapt to you. Whether at dawn before a board meeting or past midnight after atransatlantic flight, Noira moves to your schedule."
     }

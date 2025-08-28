@@ -55,7 +55,7 @@ const Navbar = () => {
         <button onClick={() => handleLinkClick('allservicespage')} className="hover:text-[#95793e] transition">
           Services
         </button>
-        <button onClick={() => handleLinkClick('#therapists')} className="hover:text-[#C49E5B] transition">
+        <button onClick={() => handleLinkClick('/browsetherapists')} className="hover:text-[#C49E5B] transition">
           Therapists
         </button>
         <button

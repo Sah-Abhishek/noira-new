@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import axios from "axios";
 import useBookingStore from "../../store/bookingStore.jsx"; // 👈 adjust path
@@ -24,7 +24,6 @@ const generateMonthDays = (year, month) => {
   }
   return days;
 };
-
 const DateTimePicker = ({
   availableTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
     "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
@@ -33,14 +32,19 @@ const DateTimePicker = ({
 }) => {
   const today = new Date();
   const { hasSearched, setHasSearched, cart, setTherapists, date, time, setDate, setTime, findingTherapist, setFindingTherapist } = useBookingStore();
+  const therapistSelectionRef = useRef(null);
 
   const [days, setDays] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  console.log("This is the hasSearched: ", hasSearched);
+  // console.log("This is the hasSearched: ", hasSearched);
 
+  useEffect(() => {
+    setDate(null);
+    setTime(null);
+  }, []);
 
   useEffect(() => {
     const monthDays = generateMonthDays(currentYear, currentMonth);
@@ -73,9 +77,19 @@ const DateTimePicker = ({
       setTherapists(res.data.therapists);
       setHasSearched(true);
 
+      if (res.data.therapists.length > 0) {
+        // 👇 scroll into therapists section once they load
+        setTimeout(() => {
+          therapistSelectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 100);
+      }
       if (res.status !== 200 && res.status !== 201) {
         throw new Error("Failed to save booking");
       }
+
 
       setMessage("✅ Booking confirmed!");
     } catch (err) {
@@ -263,6 +277,7 @@ const DateTimePicker = ({
           {loading ? "Saving..." : "Find Therapist"}
         </button>
       </div>
+      <div ref={therapistSelectionRef}></div>
 
       {/* Response message */}
       {/* {message && ( */}
