@@ -1,41 +1,39 @@
-// src/pages/AllServices.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  FaSpa,
-  FaHeartbeat,
-  FaLeaf,
-  FaYinYang,
-  FaUserMd,
-  FaHandsHelping,
-  FaPhone,
-  FaComments,
-  FaQuestionCircle,
+  FaCrown,
+  FaHands,
+  FaBriefcase,
+  FaHeart,
+  FaPlane,
 } from "react-icons/fa";
-import Footer from "../components/FooterSection";
-
-const icons = [FaSpa, FaUserMd, FaLeaf, FaYinYang, FaHandsHelping, FaHeartbeat];
+import { FaClockRotateLeft } from "react-icons/fa6";
+import useBookingStore from "../store/bookingStore";
 
 export default function AllServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const { cart, setCart } = useBookingStore();
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const fetchServices = async () => {
-    console.log("This is the authToken: ", authToken);
     try {
-      const response = await axios.get(`${apiUrl}/services/list`,
-        {
-          headers: {
-            authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      setServices(response.data);
+      const response = await axios.get(`${apiUrl}/services/list`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (Array.isArray(response.data)) {
+        setServices(response.data);
+      } else if (response.data.success) {
+        setServices(response.data.data || []);
+      }
     } catch (error) {
-      console.error("Failed to fetch services:", error);
+      console.error("Error fetching services:", error);
     } finally {
       setLoading(false);
     }
@@ -45,150 +43,163 @@ export default function AllServicesPage() {
     fetchServices();
   }, []);
 
-  // Skeleton Component
+  const icons = [
+    FaClockRotateLeft,
+    FaCrown,
+    FaHands,
+    FaBriefcase,
+    FaHeart,
+    FaPlane,
+  ];
+  const bgImages = [
+    "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800",
+    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800",
+    "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800",
+    "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800",
+    "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=800",
+    "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800",
+  ];
+
+  const handleSelect = (service, option) => {
+    // only allow one service in cart
+    setSelectedOptions({ [service._id]: option });
+    setCart({
+      serviceId: service._id,
+      serviceName: service.name,
+      ...option,
+      id: option._id,
+    });
+  };
+
+  const handleContinue = () => {
+    if (!cart) return;
+    // 🚀 navigate to next step (Date & Time page)
+    console.log("Proceed with booking:", cart);
+  };
+
   const ServiceSkeleton = () => (
-    <div className="bg-gray-900 rounded-2xl p-6 shadow-lg animate-pulse">
-      <div className="flex items-center justify-center mb-4">
-        <div className="w-12 h-12 rounded-full bg-gray-700" />
-      </div>
-      <div className="h-5 bg-gray-700 rounded w-3/4 mx-auto mb-3"></div>
-      <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-5/6 mx-auto mb-4"></div>
-      <div className="h-5 bg-gray-700 rounded w-1/2 mx-auto mb-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-1/3 mx-auto"></div>
-    </div>
+    <div className="service-card rounded-3xl overflow-hidden gold-foil p-8 animate-pulse h-64"></div>
   );
 
   return (
-    <>
-      <div className="min-h-screen pt-25 bg-gradient-to-b from-gray-900 to-black text-white px-6 py-12">
+    <div className="bg-noira-black text-noira-ivory min-h-screen p-6 font-sans">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold">
-            Book Your <span className="text-primary">Therapy</span> Session
+        <div className="text-center mb-16 mt-20">
+          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 text-noira-gold">
+            Massage Menu
           </h1>
-          <p className="text-gray-400 mt-3">
-            Follow these simple steps to schedule your premium wellness experience
+          <h2 className="text-center text-lg">Luxury Made Accessible</h2>
+          <p className="text-gray-300 text-xl font-light">
+            Choose from our premium wellness treatments
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading
-            ? // Show Skeletons
-            Array.from({ length: 6 }).map((_, idx) => (
-              <ServiceSkeleton key={idx} />
+            ? Array.from({ length: 6 }).map((_, i) => (
+              <ServiceSkeleton key={i} />
             ))
-            : // Show Real Services
-            services.map((service, idx) => {
+            : services.map((service, idx) => {
               const Icon = icons[idx % icons.length];
-              const prices = service.options.map((o) => o.price.amount);
-              const durations = service.options.map((o) => o.durationMinutes);
-
-              const minPrice = Math.min(...prices);
-              const maxPrice = Math.max(...prices);
-
-              const minDuration = Math.min(...durations);
-              const maxDuration = Math.max(...durations);
+              const bg = bgImages[idx % bgImages.length];
+              const selectedOpt = selectedOptions[service._id];
 
               return (
                 <div
                   key={service._id}
-                  className="bg-gray-900 rounded-2xl p-6 shadow-lg hover:shadow-yellow-500/20 transition"
+                  className={`service-card mb-30 rounded-3xl overflow-hidden gold-foil group cursor-pointer ${cart?.serviceId === service._id
+                    ? "ring-2 ring-noira-gold"
+                    : ""
+                    }`}
+                  style={{ backgroundImage: `url(${bg})` }}
                 >
-                  <div className="flex items-center justify-center mb-4">
-                    <Icon className="text-primary text-4xl" />
-                  </div>
-                  <h3 className="text-xl font-semibold">{service.name}</h3>
-                  <p className="text-gray-400 mt-2 text-sm">{service.description}</p>
+                  <div className="specular-sweep"></div>
+                  <div className="texture-grain absolute inset-0 z-1"></div>
 
-                  <div className="mt-4 text-primary font-bold">
-                    ${minPrice} - ${maxPrice}
-                  </div>
-                  <p className="text-gray-400 text-sm">
-                    {minDuration} - {maxDuration} minutes
-                  </p>
-
-                  {/* Features */}
-                  {service.features?.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {service.features.map((f, i) => (
-                        <span
-                          key={i}
-                          className="bg-gray-800 text-xs px-3 py-1 rounded-full text-gray-300"
-                        >
-                          {f}
+                  <div className="glass-panel rounded-3xl p-6 m-4 h-[calc(100%-2rem)] relative z-10">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="p-3 bg-noira-gold/10 rounded-2xl backdrop-blur-sm">
+                        <Icon className="text-noira-gold text-2xl" />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="price-display bg-gradient-to-r from-noira-gold to-noira-gold-light text-noira-black px-3 py-1 rounded-full text-xs font-bold opacity-80">
+                          {selectedOpt
+                            ? `£${selectedOpt.price.amount}`
+                            : "£0"}
                         </span>
-                      ))}
+                      </div>
                     </div>
-                  )}
+
+                    <h3 className="font-serif text-xl font-bold mb-3 text-noira-ivory">
+                      {service.name}
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                      {service.description}
+                    </p>
+
+                    {/* Options */}
+                    <div className="mb-6">
+                      <h4 className="text-noira-gold text-xs font-medium mb-3 uppercase tracking-wider">
+                        Select Duration
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {service.options.map((opt) => {
+                          const isActive = selectedOpt?._id === opt._id;
+                          return (
+                            <button
+                              key={opt._id}
+                              onClick={() => handleSelect(service, opt)}
+                              className={`duration-chip px-4 py-2 rounded-full text-xs text-noira-gold transition-all ${isActive ? "selected" : ""
+                                }`}
+                            >
+                              {opt.durationMinutes} min • £{opt.price.amount}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-noira-gold/20">
+                      <div className="flex items-center text-gray-400 text-xs">
+                        <span className="selected-duration">
+                          {selectedOpt
+                            ? `${selectedOpt.durationMinutes} min selected`
+                            : "Select duration"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               );
             })}
         </div>
 
-        {/* Continue Button */}
-        {!loading && (
-          <div className="text-center mt-12">
-            <button className="bg-primary hover:bg-yellow-400 text-black font-semibold px-8 py-3 rounded-full shadow-lg transition">
-              Continue to Select Therapist →
-            </button>
+        {/* Sticky Cart Summary */}
+        <div className="fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50">
+          {/* Cart Info */}
+          <div className="text-sm text-noira-light pr-25">
+            <span className="mr-2">Selected:</span>
+            <span className="font-semibold">
+              {cart ? cart.serviceName : "No service selected"}
+            </span>
+            <span className="mx-2 text-noira-gold">•</span>
+            <span className="font-semibold">
+              £{cart?.price?.amount ?? 0}
+            </span>
           </div>
-        )}
 
-        {/* Help Section */}
-        {!loading && (
-          <div className="max-w-4xl mx-auto mt-16 bg-gray-900 rounded-2xl p-8 shadow-lg">
-            <h2 className="text-center text-xl font-semibold mb-8">
-              Need Help Choosing?
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              {/* Call */}
-              <div>
-                <div className="flex justify-center mb-4">
-                  <FaPhone className="text-primary text-3xl" />
-                </div>
-                <h3 className="font-semibold">Call Us</h3>
-                <p className="text-gray-400 text-sm">
-                  Speak with our wellness experts
-                </p>
-                <p className="text-primary font-medium mt-2">
-                  +44 7350 700055
-                </p>
-              </div>
-
-              {/* Live Chat */}
-              <div>
-                <div className="flex justify-center mb-4">
-                  <FaComments className="text-primary text-3xl" />
-                </div>
-                <h3 className="font-semibold">Live Chat</h3>
-                <p className="text-gray-400 text-sm">
-                  Get instant recommendations
-                </p>
-                <p className="text-primary font-medium mt-2 cursor-pointer">
-                  Start Chat
-                </p>
-              </div>
-
-              {/* FAQ */}
-              <div>
-                <div className="flex justify-center mb-4">
-                  <FaQuestionCircle className="text-primary text-3xl" />
-                </div>
-                <h3 className="font-semibold">FAQ</h3>
-                <p className="text-gray-400 text-sm">
-                  Find answers to common questions
-                </p>
-                <p className="text-primary font-medium mt-2 cursor-pointer">
-                  View FAQ
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+          {/* Continue Button */}
+          <button
+            className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
+            onClick={handleContinue}
+            disabled={!cart}
+          >
+            Continue to Date & Time
+          </button>
+        </div>
       </div>
-      <Footer />
-    </>
+    </div>
   );
 }

@@ -18,6 +18,7 @@ import PaymentPage from "./pages/PaymentPage.jsx";
 import LoaderPage from "./pages/LoaderPage.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentFail from "./pages/PaymentFail.jsx";
+import FindTherapistByAvailability from "./components/FindTherapistByAvailability.jsx"
 
 // Protected routes
 import UserProtectedRoute from "./components/UserProtectedRoute.jsx";
@@ -34,6 +35,7 @@ import ResetPasswordPage from "./components/therapistSchedule/forgotPassword/Res
 import AdminLayout from "./layouts/AdminLayout.jsx";
 import AllServicesPage from "./pages/AllServicesPage.jsx";
 import BrowseTherapists from "./components/browseTherapist/BrowseTherapist.jsx"; // import TherapistProfile from "./pages/TherapistProfile.jsx";
+import FeaturedTherapists from "./components/FeaturedTherapist.jsx";
 // import TherapistAppointments from "./pages/TherapistAppointments.jsx";
 // import TherapistSettings from "./pages/TherapistSettings.jsx";
 
@@ -66,6 +68,7 @@ const AppRoutes = () => {
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/browsetherapists" element={<BrowseTherapists />} />
         <Route path="/browsetherapists" element={<BrowseTherapists />} />
+        <Route path="/findtherapistbyavailability" element={<FindTherapistByAvailability />} />
         {/* Protected User Routes */}
         <Route
           path="/servicespage"

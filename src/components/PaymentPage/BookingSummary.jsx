@@ -16,16 +16,22 @@ const BookingSummary = () => {
     );
   }
 
+  // ✅ Safe destructuring with fallbacks
+  const avatar =
+    selectedTherapist.avatar_url || selectedTherapist?.userId?.avatar_url;
+  const email =
+    selectedTherapist.email || selectedTherapist?.userId?.email || "N/A";
   const {
-    userId: { avatar_url, email },
-    title,
-    rating,
-    experience,
-  } = selectedTherapist;
+    title = "Therapist",
+    rating = 0,
+    experience = 0,
+  } = selectedTherapist.profile || selectedTherapist || {};
 
   // Extract cart details safely
   const serviceName = cart?.serviceName || "Not selected";
-  const serviceDuration = cart?.duration ? `${cart.duration} minutes` : "Not selected";
+  const serviceDuration = cart?.duration
+    ? `${cart.duration} minutes`
+    : "Not selected";
   const serviceFee = cart?.price || 0;
   const processingFee = 2.5;
   const total = serviceFee + processingFee;
@@ -41,7 +47,7 @@ const BookingSummary = () => {
       <div className="bg-[#0e1219] rounded-2xl p-4 mb-6">
         <div className="flex items-center gap-3">
           <img
-            src={avatar_url}
+            src={avatar}
             alt={email}
             className="w-14 h-14 rounded-full object-cover border-2 border-primary"
           />
@@ -55,7 +61,10 @@ const BookingSummary = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    className="w-3 h-3 text-primary fill-primary-400"
+                    className={`w-3 h-3 ${star <= Math.round(rating)
+                      ? "text-primary fill-primary"
+                      : "text-gray-600"
+                      }`}
                   />
                 ))}
               </div>

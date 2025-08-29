@@ -55,20 +55,25 @@ export default function TherapistSchedule() {
   const resetMonth = async () => {
     try {
       setLoading(true);
+      const month = currentDate.getMonth() + 1; // 1–12
+      const year = currentDate.getFullYear();
+
       const response = await axios.post(`${apiUrl}/therapist/reset`, {
         therapistId,
+        month,
+        year,
       });
 
       if (response.status === 200) {
-        toast.success("All availability for this month has been cleared.");
+        toast.success(`Availability for ${month}/${year} has been cleared.`);
         setIsResetModalOpen(false);
-        refreshAvailability(); // ✅ reload fresh data
+        refreshAvailability();
       } else {
-        alert("Failed to reset availability.");
+        toast.error("Failed to reset availability.");
       }
     } catch (error) {
       console.error("Error resetting month:", error);
-      alert("An error occurred while resetting availability.");
+      toast.error("An error occurred while resetting availability.");
     } finally {
       setLoading(false);
     }

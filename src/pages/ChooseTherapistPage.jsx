@@ -4,7 +4,7 @@ import BookingStepper from "../components/ServicesPage/BookingStepper";
 
 const ChooseTherapistPage = () => {
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center">
+    <div className="min-h-screen pt-10 bg-black flex flex-col items-center">
       {/* Stepper */}
       <div className="w-full max-w-4xl mt-5 px-4">
         <BookingStepper currentStep={2} />

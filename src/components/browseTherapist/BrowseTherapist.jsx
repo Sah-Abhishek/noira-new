@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, MapPin, Star, CheckCircle2, Globe2, Briefcase } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import useBookingStore from "../../store/bookingStore";
 
 /** Small helpers */
 const fullName = (t) => `${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`.trim();
@@ -23,8 +25,14 @@ export default function BrowseTherapists() {
   const [filters, setFilters] = useState(FILTERS_DEFAULT);
   const [error, setError] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const { setSelectedTherapist, } = useBookingStore();
 
   const gridRef = useRef(null);
+
+  const handleSelectTherapist = () => {
+    setSelectedTherapist();
+  }
 
   const fetchTherapists = async (pageNum) => {
     try {
@@ -33,6 +41,7 @@ export default function BrowseTherapists() {
       const res = await axios.get(`${apiUrl}/therapist/getalltherapists`, {
         params: { page: pageNum, limit: LIMIT },
       });
+      console.log("This is the therapist : ", res.data);
       setTherapists(res.data?.therapists ?? []);
       setTotalPages(res.data?.totalPages ?? 1);
 
@@ -86,10 +95,10 @@ export default function BrowseTherapists() {
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 pt-16 pb-6 text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold mt-10 tracking-tight">
-          Choose Your <span className="text-amber-400">Therapist</span>
+          Choose Your <span className="text-primary">Therapist</span>
         </h1>
         <p className="text-gray-300 mt-2">Select from our certified wellness professionals</p>
-        <p className="text-amber-400 mt-1 text-sm">Selected Service: Massage Therapy</p>
+        <p className="text-primary mt-1 text-sm">Selected Service: Massage Therapy</p>
       </div>
 
       {/* Filters */}
@@ -209,6 +218,7 @@ export default function BrowseTherapists() {
 }
 
 /** Therapist Card (unchanged) */
+/** Therapist Card */
 function TherapistCard({ t }) {
   const verified = t?.profile?.isVerified;
   const rating = t?.profile?.rating ?? null;
@@ -219,6 +229,16 @@ function TherapistCard({ t }) {
   const town = t?.address?.PostTown;
   const postcode = t?.address?.Postcode;
   const pricing = t?.profile?.pricing;
+  const navigate = useNavigate();
+
+
+  // ✅ get setter from store
+  const { setSelectedTherapist } = useBookingStore();
+
+  const handleSelectTherapist = () => {
+    setSelectedTherapist(t);   // ✅ store selected therapist in zustand
+    navigate("/findtherapistbyavailability"); // optional: redirect after selecting
+  };
 
   return (
     <div className="rounded-3xl bg-[#0d0d0d] border border-white/10 shadow-lg p-6 relative">
@@ -233,7 +253,7 @@ function TherapistCard({ t }) {
         <img
           src={t?.avatar_url}
           alt={fullName(t)}
-          className="h-20 w-20 rounded-full object-cover ring-2 ring-amber-400/50"
+          className="h-20 w-20 rounded-full object-cover ring-2 ring-primary/50"
         />
         <div>
           <h3 className="text-lg font-semibold">{fullName(t)}</h3>
@@ -241,7 +261,7 @@ function TherapistCard({ t }) {
 
           {rating && (
             <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              <Star className="h-4 w-4 fill-primary text-primary" />
               <span className="font-semibold">{rating.toFixed(1)}</span>
               <span className="text-gray-400">({ratingCount} reviews)</span>
             </div>
@@ -254,7 +274,7 @@ function TherapistCard({ t }) {
           {tags.map((tag) => (
             <span
               key={tag}
-              className="px-2 py-1 rounded-full text-xs bg-amber-500/10 text-amber-300 border border-amber-400/20"
+              className="px-2 py-1 rounded-full text-xs bg-amber-500/10 text-amber-300 border border-primary/20"
             >
               {tag}
             </span>
@@ -291,16 +311,16 @@ function TherapistCard({ t }) {
         )}
       </div>
 
+      {/* ✅ Store selected therapist */}
       <button
-        className="mt-6 w-full rounded-full bg-amber-400 hover:bg-amber-500 text-black font-semibold py-2.5 transition"
-        onClick={() => console.log("Select therapist:", t._id)}
+        onClick={handleSelectTherapist}
+        className="mt-6 w-full rounded-full bg-primary hover:bg-amber-500 text-black font-semibold py-2.5 transition"
       >
         Select Therapist
       </button>
     </div>
   );
 }
-
 /** Pagination (unchanged) */
 function Pagination({ page, totalPages, onChange }) {
   if (!totalPages || totalPages <= 1) return null;
@@ -335,7 +355,7 @@ function Pagination({ page, totalPages, onChange }) {
             className={[
               "w-10 h-10 rounded-full border transition",
               p === page
-                ? "bg-amber-400 text-black border-amber-400"
+                ? "bg-primary text-black border-primary"
                 : "border-white/10 hover:border-white/30",
             ].join(" ")}
           >

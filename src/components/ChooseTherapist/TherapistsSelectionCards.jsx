@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const TherapistSelectionCard = ({ therapist }) => {
   const { setSelectedTherapist } = useBookingStore();
+  console.log("This is the therapist: ", therapist);
   const navigate = useNavigate();
 
   const handleSelect = () => {

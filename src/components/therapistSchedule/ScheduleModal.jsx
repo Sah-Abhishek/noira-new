@@ -147,11 +147,39 @@ export default function ScheduleModal({
     });
   };
 
-  const clearDay = () => {
-    setAvailabilityData((prev) => {
-      const { [selectedDay]: _, ...rest } = prev;
-      return rest;
-    });
+  const clearDay = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/therapist/date`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          therapistId,
+          date: selectedDay,
+        }),
+      });
+      if (res.ok) {
+        setIsModalOpen(false);
+
+      }
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to clear availability for this day");
+      }
+
+      toast.success(`Availability cleared for ${selectedDay}`);
+
+      // ✅ Update UI locally
+      setAvailabilityData((prev) => {
+        const { [selectedDay]: _, ...rest } = prev;
+        return rest;
+      });
+
+      refreshAvailability(); // 🔄 reload from backend for safety
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Something went wrong while clearing the day");
+    }
   };
 
   // 👇 Copy options now just set the type, then user must press Save
