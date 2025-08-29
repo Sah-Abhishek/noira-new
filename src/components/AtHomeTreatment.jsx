@@ -4,12 +4,14 @@ import React from 'react';
 
 function AtHomeTreatment() {
   const overlayColor = 'bg-[#FFA500]/20'; // semi-transparent black overlay
+  //at home
 
   return (
     <div className="bg-black text-white py-12 pt-25 px-4 text-center relative">
       <h2 className="text-4xl font-braven text-[#D59940] font-whisper font-bold mb-6 text-center">
         At Home Treatment
       </h2>
+
 
       {/* Videos container */}
       <div className="flex flex-col lg:flex-row justify-center items-center gap-8 relative">
