@@ -1,49 +1,30 @@
 import React from 'react';
 
-import video1 from '../assets/videos/1.mp4';
-import video2 from '../assets/videos/2.mp4';
-import video3 from '../assets/videos/3.mov';
 function AutoPlayVideo() {
-  const overlayColor = 'bg-[#FFA500]/20'; // semi-transparent black overlay
+  const overlayColor = 'bg-[#FFA500]/20'; // semi-transparent overlay if you want
 
   return (
     <div className="bg-black text-white py-12 pt-25 px-4 text-center relative">
-      {/* <h2 className="text-4xl font-braven text-[#D59940] font-whisper font-bold mb-6 text-center"> */}
-      {/*   At Home Treatment */}
-      {/* </h2> */}
+      {/* Images container */}
+      <div className="flex flex-col lg:flex-row justify-center items-center gap-15 relative">
 
-      {/* Videos container */}
-      <div className="flex flex-col lg:flex-row justify-center items-center gap-8 relative">
-        {/* First Video */}
-        <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
-          <video
-            className="w-full h-full object-cover"
-            src={video3}
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            Your browser does not support the video tag.
-          </video>
-          {/* Overlay */}
-          {/* <div className={`absolute inset-0 ${overlayColor} z-10`} /> */}
+        {/* First Image */}
+        <div className="relative w-full max-w-[720px] aspect-video rounded-lg overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+
+          <img
+            src="/pic4.jpeg" // ✅ directly from public folder
+            alt="Pic 1"
+            className="w-full h-full object-cover rounded-lg"
+          />
         </div>
 
-        {/* Second Video */}
-        <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
-          <video
-            className="w-full h-full object-cover"
-            src={video2}
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            Your browser does not support the video tag.
-          </video>
-          {/* Overlay */}
-          {/* <div className={`absolute inset-0 ${overlayColor} z-10`} /> */}
+        {/* Second Image */}
+        <div className="relative w-full max-w-[720px] aspect-video rounded-lg overflow-hidden shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          <img
+            src="/pic3.jpeg" // ✅ directly from public folder
+            alt="Pic 2"
+            className="w-full h-full object-cover rounded-lg"
+          />
         </div>
       </div>
     </div>

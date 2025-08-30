@@ -2,6 +2,7 @@ import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
 import noira from "/noira.png";
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
   const { isDarkMode } = useTheme();
@@ -9,6 +10,10 @@ const HeroSection = () => {
   const overlayColor = isDarkMode ? 'bg-black/50' : 'bg-white/10';
   const textMain = isDarkMode ? 'text-white' : 'text-gray-900';
   const textSub = isDarkMode ? 'text-gray-300' : 'text-gray-600';
+
+
+  const navigate = useNavigate();
+
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 70 },
@@ -60,7 +65,7 @@ const HeroSection = () => {
         </h3>
 
         {/* CTA Button */}
-        <button className="bg-[#C49E5B] text-black font-semibold px-6 py-3 rounded-full hover:opacity-90 transition">
+        <button onClick={() => navigate("/allservicespage")} className="bg-[#C49E5B] text-black font-semibold px-6 py-3 rounded-full hover:opacity-90 transition">
           Request Black Label Access
         </button>
       </motion.div>

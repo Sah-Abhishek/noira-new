@@ -61,6 +61,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     if (!cart || !date || !time) return;
     const apiUrl = import.meta.env.VITE_API_URL;
     const payload = { service: cart, date, time };
+    console.log("This is the cart: ", cart);
 
     try {
       setFindingTherapist(true);
@@ -275,6 +276,18 @@ const DateTimePicker = ({ availableTimes = [] }) => {
         {/* Confirm */}
         <div className="text-center mt-10 space-x-10">
           <button
+            onClick={() => navigate('/allservicespage')}
+            className="px-10 py-4 rounded-full text-lg font-semibold transition-all
+                        inline-flex items-center gap-x-4 text-white hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+
+            Back
+          </button>
+
+          <button
             onClick={handleConfirm}
             disabled={loading || !date || !time}
             className={`px-10 py-4 rounded-full text-lg font-semibold transition-all
@@ -284,13 +297,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               }`}
           >
             {loading ? "Saving..." : "Find Therapists"}
-          </button>
-          <button
-            onClick={() => navigate('/servicespage')}
-            className="px-10 py-4 rounded-full text-lg font-semibold transition-all
-                       bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
-          >
-            Back to Choose Service
           </button>
           <p className="text-gray-500 text-sm mt-2">
             Continue to select your preferred wellness professional

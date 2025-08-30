@@ -39,6 +39,7 @@ const FindTherapistByAvailability = () => {
     findingTherapist,
     setFindingTherapist,
     selectedTherapist,
+    setSelectedTherapist
   } = useBookingStore();
 
   const [days, setDays] = useState([]);
@@ -295,12 +296,16 @@ const FindTherapistByAvailability = () => {
 
         {/* Confirm */}
         <div className="text-center mt-10 space-x-10">
+          <button onClick={() => navigate('/allservicespage')} className="px-10 py-4 inline-flex gap-x-4 items-center rounded-full text-lg font-semibold transition-all bg-black -white hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Back
+          </button>
+
           <button onClick={() => navigate('/paymentpage')} disabled={loading || !date || !time} className={`px-10 py-4 rounded-full text-lg font-semibold transition-all
               ${loading || !date || !time ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"}`}>
             {loading ? "Saving..." : "Continue to Payment"}
-          </button>
-          <button onClick={() => navigate('/servicespage')} className="px-10 py-4 rounded-full text-lg font-semibold transition-all bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]">
-            Back to Choose Therapist
           </button>
           <p className="text-gray-500 text-sm mt-2">Continue to select your preferred wellness professional</p>
         </div>

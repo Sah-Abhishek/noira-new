@@ -29,12 +29,23 @@ const BookingSummary = () => {
 
   // Extract cart details safely
   const serviceName = cart?.serviceName || "Not selected";
-  const serviceDuration = cart?.duration
-    ? `${cart.duration} minutes`
+  const serviceDuration = cart?.durationMinutes
+    ? `${cart.durationMinutes} minutes`
     : "Not selected";
   const serviceFee = cart?.price || 0;
   const processingFee = 2.5;
-  const total = serviceFee + processingFee;
+
+  // ✅ Elite Hours Logic
+  let eliteHoursFee = 0;
+  if (time) {
+    const [hourStr] = time.split(":"); // assumes time is "HH:mm"
+    const hour = parseInt(hourStr, 10);
+    if (hour >= 21) {
+      eliteHoursFee = 10;
+    }
+  }
+
+  const total = serviceFee + processingFee + eliteHoursFee;
 
   return (
     <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full">
@@ -62,8 +73,8 @@ const BookingSummary = () => {
                   <Star
                     key={star}
                     className={`w-3 h-3 ${star <= Math.round(rating)
-                      ? "text-primary fill-primary"
-                      : "text-gray-600"
+                        ? "text-primary fill-primary"
+                        : "text-gray-600"
                       }`}
                   />
                 ))}
@@ -106,12 +117,18 @@ const BookingSummary = () => {
       <div className="space-y-2 mb-4">
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Service Fee:</span>
-          <span className="text-white">${serviceFee.toFixed(2)}</span>
+          <span className="text-white">₤{serviceFee.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Processing Fee:</span>
-          <span className="text-white">${processingFee.toFixed(2)}</span>
+          <span className="text-white">₤{processingFee.toFixed(2)}</span>
         </div>
+        {eliteHoursFee > 0 && (
+          <div className="flex justify-between text-sm text-yellow-400">
+            <span>Elite Hours Fee:</span>
+            <span>₤{eliteHoursFee.toFixed(2)}</span>
+          </div>
+        )}
       </div>
 
       {/* Total */}
@@ -119,7 +136,7 @@ const BookingSummary = () => {
         <div className="flex justify-between items-center">
           <span className="text-primary text-lg font-semibold">Total:</span>
           <span className="text-primary text-xl font-bold">
-            ${total.toFixed(2)}
+            ₤ {total.toFixed(2)}
           </span>
         </div>
       </div>

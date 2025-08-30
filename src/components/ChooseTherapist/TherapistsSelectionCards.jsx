@@ -11,7 +11,6 @@ const TherapistSelectionCard = ({ therapist }) => {
   const handleSelect = () => {
     setSelectedTherapist(therapist); // ✅ store therapist in Zustand
     navigate('/paymentpage');
-
     console.log("This is the therapist: ", therapist);
   };
 

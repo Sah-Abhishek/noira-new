@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -5,35 +6,39 @@ import {
   FaHands,
   FaBriefcase,
   FaHeart,
+  FaPlane,
 } from "react-icons/fa";
 import { FaClockRotateLeft } from "react-icons/fa6";
-import spa from "../assets/icons/icons8-massage-48.png";
-import massage from "../assets/icons/icons8-spa-48.png";
-import useBookingStore from "../store/bookingStore";
+import useBookingStore from "../../store/bookingStore.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary";
 
-export default function AllServicesPage() {
+export default function ServiceByTherapist() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const { cart, setCart } = useBookingStore();
+  const { cart, setCart, selectedTherapist } = useBookingStore();
   const navigate = useNavigate();
   const location = useLocation();
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
-
+  const therapistId = selectedTherapist.profile._id;
   const fetchServices = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/services/list`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${apiUrl}/therapist/${therapistId}/services`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
+      // ✅ handle both formats (array or { therapistId, services: [...] })
       if (Array.isArray(response.data)) {
         setServices(response.data);
+      } else if (response.data.services) {
+        setServices(response.data.services);
       } else if (response.data.success) {
         setServices(response.data.data || []);
       }
@@ -48,16 +53,14 @@ export default function AllServicesPage() {
     fetchServices();
   }, []);
 
-  // Mix of icons (components) and images
   const icons = [
     FaClockRotateLeft,
     FaCrown,
     FaHands,
+    FaBriefcase,
     FaHeart,
-    { img: spa },
-    { img: massage },
+    FaPlane,
   ];
-
   const bgImages = [
     "./pic3.jpeg",
     "./pic.jpeg",
@@ -65,10 +68,11 @@ export default function AllServicesPage() {
     "./pic.jpeg",
     "./pic.jpeg",
     "./pic4.jpeg",
-    "./pic2.jpeg",
   ];
 
   const handleSelect = (service, option, optionIndex) => {
+    console.log("This is the option: ", option.price.amount);
+    // only allow one service in cart
     setSelectedOptions({ [service._id]: option });
     setCart({
       serviceId: service._id,
@@ -76,18 +80,19 @@ export default function AllServicesPage() {
       optionIndex,
       durationMinutes: option.durationMinutes,
       id: option._id,
-      price: option.price.amount,
+      price: option.price.amount, // ✅ flat number only
     });
   };
 
   const handleContinue = () => {
     if (!cart) return;
-    navigate("/choosetherapist");
+    navigate("/findtherapistbyavailability");
+    // 🚀 navigate to next step (Date & Time page)
+    console.log("Proceed with booking:", cart);
   };
 
   const ServiceSkeleton = () => (
     <div className="service-card rounded-3xl overflow-hidden gold-foil p-8 animate-pulse h-64"></div>
-
   );
 
   return (
@@ -95,7 +100,7 @@ export default function AllServicesPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 mt-20">
-          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 text-noira-gold">
+          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 text-primary">
             Massage Menu
           </h1>
           <h2 className="text-center text-lg">Luxury Made Accessible</h2>
@@ -111,7 +116,7 @@ export default function AllServicesPage() {
               <ServiceSkeleton key={i} />
             ))
             : services.map((service, idx) => {
-              const IconOrImg = icons[idx % icons.length];
+              const Icon = icons[idx % icons.length];
               const bg = bgImages[idx % bgImages.length];
               const selectedOpt = selectedOptions[service._id];
 
@@ -130,16 +135,7 @@ export default function AllServicesPage() {
                   <div className="glass-panel rounded-3xl p-6 m-4 h-[calc(100%-2rem)] relative z-10">
                     <div className="flex items-start justify-between mb-6">
                       <div className="p-3 bg-noira-gold/10 rounded-2xl backdrop-blur-sm">
-                        {/* Render icon if function, else image */}
-                        {typeof IconOrImg === "function" ? (
-                          <IconOrImg className="text-noira-gold text-2xl" />
-                        ) : (
-                          <img
-                            src={IconOrImg.img}
-                            alt="service icon"
-                            className="w-6 h-6"
-                          />
-                        )}
+                        <Icon className="text-noira-gold text-2xl" />
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="price-display bg-gradient-to-r from-noira-gold to-noira-gold-light text-noira-black px-3 py-1 rounded-full text-xs font-bold opacity-80">
@@ -163,7 +159,6 @@ export default function AllServicesPage() {
                         {authToken ? "Select Duration" : "Pricing"}
                       </h4>
 
-
                       {authToken ? (
                         <div className="flex flex-wrap gap-2">
                           {service.options.map((opt, index) => {
@@ -171,23 +166,18 @@ export default function AllServicesPage() {
                             return (
                               <button
                                 key={opt._id}
-                                onClick={() =>
-                                  handleSelect(service, opt, index)
-                                }
+                                onClick={() => handleSelect(service, opt, index)} // ✅ pass index
                                 className={`duration-chip px-4 py-2 rounded-full text-xs text-noira-gold transition-all ${isActive ? "selected" : ""
                                   }`}
                               >
-                                {opt.durationMinutes} min • £
-                                {opt.price.amount}
+                                {opt.durationMinutes} min • £{opt.price.amount}
                               </button>
                             );
                           })}
                         </div>
                       ) : (
                         <button
-                          onClick={() =>
-                            navigate("/userlogin", { state: { from: location } })
-                          }
+                          onClick={() => navigate("/userlogin", { state: { from: location } })}
                           className="px-4 py-2 rounded-full text-xs font-semibold bg-noira-gold text-black hover:opacity-90 transition"
                         >
                           Login to see prices
@@ -212,7 +202,34 @@ export default function AllServicesPage() {
 
         {/* Sticky Cart Summary */}
         {Object.keys(selectedOptions).length > 0 && (
-          <StickyCartSummary />
+
+          <div
+            className={`fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50
+    transform transition-all duration-500 ease-in-out
+    ${Object.keys(selectedOptions).length > 0
+                ? "translate-y-0 opacity-100"
+                : "translate-y-full opacity-0 pointer-events-none"
+              }`}
+          >
+            {/* Cart Info */}
+            <div className="text-sm text-noira-light pr-25">
+              <span className="mr-2 text-xl text-primary font-bold">Selected:</span>
+              <span className="font-semibold">
+                {cart ? cart.serviceName : "No service selected"}
+              </span>
+              <span className="mx-2 text-noira-gold">•</span>
+              <span className="font-semibold">£{cart?.price ?? 0}</span>
+            </div>
+
+            {/* Continue Button */}
+            <button
+              className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
+              onClick={handleContinue}
+              disabled={!cart}
+            >
+              Continue to Date & Time
+            </button>
+          </div>
         )}
       </div>
     </div>

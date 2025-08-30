@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-// import jwt_decode from "jwt-decode";
 import "../index.css";
 import { zoomies } from "ldrs";
 zoomies.register();
@@ -11,6 +10,8 @@ import {
   FaLock,
   FaEye,
   FaUserPlus,
+  FaMapMarkerAlt,
+  FaPhone,
   FaGoogle,
   FaApple,
 } from "react-icons/fa";
@@ -19,20 +20,31 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+
+// ✅ List of London & Greater London postal code prefixes
+const LONDON_POSTCODES = [
+  "E", "EC", "N", "NW", "SE", "SW", "W", "WC", // London core
+  "BR", "CR", "DA", "EN", "HA", "IG", "KT", "RM", "SM", "TW", "UB", "WD" // Greater London
+];
 
 // Validation schema
 const schema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Minimum 6 characters")
-    .required("Password is required"),
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  phone: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10,15}$/, "Phone number must be 10–15 digits"),
+  password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+  postalCode: Yup.string()
+    .required("Postal code is required")
+    .test("is-london", "We do not provide service in your area", (value) => {
+      if (!value) return false;
+      const code = value.trim().toUpperCase();
+      return LONDON_POSTCODES.some((prefix) => code.startsWith(prefix));
+    }),
 });
 
 export default function UserSignup() {
@@ -41,19 +53,19 @@ export default function UserSignup() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
         const res = await axios.post(`${apiUrl}/auth/google`, {
-          token: credentialResponse.access_token, // or id_token depending on your backend
+          token: credentialResponse.access_token,
         });
 
-        toast.success("Signin successfull")
-
+        toast.success("Signin successful");
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
-
-        navigate("/servicespage");
+        navigate("/allservicespage");
       } catch (error) {
         console.error("Google login error:", error);
         setErrorMsg("Google login failed");
@@ -64,7 +76,6 @@ export default function UserSignup() {
     },
   });
 
-
   const {
     register,
     handleSubmit,
@@ -73,33 +84,27 @@ export default function UserSignup() {
     resolver: yupResolver(schema),
   });
 
-  const apiUrl = import.meta.env.VITE_API_URL;
   const onSubmit = async (data) => {
     const endpoint = `${apiUrl}/auth/user/register`;
 
     const transformedData = {
-      name: {
-        first: data.firstName,
-        last: data.lastName,
-      },
+      name: { first: data.firstName, last: data.lastName },
       email: data.email,
+      phone: data.phone,
       password: data.password,
+      postalCode: data.postalCode,
     };
 
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, transformedData);
-      console.log("Signup success:", response);
-
       if (response.status === 201) {
         localStorage.setItem("userEmail", data.email);
         navigate("/otpinput/register");
       }
     } catch (error) {
       if (error.response) {
-        setErrorMsg(
-          `Signup failed: ${error.response.data.message || error.response.statusText}`
-        );
+        setErrorMsg(`Signup failed: ${error.response.data.message || error.response.statusText}`);
       } else if (error.request) {
         setErrorMsg("No response from server. Please try again later.");
       } else {
@@ -107,7 +112,6 @@ export default function UserSignup() {
       }
     } finally {
       setIsLoading(false);
-
     }
   };
 
@@ -119,9 +123,7 @@ export default function UserSignup() {
           <div className="flex items-center h-10 mt-10">
             <img src={noira} alt="Logo" className="h-10 sm:h-15 mb-10" />
           </div>
-          <p className="text-gray-400 text-medium font-medium">
-            Wellness Platform
-          </p>
+          <p className="text-gray-400 text-medium font-medium">Wellness Platform</p>
         </div>
 
         {/* Form */}
@@ -129,10 +131,7 @@ export default function UserSignup() {
           {/* First Name */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-primary">
-                <FaUser />
-              </span>{" "}
-              First Name
+              <FaUser className="text-primary" /> First Name
             </label>
             <input
               type="text"
@@ -141,20 +140,13 @@ export default function UserSignup() {
               className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.firstName ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.firstName.message}
-              </p>
-            )}
+            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
           </div>
 
           {/* Last Name */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-primary">
-                <FaUser />
-              </span>{" "}
-              Last Name
+              <FaUser className="text-primary" /> Last Name
             </label>
             <input
               type="text"
@@ -163,20 +155,13 @@ export default function UserSignup() {
               className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.lastName ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.lastName.message}
-              </p>
-            )}
+            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
           </div>
 
-          {/* Email Input */}
+          {/* Email */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-primary">
-                <FaEnvelope />
-              </span>{" "}
-              Email Address
+              <FaEnvelope className="text-primary" /> Email Address
             </label>
             <input
               type="email"
@@ -185,20 +170,28 @@ export default function UserSignup() {
               className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.email ? "ring-red-500" : "focus:ring-primary"
                 }`}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email.message}
-              </p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
-          {/* Password Input */}
+          {/* Phone */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
-              <span className="text-primary">
-                <FaLock />
-              </span>{" "}
-              Password
+              <FaPhone className="text-primary" /> Phone Number
+            </label>
+            <input
+              type="tel"
+              placeholder="Enter your phone number"
+              {...register("phone")}
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.phone ? "ring-red-500" : "focus:ring-primary"
+                }`}
+            />
+            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+          </div>
+
+          {/* Password */}
+          <div className="space-y-1">
+            <label className="text-sm text-gray-300 flex items-center gap-2">
+              <FaLock className="text-primary" /> Password
             </label>
             <div className="relative">
               <input
@@ -215,76 +208,73 @@ export default function UserSignup() {
                 <FaEye />
               </span>
             </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          </div>
+
+          {/* Postal Code */}
+          <div className="space-y-1">
+            <label className="text-sm text-gray-300 flex items-center gap-2">
+              <FaMapMarkerAlt className="text-primary" /> Postal Code
+            </label>
+            <input
+              type="text"
+              placeholder="Enter your postal code"
+              {...register("postalCode")}
+              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.postalCode ? "ring-red-500" : "focus:ring-primary"
+                }`}
+            />
+            {errors.postalCode && (
+              <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p>
             )}
           </div>
 
           {/* Sign Up Button */}
           <button
             type="submit"
-            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2
-    ${isLoading
-                ? "bg-black text-white cursor-not-allowed"
-                : "bg-primary text-black hover:bg-primary/90"
-              }
-  `}
+            className={`w-full font-semibold py-3 rounded-md flex items-center justify-center gap-2 ${isLoading
+              ? "bg-black text-white cursor-not-allowed"
+              : "bg-primary text-black hover:bg-primary/90"
+              }`}
             disabled={isLoading}
           >
             {isLoading ? (
               <span>
-                <l-zoomies
-                  size="80"
-                  stroke="5"
-                  bg-opacity="0.1"
-                  speed="1.4"
-                  color="yellow"
-                ></l-zoomies>
+                <l-zoomies size="80" stroke="5" bg-opacity="0.1" speed="1.4" color="yellow"></l-zoomies>
               </span>
             ) : (
               <span className="inline-flex items-center">
-                <FaUserPlus className="mr-2" />
-                Sign Up
+                <FaUserPlus className="mr-2" /> Sign Up
               </span>
             )}
           </button>
           <h1 className="text-center text-sm text-red-500">{errorMsg}</h1>
+          <div className="flex items-center gap-2 text-gray-400 text-sm mt-4">
+            <hr className="flex-1 border-gray-600" />
+            Or continue with
+            <hr className="flex-1 border-gray-600" />
+          </div>
+
+          {/* Social Buttons */}
+          <div className="flex gap-4">
+            <button
+              onClick={() => login()}
+              className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
+            >
+              <FaGoogle /> Google
+            </button>
+            <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600">
+              <FaApple /> Apple
+            </button>
+          </div>
+
+          {/* Sign up */}
+          <div className="text-center text-sm text-gray-400 mt-4">
+            Don’t have an account?{" "}
+            <Link to="/usersignup" className="text-primary hover:underline">
+              Sign Up
+            </Link>
+          </div>
         </form>
-
-        {/* Or Divider */}
-        <div className="flex items-center gap-2 text-gray-400 text-sm mt-4">
-          <hr className="flex-1 border-gray-600" />
-          Or continue with
-          <hr className="flex-1 border-gray-600" />
-        </div>
-
-        {/* Social Buttons */}
-        <div className="flex gap-4">
-          <button
-            onClick={() => login()}
-            className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
-          >
-            <FaGoogle />
-            Google
-          </button>
-
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white">
-            <FaApple /> Apple
-          </button>
-        </div>
-
-        {/* Already signed up? */}
-        <div className="text-center text-sm text-gray-400 mt-4">
-          Already signed up?{" "}
-          <Link
-            to="/userlogin"
-            className="text-primary hover:underline cursor-pointer"
-          >
-            Login
-          </Link>
-        </div>
       </div>
     </div>
   );

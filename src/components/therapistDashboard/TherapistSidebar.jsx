@@ -105,9 +105,10 @@ const TherapistSidebar = () => {
           {/* User Info */}
           <div className="flex flex-col text-white">
             <span className="text-sm font-semibold capitalize">
-              {firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase()}
+              {firstname
+                ? firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase()
+                : "Therapist"}
             </span>
-            <span className="text-xs text-gray-400">Massage Therapist</span>
             <button className="text-xs text-red-500 mt-1 hover:underline">Logout</button>
           </div>
         </div>

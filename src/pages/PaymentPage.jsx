@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { ArrowLeft, Lock } from "lucide-react";
 import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
+
 import useBookingStore from "../store/bookingStore.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import confetti from "canvas-confetti";
+import ComingSoonModal from "../components/PaymentPage/ComingSoonModal.jsx";
 
 const PaymentPage = () => {
   const { date, time, selectedTherapist, cart } = useBookingStore();
@@ -12,6 +15,7 @@ const PaymentPage = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Sample booking data
   const bookingData = {
@@ -30,25 +34,33 @@ const PaymentPage = () => {
   };
 
   const handlePayment = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
-        therapistId: selectedTherapist._id,
-        serviceId: cart.serviceId,
-        optionIndex: cart.optionIndex,
-        date,
-        time,
-        email: userEmail,
-        notes: null,
-      });
+    setIsModalOpen(true);
+    confetti({
+      particleCount: 120,
+      spread: 70,
+      origin: { y: 0.9 },
+    });
 
-      // Redirect to Stripe Checkout
-      window.location.href = response.data.url;
-    } catch (error) {
-      console.error("This was the error: ", error);
-    } finally {
-      setLoading(false);
-    }
+    // Show message instead of logging out
+    // setLoading(true);
+    // try {
+    //   const response = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
+    //     therapistId: selectedTherapist._id,
+    //     serviceId: cart.serviceId,
+    //     optionIndex: cart.optionIndex,
+    //     date,
+    //     time,
+    //     email: userEmail,
+    //     notes: null,
+    //   });
+    //
+    //   // Redirect to Stripe Checkout
+    //   window.location.href = response.data.url;
+    // } catch (error) {
+    //   console.error("This was the error: ", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -94,6 +106,7 @@ const PaymentPage = () => {
           </div>
         </div>
       </div>
+      <ComingSoonModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import CareerPage from "./pages/CareerPage";
 import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/About.jsx";
-import AdmiLogin from "./pages/AdminLogin.jsx";
+import AdminLogin from "./pages/AdminLogin.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import OtpInput from "./pages/OtpInput.jsx";
 import UserSignup from "./pages/UserSignup.jsx";
@@ -18,7 +18,7 @@ import PaymentPage from "./pages/PaymentPage.jsx";
 import LoaderPage from "./pages/LoaderPage.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentFail from "./pages/PaymentFail.jsx";
-import FindTherapistByAvailability from "./components/FindTherapistByAvailability.jsx"
+import FindTherapistByAvailability from "./components/FindTherapistByAvailability.jsx";
 
 // Protected routes
 import UserProtectedRoute from "./components/UserProtectedRoute.jsx";
@@ -34,16 +34,15 @@ import ForgotPassword from "./components/therapistSchedule/forgotPassword/forgot
 import ResetPasswordPage from "./components/therapistSchedule/forgotPassword/ResetPasswordPage.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
 import AllServicesPage from "./pages/AllServicesPage.jsx";
-import BrowseTherapists from "./components/browseTherapist/BrowseTherapist.jsx"; // import TherapistProfile from "./pages/TherapistProfile.jsx";
+import BrowseTherapists from "./components/browseTherapist/BrowseTherapist.jsx";
 import FeaturedTherapists from "./components/FeaturedTherapist.jsx";
-// import TherapistAppointments from "./pages/TherapistAppointments.jsx";
-// import TherapistSettings from "./pages/TherapistSettings.jsx";
+import ServiceByTherapist from "./components/byTherapistFlow/ServicesByTherapist.jsx";
 
 const AppRoutes = () => {
   return (
     <>
       <Toaster
-        position="top-center" // 👈 where the toast will show
+        position="top-center"
         toastOptions={{
           style: {
             background: "#333",
@@ -56,17 +55,23 @@ const AppRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/careers" element={<CareerPage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/adminlogin" element={<AdmiLogin />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/otpinput/:purpose" element={<OtpInput />} />
         <Route path="/usersignup" element={<UserSignup />} />
         <Route path="/userlogin" element={<UserLogin />} />
         <Route path="/loading" element={<LoaderPage />} />
         <Route path="/paymentsuccess" element={<PaymentSuccess />} />
         <Route path="/paymentfail" element={<PaymentFail />} />
-        <Route path="*" element={<NotFoundPage />} />
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
-        <Route path="/browsetherapists" element={<BrowseTherapists />} />
+        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="/servicesbytherapist"
+          element={
+            <ServiceByTherapist />
+          }
+        />
+
         {/* Protected User Routes */}
         <Route
           path="/servicespage"
@@ -76,41 +81,49 @@ const AppRoutes = () => {
             </UserProtectedRoute>
           }
         />
-
         <Route
           path="/findtherapistbyavailability"
           element={
             <UserProtectedRoute>
               <FindTherapistByAvailability />
             </UserProtectedRoute>
-
           }
         />
-
-
         <Route
           path="/browsetherapists"
-          element={<UserProtectedRoute>
-            <BrowseTherapists />
-          </UserProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/allservicespage"
           element={
-            <AllServicesPage />
+            <UserProtectedRoute>
+              <BrowseTherapists />
+            </UserProtectedRoute>
           }
         />
-        <Route path="/cartpage" element={<CartPage />} />
-        <Route path="/choosetherapist" element={
-          <UserProtectedRoute>
-            <ChooseTherapistPage />
-          </UserProtectedRoute>
-        } />
-        <Route path="/paymentpage" element={<PaymentPage />} />
+        <Route path="/allservicespage" element={<AllServicesPage />} />
+        <Route
+          path="/cartpage"
+          element={
+            <UserProtectedRoute>
+              <CartPage />
+            </UserProtectedRoute>
+          }
+        />
+        <Route
+          path="/choosetherapist"
+          element={
+            <UserProtectedRoute>
+              <ChooseTherapistPage />
+            </UserProtectedRoute>
+          }
+        />
+        <Route
+          path="/paymentpage"
+          element={
+            <UserProtectedRoute>
+              <PaymentPage />
+            </UserProtectedRoute>
+          }
+        />
 
-        {/* Admin Protected Route */}
+        {/* Admin Protected Routes */}
         <Route
           path="/admin"
           element={
@@ -119,13 +132,11 @@ const AppRoutes = () => {
             </AdminProtectedRoute>
           }
         >
-          {/* Admin Routes */}
           <Route index element={<Navigate to="admindashboard" replace />} />
           <Route path="admindashboard" element={<AdminDashboard />} />
-
         </Route>
 
-        {/* Therapist Nested Routes */}
+        {/* Therapist Protected Routes */}
         <Route
           path="/therapist"
           element={
@@ -134,21 +145,19 @@ const AppRoutes = () => {
             </TherapistProtectedRoute>
           }
         >
-          {/* Redirect /therapist → /therapist/dashboard */}
           <Route index element={<Navigate to="therapistdashboard" replace />} />
-
           <Route path="therapistdashboard" element={<TherapistDashboard />} />
-          {/* <Route path="profile" element={<TherapistProfile />} /> */}
-          {/* <Route path="appointments" element={<TherapistAppointments />} /> */}
-          {/* <Route path="settings" element={<TherapistSettings />} /> */}
-          <Route path="therapistschedule" element={<TherapistSchedule />} />
-
-
-
+          <Route
+            path="therapistschedule"
+            element={
+              <TherapistProtectedRoute>
+                <TherapistSchedule />
+              </TherapistProtectedRoute>
+            }
+          />
         </Route>
-      </Routes >
+      </Routes>
     </>
-
   );
 };
 

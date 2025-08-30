@@ -37,7 +37,7 @@ export default function UserLogin() {
   // figure out where to redirect
   const from = location.state?.from;
   console.log("This is the from: ", from);
-  let redirectedTo = "/servicespage"; // default
+  let redirectedTo = "/allservicespage"; // default
 
 
   if (from?.pathname === "/browsetherapists") {

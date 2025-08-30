@@ -74,6 +74,7 @@ export default function BrowseTherapists() {
   }, [therapists]);
 
   /** Client-side filtering */
+  /** Client-side filtering */
   const filtered = useMemo(() => {
     return therapists.filter((t) => {
       const okService =
@@ -84,7 +85,11 @@ export default function BrowseTherapists() {
         filters.language === "All Languages" ||
         (t?.profile?.languages ?? []).includes(filters.language);
 
-      return okService && okLanguage;
+      const okGender =
+        filters.gender === "No Preference" ||
+        (t.gender?.toLowerCase() === filters.gender.toLowerCase());
+
+      return okService && okLanguage && okGender;
     });
   }, [therapists, filters]);
 
@@ -236,8 +241,9 @@ function TherapistCard({ t }) {
   const { setSelectedTherapist } = useBookingStore();
 
   const handleSelectTherapist = () => {
+    console.log("This is the selected therapist: ", t);
     setSelectedTherapist(t);   // ✅ store selected therapist in zustand
-    navigate("/findtherapistbyavailability"); // optional: redirect after selecting
+    navigate("/servicesbytherapist"); // optional: redirect after selecting
   };
 
   return (
