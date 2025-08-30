@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 
@@ -32,6 +32,22 @@ export default function UserLogin() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const location = useLocation();
+
+  // figure out where to redirect
+  const from = location.state?.from;
+  console.log("This is the from: ", from);
+  let redirectedTo = "/servicespage"; // default
+
+
+  if (from?.pathname === "/browsetherapists") {
+    redirectedTo = "/findtherapistbyavailability";
+  } else if (from?.pathname === "/allservicespage") {
+    redirectedTo = "/allservicespage"
+  }
+  else if (from?.pathname) {
+    redirectedTo = from;
+  }
 
   const {
     register,
@@ -52,7 +68,7 @@ export default function UserLogin() {
         toast.success("Login successful");
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
-        navigate("/servicespage");
+        navigate(redirectedTo, { replace: true });
       } catch (error) {
         console.error("Google login error:", error);
         setErrorMsg("Google login failed");
@@ -69,12 +85,11 @@ export default function UserLogin() {
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, data);
-      console.log("Login success:", response.data);
 
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
         localStorage.setItem("userjwt", response.data.token);
-        navigate("/servicespage");
+        navigate(redirectedTo, { replace: true });
       }
     } catch (error) {
       if (error.response) {

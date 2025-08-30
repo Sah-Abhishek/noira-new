@@ -9,12 +9,15 @@ import {
 } from "react-icons/fa";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import useBookingStore from "../store/bookingStore";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AllServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState({});
   const { cart, setCart } = useBookingStore();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -142,23 +145,33 @@ export default function AllServicesPage() {
                     {/* Options */}
                     <div className="mb-6">
                       <h4 className="text-noira-gold text-xs font-medium mb-3 uppercase tracking-wider">
-                        Select Duration
+                        {authToken ? "Select Duration" : "Pricing"}
                       </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {service.options.map((opt) => {
-                          const isActive = selectedOpt?._id === opt._id;
-                          return (
-                            <button
-                              key={opt._id}
-                              onClick={() => handleSelect(service, opt)}
-                              className={`duration-chip px-4 py-2 rounded-full text-xs text-noira-gold transition-all ${isActive ? "selected" : ""
-                                }`}
-                            >
-                              {opt.durationMinutes} min • £{opt.price.amount}
-                            </button>
-                          );
-                        })}
-                      </div>
+
+                      {authToken ? (
+                        <div className="flex flex-wrap gap-2">
+                          {service.options.map((opt) => {
+                            const isActive = selectedOpt?._id === opt._id;
+                            return (
+                              <button
+                                key={opt._id}
+                                onClick={() => handleSelect(service, opt)}
+                                className={`duration-chip px-4 py-2 rounded-full text-xs text-noira-gold transition-all ${isActive ? "selected" : ""
+                                  }`}
+                              >
+                                {opt.durationMinutes} min • £{opt.price.amount}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => navigate("/userlogin", { state: { from: location } })}
+                          className="px-4 py-2 rounded-full text-xs font-semibold bg-noira-gold text-black hover:opacity-90 transition"
+                        >
+                          Login to see prices
+                        </button>
+                      )}
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t border-noira-gold/20">
@@ -177,28 +190,38 @@ export default function AllServicesPage() {
         </div>
 
         {/* Sticky Cart Summary */}
-        <div className="fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50">
-          {/* Cart Info */}
-          <div className="text-sm text-noira-light pr-25">
-            <span className="mr-2">Selected:</span>
-            <span className="font-semibold">
-              {cart ? cart.serviceName : "No service selected"}
-            </span>
-            <span className="mx-2 text-noira-gold">•</span>
-            <span className="font-semibold">
-              £{cart?.price?.amount ?? 0}
-            </span>
-          </div>
+        {Object.keys(selectedOptions).length > 0 && (
 
-          {/* Continue Button */}
-          <button
-            className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
-            onClick={handleContinue}
-            disabled={!cart}
+          <div
+            className={`fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50
+    transform transition-all duration-500 ease-in-out
+    ${Object.keys(selectedOptions).length > 0
+                ? "translate-y-0 opacity-100"
+                : "translate-y-full opacity-0 pointer-events-none"
+              }`}
           >
-            Continue to Date & Time
-          </button>
-        </div>
+            {/* Cart Info */}
+            <div className="text-sm text-noira-light pr-25">
+              <span className="mr-2 text-xl text-primary font-bold">Selected:</span>
+              <span className="font-semibold">
+                {cart ? cart.serviceName : "No service selected"}
+              </span>
+              <span className="mx-2 text-noira-gold">•</span>
+              <span className="font-semibold">
+                £{cart?.price?.amount ?? 0}
+              </span>
+            </div>
+
+            {/* Continue Button */}
+            <button
+              className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
+              onClick={handleContinue}
+              disabled={!cart}
+            >
+              Continue to Date & Time
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

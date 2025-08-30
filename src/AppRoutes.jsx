@@ -67,8 +67,6 @@ const AppRoutes = () => {
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/browsetherapists" element={<BrowseTherapists />} />
-        <Route path="/browsetherapists" element={<BrowseTherapists />} />
-        <Route path="/findtherapistbyavailability" element={<FindTherapistByAvailability />} />
         {/* Protected User Routes */}
         <Route
           path="/servicespage"
@@ -78,6 +76,26 @@ const AppRoutes = () => {
             </UserProtectedRoute>
           }
         />
+
+        <Route
+          path="/findtherapistbyavailability"
+          element={
+            <UserProtectedRoute>
+              <FindTherapistByAvailability />
+            </UserProtectedRoute>
+
+          }
+        />
+
+
+        <Route
+          path="/browsetherapists"
+          element={<UserProtectedRoute>
+            <BrowseTherapists />
+          </UserProtectedRoute>
+          }
+        />
+
         <Route
           path="/allservicespage"
           element={

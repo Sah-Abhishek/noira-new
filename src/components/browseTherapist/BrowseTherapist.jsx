@@ -228,7 +228,7 @@ function TherapistCard({ t }) {
   const exp = t?.profile?.experience;
   const town = t?.address?.PostTown;
   const postcode = t?.address?.Postcode;
-  const pricing = t?.profile?.pricing;
+  // const pricing = t?.profile?.pricing;
   const navigate = useNavigate();
 
 
@@ -301,14 +301,14 @@ function TherapistCard({ t }) {
             <span>{exp}+ years experience</span>
           </div>
         )}
-        {pricing && price(pricing) && (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-gray-400" />
-            <span className="text-amber-300 font-medium">
-              {price(pricing)} {currency(pricing)}/session
-            </span>
-          </div>
-        )}
+        {/* {pricing && price(pricing) && ( */}
+        {/*   <div className="flex items-center gap-2"> */}
+        {/*     <CheckCircle2 className="h-4 w-4 text-gray-400" /> */}
+        {/*     <span className="text-amber-300 font-medium"> */}
+        {/*       {price(pricing)} {currency(pricing)}/session */}
+        {/*     </span> */}
+        {/*   </div> */}
+        {/* )} */}
       </div>
 
       {/* ✅ Store selected therapist */}

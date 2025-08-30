@@ -1,6 +1,6 @@
 // src/components/ProtectedRoute.jsx
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import LoaderPage from "../pages/LoaderPage";
 
@@ -8,6 +8,7 @@ const UserProtectedRoute = ({ children }) => {
   const [isValid, setIsValid] = useState(null);
   const token = localStorage.getItem("userjwt");
   const email = localStorage.getItem("userEmail");
+  const location = useLocation();
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -36,7 +37,7 @@ const UserProtectedRoute = ({ children }) => {
   }, [token, email]);
 
   if (isValid === null) return <div><LoaderPage /></div>;
-  if (!isValid) return <Navigate to="/userlogin" replace />;
+  if (!isValid) return <Navigate to="/userlogin" replace state={{ from: location }} />;
 
   return children;
 };
