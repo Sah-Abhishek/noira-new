@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext'; // Adjust path if needed
 import sarahImg from '../assets/sarah.jpg';
 import michaelImg from '../assets/micheal.jpg';
 import emmaImg from '../assets/emma.jpg';
+import { useNavigate } from 'react-router-dom';
 // Assume David has no image
 
 const therapists = [
@@ -42,6 +43,7 @@ const therapists = [
 
 const FeaturedTherapists = () => {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <section
@@ -146,7 +148,7 @@ const FeaturedTherapists = () => {
             </div>
 
             {/* Book Now Button */}
-            <button className="mt-6 bg-[#D59940] w-full text-black font-semibold px-6 py-2 rounded-full shadow-lg shadow-[#C49E5B]/25 hover:shadow-[#C49E5B]/40 transform hover:scale-105 transition-all duration-300">
+            <button onClick={() => navigate("/browsetherapists")} className="mt-6 bg-[#D59940] w-full text-black font-semibold px-6 py-2 rounded-full shadow-lg shadow-[#C49E5B]/25 hover:shadow-[#C49E5B]/40 transform hover:scale-105 transition-all duration-300">
               Book Now
             </button>
           </div>
