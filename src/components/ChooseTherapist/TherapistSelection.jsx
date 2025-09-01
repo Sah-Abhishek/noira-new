@@ -4,7 +4,7 @@ import TherapistSelectionCard from "./TherapistsSelectionCards";
 import TherapistSkeletonCard from "./TherapistCardSkeleton.jsx";
 import TherapistSkeletonList from "./TherapistCardSkeleton.jsx";
 
-const TherapistSelection = () => {
+const TherapistSelection = ({ isAbled, setIsAbled }) => {
   const therapists = useBookingStore((state) => state.therapists);
   const { findingTherapist, hasSearched } = useBookingStore();
 

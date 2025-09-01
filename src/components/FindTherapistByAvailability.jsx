@@ -4,6 +4,7 @@ import axios from "axios";
 import useBookingStore from "../store/bookingStore.jsx";
 import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import StickyCartSummary from "./ChooseTherapist/StickyCartSummary.jsx";
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -303,7 +304,11 @@ const FindTherapistByAvailability = () => {
             Back
           </button>
 
-          <button onClick={() => navigate('/paymentpage')} disabled={loading || !date || !time} className={`px-10 py-4 rounded-full text-lg font-semibold transition-all
+          <button onClick={() =>
+            navigate("/paymentpage", {
+              state: { from: "/findtherapistbyavailability" },
+            })
+          } disabled={loading || !date || !time} className={`px-10 py-4 rounded-full text-lg font-semibold transition-all
               ${loading || !date || !time ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"}`}>
             {loading ? "Saving..." : "Continue to Payment"}
           </button>
@@ -312,6 +317,7 @@ const FindTherapistByAvailability = () => {
 
         <div ref={therapistSelectionRef}></div>
       </div>
+      <StickyCartSummary />
     </div>
   );
 };

@@ -3,27 +3,36 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useBookingStore from "../../store/bookingStore.jsx";
 
-export default function StickyCartSummary() {
+export default function StickyCartSummary({ isAbled, setIsAbled }) {
   const { cart, selectedTherapist } = useBookingStore();
   const location = useLocation();
   const navigate = useNavigate();
+  console.log("this is the value of isabled: ", isAbled);
   // console.log("serviceName: ", cart.serviceName);
   // console.log("price: ", cart.price);
 
   // If cart is empty, don't show sticky summary
   if (!cart || !cart.serviceId) return null;
-  const pageName = location.pathname === '/paymentpage' ? 'paymentpage' : '';
+  const pageName =
+    location.pathname === "/paymentpage"
+      ? "paymentpage"
+      : location.pathname === "/findtherapistbyavailibility"
+        ? "findtherapistbyavailibility"
+        : "";
 
 
   const handleContinue = () => {
     if (location.pathname === "/allservicespage") {
-      navigate("/choosetherapist");
+      navigate("/choosetherapist",);
     } else if (location.pathname === '/choosetherapist') {
       // fallback in case you reuse this component elsewhere
-      navigate("/paymentpage");
-    } else {
+      navigate("/paymentpage", { state: { from: "/choosetherapist" } });
+    } else if (location.pathname === "/servicesbytherapist") {
+      navigate("/findtherapistbyavailability",)
 
       console.log("Continue action triggered");
+    } else if (location.pathname === "/findtherapistbyavailability") {
+      navigate("/paymentpage", { state: { from: "/findtherapistbyavailability" } });
     }
   };
 
@@ -46,7 +55,7 @@ export default function StickyCartSummary() {
         </div>
         <div>
           <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
-          <span className="font-semibold text-white">{selectedTherapist.title}</span>
+          <span className="font-semibold text-white">{selectedTherapist.profile?.title}</span>
           {/* <span className="mx-2 text-noira-gold">•</span> */}
           {/* <span className="font-semibold text-white">£{cart?.price ?? 0}</span> */}
           {/* <span className="mx-2 text-noira-gold">•</span> */}
@@ -58,11 +67,16 @@ export default function StickyCartSummary() {
 
       {/* Continue Button */}
       <button
-        className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
+        disabled={!isAbled}
+        className={`bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg transition
+    ${!isAbled ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"}`}
         onClick={handleContinue}
-        disabled={!cart}
       >
-        {location.pathname === "/choosetherapist" ? "Continue to Payment Page" : "Continue to Date & Time"}
+        {
+          location.pathname === "/choosetherapist" || location.pathname === "/findtherapistbyavailability"
+            ? "Continue to Payment Page"
+            : "Continue to Date & Time"
+        }
       </button>
     </div>
   );

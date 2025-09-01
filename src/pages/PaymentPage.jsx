@@ -5,7 +5,7 @@ import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 
 import useBookingStore from "../store/bookingStore.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import ComingSoonModal from "../components/PaymentPage/ComingSoonModal.jsx";
 import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary.jsx";
@@ -15,8 +15,11 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
+  const location = useLocation();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const from = location.state?.from || "/";
+  console.log("This is the from value: ", from);
 
   // Sample booking data
   const bookingData = {
@@ -87,7 +90,7 @@ const PaymentPage = () => {
             {/* Payment Button */}
             <div className="mt-8">
               <button
-                onClick={() => navigate('/choosetherapist')}
+                onClick={() => navigate(from)}
                 disabled={loading}
                 className="cursor-pointer mb-5 w-full bg-black border border-primary text-primary hover:text-black font-semibold py-3 px-6 rounded-full bg-black hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
