@@ -32,7 +32,7 @@ const LONDON_POSTCODES = [
 // Validation schema
 const schema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
+  lastName: Yup.string(),
   email: Yup.string().email("Invalid email format").required("Email is required"),
   phone: Yup.string()
     .required("Phone number is required")

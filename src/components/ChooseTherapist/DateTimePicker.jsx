@@ -4,6 +4,7 @@ import axios from "axios";
 import useBookingStore from "../../store/bookingStore";
 import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion"; // 🔥 added
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -44,7 +45,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("day"); // NEW
+  const [activeTab, setActiveTab] = useState("day");
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
 
@@ -61,7 +62,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     if (!cart || !date || !time) return;
     const apiUrl = import.meta.env.VITE_API_URL;
     const payload = { service: cart, date, time };
-    console.log("This is the cart: ", cart);
 
     try {
       setFindingTherapist(true);
@@ -69,6 +69,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
       const res = await axios.post(`${apiUrl}/therapist/filter`, payload);
       setTherapists(res.data.therapists);
       setHasSearched(true);
+
       if (res.data.therapists.length > 0) {
         setTimeout(() => {
           therapistSelectionRef.current?.scrollIntoView({
@@ -84,6 +85,13 @@ const DateTimePicker = ({ availableTimes = [] }) => {
       setLoading(false);
     }
   };
+
+  // 🔥 Auto-trigger API when both date + time are set
+  useEffect(() => {
+    if (date && time && !loading) {
+      handleConfirm();
+    }
+  }, [date, time]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -103,7 +111,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     }
   };
 
-  // Sections
   const daySections = {
     morning: [
       "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
@@ -124,7 +131,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     ],
   };
 
-  // Render helper
   const renderSections = (sections, isPremium = false) => (
     <>
       {Object.entries(sections).map(([label, times]) => (
@@ -159,18 +165,39 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   return (
     <div className="min-h-screen bg-black text-white font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* HEADER */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-primary mb-2">
-            Select Your Date & Time
-          </h1>
-          <p className="text-gray-400">
-            Choose your preferred appointment slot
-          </p>
+          <div className="flex items-center justify-between">
+            {/* Back Button */}
+            <button
+              onClick={() => navigate("/allservicespage")}
+              className="px-6 py-3 rounded-full text-lg font-semibold transition-all
+      inline-flex items-center gap-x-3 text-white border border-white border-full hover:bg-white hover:text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+              </svg>
+              Back
+            </button>
+
+            {/* Title */}
+            <div className="flex-1 text-center">
+              <h1 className="text-4xl font-bold text-primary mb-2">
+                Select Your Date & Time
+              </h1>
+              <p className="text-gray-400">
+                Choose your preferred appointment slot
+              </p>
+            </div>
+
+            {/* Placeholder to balance spacing (so title stays centered) */}
+            <div className="w-[110px]"></div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Calendar */}
+          {/* CALENDAR */}
           <div className="bg-[#111] p-6 rounded-2xl border border-primary/30">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl text-primary font-semibold">
@@ -195,15 +222,12 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               </div>
             </div>
             <div className="border border-primary/20 p-5 rounded-2xl">
-
-              {/* Weekday labels */}
               <div className="grid grid-cols-7 gap-2 text-center text-sm text-primary mb-2">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
                   <div key={d}>{d}</div>
                 ))}
               </div>
 
-              {/* Days */}
               <div className="grid grid-cols-7 gap-2 text-center">
                 {days.map((d, idx) => {
                   const fullDate = formatDate(d.fullDate);
@@ -217,33 +241,31 @@ const DateTimePicker = ({ availableTimes = [] }) => {
                       disabled={isPast}
                       onClick={() => !isPast && setDate(fullDate)}
                       className={`
-                      flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition
-                      ${isPast
+                        flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition
+                        ${isPast
                           ? "text-gray-600 cursor-not-allowed"
                           : isSelected
                             ? "bg-primary text-black font-semibold shadow-[0_0_15px_var(--tw-color-primary)]"
-                            : "text-primary hover:bg-primary hover:text-black "
-                        }
-                    `}
+                            : "text-primary hover:bg-primary hover:text-black"}
+                      `}
                     >
                       {d.date}
                     </button>
                   );
                 })}
-              </div></div>
+              </div>
+            </div>
           </div>
 
-          {/* Time Slots with Tabs */}
+          {/* TIME SLOTS */}
           <div className="bg-[#111] p-6 rounded-2xl border border-primary/30">
             <h2 className="text-2xl text-primary mb-4 font-semibold">
               Available Time Slots
             </h2>
             <p className="text-gray-400 mb-4 text-lg">
-
               {date ? `Selected Date: ${date}` : "Please select a date"}
             </p>
 
-            {/* Tabs */}
             <div className="flex justify-center mb-6">
               <div className="bg-black/40 p-1 rounded-full border border-primary/30 flex">
                 <button
@@ -267,37 +289,48 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               </div>
             </div>
 
-            {/* Sections */}
-            {activeTab === "day" && renderSections(daySections)}
-            {activeTab === "night" && renderSections(nightSections, true)}
+            {/* 🔥 Animate between Day/Night tabs */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+              >
+                {activeTab === "day" && renderSections(daySections)}
+                {activeTab === "night" && renderSections(nightSections, true)}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* Confirm */}
+        {/* ACTIONS */}
         <div className="text-center mt-10 space-x-10">
-          <button
-            onClick={() => navigate('/allservicespage')}
-            className="px-10 py-4 rounded-full text-lg font-semibold transition-all
-                        inline-flex items-center gap-x-4 text-white hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
+          {/* <button */}
+          {/*   onClick={() => navigate("/allservicespage")} */}
+          {/*   className="px-10 py-4 rounded-full text-lg font-semibold transition-all */}
+          {/*     inline-flex items-center gap-x-4 text-white hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]" */}
+          {/* > */}
+          {/*   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" */}
+          {/*     strokeWidth={1.5} stroke="currentColor" className="size-6"> */}
+          {/*     <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /> */}
+          {/*   </svg> */}
+          {/*   Back */}
+          {/* </button> */}
 
-            Back
-          </button>
-
-          <button
-            onClick={handleConfirm}
-            disabled={loading || !date || !time}
-            className={`px-10 py-4 rounded-full text-lg font-semibold transition-all
-              ${loading || !date || !time
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
-              }`}
-          >
-            {loading ? "Saving..." : "Find Therapists"}
-          </button>
+          {/* <button */}
+          {/*   onClick={handleConfirm} */}
+          {/*   disabled={loading || !date || !time} */}
+          {/*   className={`px-10 py-4 rounded-full text-lg font-semibold transition-all */}
+          {/*     ${loading || !date || !time */}
+          {/*       ? "bg-gray-700 text-gray-400 cursor-not-allowed" */}
+          {/*       : "bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]" */}
+          {/*     }`} */}
+          {/* > */}
+          {/*   {loading ? "Saving..." : "Find Therapists"} */}
+          {/* </button> */}
+          {/**/}
           <p className="text-gray-500 text-sm mt-2">
             Continue to select your preferred wellness professional
           </p>

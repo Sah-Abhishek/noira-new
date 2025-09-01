@@ -52,7 +52,7 @@ const FindTherapistByAvailability = () => {
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
 
-  const therapistId = selectedTherapist.profile._id;
+  const therapistId = selectedTherapist?.profile?._id;
 
   useEffect(() => {
     setDate(null);

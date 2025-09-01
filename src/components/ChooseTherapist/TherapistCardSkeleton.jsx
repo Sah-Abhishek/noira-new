@@ -37,7 +37,7 @@ const TherapistSkeletonCard = () => {
 
 const TherapistSkeletonList = () => {
   return (
-    <div className="flex inline-flex px-10 rounded-lg justify-center gap-6 py-12 bg-black text-white">
+    <div className="flex inline-flex mt-40 px-10 rounded-lg justify-center gap-6 py-12 bg-black text-white">
       <TherapistSkeletonCard />
       <TherapistSkeletonCard />
       <TherapistSkeletonCard />

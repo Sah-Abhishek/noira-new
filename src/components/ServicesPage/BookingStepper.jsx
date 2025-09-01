@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const BookingStepper = ({ currentStep }) => {
   const steps = [
-    { id: 1, label: "Service Selected", redirect: "/servicespage" },
+    { id: 1, label: "Service Selected", redirect: "/allservicespage" },
     { id: 2, label: "Choose Therapist", redirect: "/choosetherapist" },
     { id: 3, label: "Confirm Booking", redirect: "/paymentpage" },
   ];

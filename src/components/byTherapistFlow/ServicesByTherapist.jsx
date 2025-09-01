@@ -11,6 +11,7 @@ import {
 import { FaClockRotateLeft } from "react-icons/fa6";
 import useBookingStore from "../../store/bookingStore.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
+import StickyCartSummary from "../ChooseTherapist/StickyCartSummary.jsx";
 
 export default function ServiceByTherapist() {
   const [services, setServices] = useState([]);
@@ -201,37 +202,36 @@ export default function ServiceByTherapist() {
         </div>
 
         {/* Sticky Cart Summary */}
-        {Object.keys(selectedOptions).length > 0 && (
-
-          <div
-            className={`fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50
-    transform transition-all duration-500 ease-in-out
-    ${Object.keys(selectedOptions).length > 0
-                ? "translate-y-0 opacity-100"
-                : "translate-y-full opacity-0 pointer-events-none"
-              }`}
-          >
-            {/* Cart Info */}
-            <div className="text-sm text-noira-light pr-25">
-              <span className="mr-2 text-xl text-primary font-bold">Selected:</span>
-              <span className="font-semibold">
-                {cart ? cart.serviceName : "No service selected"}
-              </span>
-              <span className="mx-2 text-noira-gold">•</span>
-              <span className="font-semibold">£{cart?.price ?? 0}</span>
-            </div>
-
-            {/* Continue Button */}
-            <button
-              className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition"
-              onClick={handleContinue}
-              disabled={!cart}
-            >
-              Continue to Date & Time
-            </button>
-          </div>
-        )}
+        {/*     {Object.keys(selectedOptions).length > 0 && ( */}
+        {/**/}
+        {/*       <div */}
+        {/*         className={`fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50 */}
+        {/* transform transition-all duration-500 ease-in-out */}
+        {/* ${Object.keys(selectedOptions).length > 0 */}
+        {/*             ? "translate-y-0 opacity-100" */}
+        {/*             : "translate-y-full opacity-0 pointer-events-none" */}
+        {/*           }`} */}
+        {/*       > */}
+        {/*         <div className="text-sm text-noira-light pr-25"> */}
+        {/*           <span className="mr-2 text-xl text-primary font-bold">Selected:</span> */}
+        {/*           <span className="font-semibold"> */}
+        {/*             {cart ? cart.serviceName : "No service selected"} */}
+        {/*           </span> */}
+        {/*           <span className="mx-2 text-noira-gold">•</span> */}
+        {/*           <span className="font-semibold">£{cart?.price ?? 0}</span> */}
+        {/*         </div> */}
+        {/**/}
+        {/*         <button */}
+        {/*           className="bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg hover:opacity-90 transition" */}
+        {/*           onClick={handleContinue} */}
+        {/*           disabled={!cart} */}
+        {/*         > */}
+        {/*           Continue to Date & Time */}
+        {/*         </button> */}
+        {/*       </div> */}
+        {/*     )} */}
       </div>
+      <StickyCartSummary />
     </div>
   );
 }

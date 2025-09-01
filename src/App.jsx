@@ -21,7 +21,7 @@ function AppLayout() {
     '/auth/forgotpassword',
     '/auth/resetpassword/:token',
     '/admin/admindashboard',
-    '/paymentpage',
+
     '/paymentsuccess',
     '/paymentfail',
   ];

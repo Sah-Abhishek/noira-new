@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import ComingSoonModal from "../components/PaymentPage/ComingSoonModal.jsx";
+import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary.jsx";
 
 const PaymentPage = () => {
   const { date, time, selectedTherapist, cart } = useBookingStore();
@@ -64,7 +65,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-25 p-4">
+    <div className="min-h-screen bg-black pb-35 pt-25 p-4">
       <div className="max-w-6xl mx-auto">
         <BookingStepper currentStep={3} />
 
@@ -107,6 +108,7 @@ const PaymentPage = () => {
         </div>
       </div>
       <ComingSoonModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* <StickyCartSummary /> */}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import axios from "axios";
 import { ChevronLeft, ChevronRight, MapPin, Star, CheckCircle2, Globe2, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useBookingStore from "../../store/bookingStore";
+import FancyDropdown from "./FancyDropdown";
 
 /** Small helpers */
 const fullName = (t) => `${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`.trim();
@@ -113,58 +114,28 @@ export default function BrowseTherapists() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Services */}
-            <div>
-              <label className="block text-sm text-gray-300 mb-2">Service</label>
-              <div className="relative">
-                <select
-                  className="w-full rounded-full bg-black/60 border border-white/10 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  value={filters.service}
-                  onChange={(e) => setFilters((f) => ({ ...f, service: e.target.value }))}
-                >
-                  {serviceOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <FancyDropdown
+              label="Service"
+              options={serviceOptions}
+              value={filters.service}
+              onChange={(val) => setFilters((f) => ({ ...f, service: val }))}
+            />
 
             {/* Language */}
-            <div>
-              <label className="block text-sm text-gray-300 mb-2">Language</label>
-              <div className="relative">
-                <select
-                  className="w-full rounded-full bg-black/60 border border-white/10 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  value={filters.language}
-                  onChange={(e) => setFilters((f) => ({ ...f, language: e.target.value }))}
-                >
-                  {languageOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <FancyDropdown
+              label="Language"
+              options={languageOptions}
+              value={filters.language}
+              onChange={(val) => setFilters((f) => ({ ...f, language: val }))}
+            />
 
             {/* Gender */}
-            <div>
-              <label className="block text-sm text-gray-300 mb-2">Gender Preference</label>
-              <div className="relative">
-                <select
-                  className="w-full rounded-full bg-black/60 border border-white/10 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  value={filters.gender}
-                  onChange={(e) => setFilters((f) => ({ ...f, gender: e.target.value }))}
-                >
-                  {["No Preference", "Female", "Male"].map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <FancyDropdown
+              label="Gender Preference"
+              options={["No Preference", "Female", "Male"]}
+              value={filters.gender}
+              onChange={(val) => setFilters((f) => ({ ...f, gender: val }))}
+            />
           </div>
 
           <div className="flex justify-center mt-4">
