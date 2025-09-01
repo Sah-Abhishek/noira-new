@@ -55,7 +55,14 @@ export default function StickyCartSummary({ isAbled, setIsAbled }) {
         </div>
         <div>
           <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
-          <span className="font-semibold text-white">{selectedTherapist.profile?.title}</span>
+          {selectedTherapist && (
+            <div>
+              <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
+              <span className="font-semibold text-white">
+                {selectedTherapist.profile?.title || selectedTherapist?.title}
+              </span>
+            </div>
+          )}
           {/* <span className="mx-2 text-noira-gold">•</span> */}
           {/* <span className="font-semibold text-white">£{cart?.price ?? 0}</span> */}
           {/* <span className="mx-2 text-noira-gold">•</span> */}
@@ -67,9 +74,7 @@ export default function StickyCartSummary({ isAbled, setIsAbled }) {
 
       {/* Continue Button */}
       <button
-        disabled={!isAbled}
-        className={`bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg transition
-    ${!isAbled ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"}`}
+        className={`bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg transition`}
         onClick={handleContinue}
       >
         {
