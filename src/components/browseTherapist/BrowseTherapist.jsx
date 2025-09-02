@@ -112,7 +112,7 @@ export default function BrowseTherapists() {
         <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-4 md:p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-center text-gray-200 mb-4">Filter Therapists</h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Services */}
             <FancyDropdown
               label="Service"
@@ -130,12 +130,12 @@ export default function BrowseTherapists() {
             />
 
             {/* Gender */}
-            <FancyDropdown
-              label="Gender Preference"
-              options={["No Preference", "Female", "Male"]}
-              value={filters.gender}
-              onChange={(val) => setFilters((f) => ({ ...f, gender: val }))}
-            />
+            {/* <FancyDropdown */}
+            {/*   label="Gender Preference" */}
+            {/*   options={["No Preference", "Female", "Male"]} */}
+            {/*   value={filters.gender} */}
+            {/*   onChange={(val) => setFilters((f) => ({ ...f, gender: val }))} */}
+            {/* /> */}
           </div>
 
           <div className="flex justify-center mt-4">

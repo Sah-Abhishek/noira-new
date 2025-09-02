@@ -37,6 +37,8 @@ import AllServicesPage from "./pages/AllServicesPage.jsx";
 import BrowseTherapists from "./components/browseTherapist/BrowseTherapist.jsx";
 import FeaturedTherapists from "./components/FeaturedTherapist.jsx";
 import ServiceByTherapist from "./components/byTherapistFlow/ServicesByTherapist.jsx";
+import TherapistManagement from "./components/Admin/TherapistManagement.jsx";
+import AddNewTherapist from "./components/Admin/AddNewTherapist.jsx";
 
 const AppRoutes = () => {
   return (
@@ -134,6 +136,8 @@ const AppRoutes = () => {
         >
           <Route index element={<Navigate to="admindashboard" replace />} />
           <Route path="admindashboard" element={<AdminDashboard />} />
+          <Route path="therapistmanagement" element={<TherapistManagement />} />
+          <Route path="addnewtherapist" element={<AddNewTherapist />} />
         </Route>
 
         {/* Therapist Protected Routes */}

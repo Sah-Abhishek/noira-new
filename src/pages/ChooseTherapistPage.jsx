@@ -7,12 +7,16 @@ import useBookingStore from "../store/bookingStore";
 
 const ChooseTherapistPage = () => {
   const [isDateAndTimeSelected, setIsDateAndTimeSelected] = useState(false);
-  const { selectedTherapist, setSelectedTherapist } = useBookingStore();
+  const { selectedTherapist, setSelectedTherapist, date, time } = useBookingStore();
+
   useEffect(() => {
-    if (!selectedTherapist) {
+    if (selectedTherapist && date && time) {
+      setIsDateAndTimeSelected(true);
+    } else {
       setIsDateAndTimeSelected(false);
     }
-  }, [isDateAndTimeSelected]);
+  }, [selectedTherapist, date, time]);
+
   return (
     <div className="min-h-screen pb-30 pt-10 bg-black justify-center  flex flex-col items-center">
       {/* Stepper */}
@@ -23,8 +27,9 @@ const ChooseTherapistPage = () => {
       {/* DateTimePicker */}
       <div className="flex ">
 
+
         <div className="w-full max-w-4xl px-4 mt-8">
-          <DateTimePicker setIsAbled={setIsDateAndTimeSelected} isAbled={isDateAndTimeSelected} />
+          <DateTimePicker />
         </div>
         <div>
           <TherapistSelection setIsAbled={setIsDateAndTimeSelected} isAbled={isDateAndTimeSelected} />

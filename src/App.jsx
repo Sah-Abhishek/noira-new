@@ -21,9 +21,10 @@ function AppLayout() {
     '/auth/forgotpassword',
     '/auth/resetpassword/:token',
     '/admin/admindashboard',
-
+    '/admin/therapistmanagement',
     '/paymentsuccess',
     '/paymentfail',
+    '/admin/addnewtherapist'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);

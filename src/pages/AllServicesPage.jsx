@@ -12,6 +12,7 @@ import massage from "../assets/icons/icons8-spa-48.png";
 import useBookingStore from "../store/bookingStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary";
+import AddressModal from "../components/AddressModal";
 
 export default function AllServicesPage() {
   const [services, setServices] = useState([]);
@@ -212,9 +213,10 @@ export default function AllServicesPage() {
 
         {/* Sticky Cart Summary */}
         {Object.keys(selectedOptions).length > 0 && (
-          <StickyCartSummary />
+          <StickyCartSummary isAbled={true} />
         )}
       </div>
+      <AddressModal isOpen={false} />
     </div>
   );
 }

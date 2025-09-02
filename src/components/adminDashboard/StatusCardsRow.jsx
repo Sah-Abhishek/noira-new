@@ -31,7 +31,27 @@ export default function StatusCardRow() {
   }, [filter]);
 
   if (!stats) {
-    return <p className="px-6 mt-6 text-gray-400">Loading...</p>;
+    return (
+      <div className="px-6 mt-6">
+        <div className="flex justify-between items-center mb-4">
+          <div className="h-6 w-32 bg-gray-700 animate-pulse rounded"></div>
+          <div className="h-8 w-24 bg-gray-700 animate-pulse rounded"></div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="bg-gray-800 rounded-xl p-6 shadow-md animate-pulse"
+            >
+              <div className="h-5 w-24 bg-gray-700 rounded mb-4"></div>
+              <div className="h-8 w-16 bg-gray-600 rounded mb-6"></div>
+              <div className="h-4 w-32 bg-gray-700 rounded"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (

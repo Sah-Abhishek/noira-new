@@ -20,6 +20,7 @@ export default function ServiceByTherapist() {
   const { cart, setCart, selectedTherapist } = useBookingStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAbled, setIsabled] = useState(false);
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -231,7 +232,10 @@ export default function ServiceByTherapist() {
         {/*       </div> */}
         {/*     )} */}
       </div>
-      <StickyCartSummary />
+      {Object.keys(selectedOptions).length > 0 && (
+
+        <StickyCartSummary isAbled={true} />
+      )}
     </div>
   );
 }

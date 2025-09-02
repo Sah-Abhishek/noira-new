@@ -41,7 +41,7 @@ const BookingSummary = () => {
     const [hourStr] = time.split(":"); // assumes time is "HH:mm"
     const hour = parseInt(hourStr, 10);
     if (hour >= 21) {
-      eliteHoursFee = 10;
+      eliteHoursFee = 15;
     }
   }
 
@@ -73,8 +73,8 @@ const BookingSummary = () => {
                   <Star
                     key={star}
                     className={`w-3 h-3 ${star <= Math.round(rating)
-                        ? "text-primary fill-primary"
-                        : "text-gray-600"
+                      ? "text-primary fill-primary"
+                      : "text-gray-600"
                       }`}
                   />
                 ))}

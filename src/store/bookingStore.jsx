@@ -17,6 +17,7 @@ const useBookingStore = create(
       services: [],
       therapists: [],
       selectedTherapist: null, // actual state
+      userAddress: null,
 
       // setters
       setHasSearched: (value) => set({ hasSearched: value }),

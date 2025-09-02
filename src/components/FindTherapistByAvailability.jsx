@@ -26,7 +26,6 @@ const generateMonthDays = (year, month) => {
   }
   return days;
 };
-
 const FindTherapistByAvailability = () => {
   const today = new Date();
   const {
@@ -52,6 +51,7 @@ const FindTherapistByAvailability = () => {
   const [availableTimes, setAvailableTimes] = useState({}); // API available times by date
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
+  const [isAbled, setIsAbled] = useState(false);
 
   const therapistId = selectedTherapist?.profile?._id;
 
@@ -59,6 +59,13 @@ const FindTherapistByAvailability = () => {
     setDate(null);
     setTime(null);
   }, []);
+  useEffect(() => {
+    if (selectedTherapist && date && time) {
+      setIsAbled(true);
+    } else {
+      setIsAbled(false);
+    }
+  }, [selectedTherapist, date, time]);
 
   // regenerate days for month/year
   useEffect(() => {
@@ -317,7 +324,7 @@ const FindTherapistByAvailability = () => {
 
         <div ref={therapistSelectionRef}></div>
       </div>
-      <StickyCartSummary />
+      <StickyCartSummary isAbled={isAbled} />
     </div>
   );
 };

@@ -1,0 +1,184 @@
+import React from "react";
+import { FaStar, FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
+import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
+
+export default function TherapistTable({ therapists, loading }) {
+  if (loading) {
+    // Skeleton rows
+    return (
+      <div className="overflow-x-auto rounded-xl bg-[#0d0d0d] border border-white/10">
+        <table className="w-full text-sm">
+          <thead className="sticky top-0 bg-[#111] z-10">
+            <tr className="text-gray-300 border-b border-white/20 text-left">
+              <th className="p-3">Profile</th>
+              <th className="p-3">Name & Title</th>
+              <th className="p-3">Rating</th>
+              <th className="p-3">Location</th>
+              <th className="p-3">Languages</th>
+              <th className="p-3">Experience</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <tr
+                key={i}
+                className="border-b border-white/10 animate-pulse"
+              >
+                <td className="p-3">
+                  <div className="w-12 h-12 rounded-full bg-gray-700" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-32 bg-gray-700 rounded mb-2" />
+                  <div className="h-3 w-24 bg-gray-800 rounded" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-10 bg-gray-700 rounded" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-20 bg-gray-700 rounded" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-28 bg-gray-700 rounded" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-16 bg-gray-700 rounded" />
+                </td>
+                <td className="p-3">
+                  <div className="h-4 w-20 bg-gray-700 rounded" />
+                </td>
+                <td className="p-3 flex gap-3">
+                  <div className="w-6 h-6 bg-gray-700 rounded" />
+                  <div className="w-6 h-6 bg-gray-700 rounded" />
+                  <div className="w-6 h-6 bg-gray-700 rounded" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  if (!therapists || therapists.length === 0) {
+    return (
+      <div className="bg-[#0d0d0d] rounded-xl p-6 text-center text-gray-400 border border-white/10">
+        No therapists found.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-xl bg-[#0d0d0d] border border-white/10">
+      <table className="w-full text-sm">
+        <thead className="sticky top-0 bg-[#111] z-10">
+          <tr className="text-gray-300 border-b border-white/20 text-left">
+            <th className="p-3">Profile</th>
+            <th className="p-3">Name & Title</th>
+            <th className="p-3">Rating</th>
+            <th className="p-3">Location</th>
+            <th className="p-3">Languages</th>
+            <th className="p-3">Experience</th>
+            <th className="p-3">Status</th>
+            <th className="p-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {therapists.map((t) => (
+            <tr
+              key={t._id}
+              className="border-b border-white/10 hover:bg-[#181818] transition"
+            >
+              {/* Profile */}
+              <td className="p-3">
+                <img
+                  src={t.avatar_url}
+                  alt={t.profile?.title || t.name.first}
+                  className="w-12 h-12 rounded-full object-cover border border-white/20"
+                />
+              </td>
+
+              {/* Name */}
+              <td className="p-3">
+                <p className="font-semibold text-white">
+                  {t.profile?.title || `${t.name.first} ${t.name.last}`}
+                </p>
+                <p className="text-gray-400 text-xs">{t.email}</p>
+              </td>
+
+              {/* Rating */}
+              <td className="p-3 flex items-center gap-1">
+                <FaStar className="text-yellow-400" />
+                {t.profile?.rating || 0}{" "}
+                <span className="text-gray-400 text-xs">
+                  ({t.profile?.ratingCount || 0})
+                </span>
+              </td>
+
+              {/* Location */}
+              <td className="p-3">
+                {t.address?.PostTown || "—"}, {t.address?.Postcode || "—"}
+              </td>
+
+              {/* Languages */}
+              <td className="p-3">
+                <div className="flex gap-1 flex-wrap">
+                  {t.profile?.languages?.length ? (
+                    t.profile.languages.map((lang) => (
+                      <span
+                        key={lang}
+                        className="bg-[#111] border border-white/20 text-xs px-2 py-1 rounded-lg"
+                      >
+                        {lang}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500 text-xs">—</span>
+                  )}
+                </div>
+              </td>
+
+              {/* Experience */}
+              <td className="p-3">{t.profile?.experience || 0}+ years</td>
+
+              {/* Status */}
+              <td className="p-3">
+                {t.profile?.isVerified ? (
+                  <span className="flex items-center gap-1 text-green-400 text-xs">
+                    <FaCheckCircle /> Verified
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-yellow-400 text-xs">
+                    <FaHourglassHalf /> Pending
+                  </span>
+                )}
+                <p
+                  className={`text-xs ${t.profile?.acceptingNewClients
+                      ? "text-green-300"
+                      : "text-red-400"
+                    }`}
+                >
+                  {t.profile?.acceptingNewClients ? "Active" : "Inactive"}
+                </p>
+              </td>
+
+              {/* Actions */}
+              <td className="p-3 flex gap-3">
+                <button title="View">
+                  <MdVisibility className="cursor-pointer text-blue-400 hover:text-blue-500" />
+                </button>
+                <button title="Edit">
+                  <MdEdit className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
+                </button>
+                <button title="Delete">
+                  <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

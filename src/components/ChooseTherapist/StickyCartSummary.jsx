@@ -74,14 +74,18 @@ export default function StickyCartSummary({ isAbled, setIsAbled }) {
 
       {/* Continue Button */}
       <button
-        className={`bg-primary text-noira-dark font-semibold px-6 py-2 text-black rounded-full shadow-lg transition`}
+        className={`px-6 py-2 rounded-full shadow-lg font-semibold transition 
+    ${isAbled
+            ? "bg-primary text-black hover:bg-primary/90 cursor-pointer"
+            : "bg-gray-600 text-gray-300 cursor-not-allowed opacity-50"
+          }`}
+        disabled={!isAbled}
         onClick={handleContinue}
       >
-        {
-          location.pathname === "/choosetherapist" || location.pathname === "/findtherapistbyavailability"
-            ? "Continue to Payment Page"
-            : "Continue to Date & Time"
-        }
+        {location.pathname === "/choosetherapist" ||
+          location.pathname === "/findtherapistbyavailability"
+          ? "Continue to Payment Page"
+          : "Continue to Date & Time"}
       </button>
     </div>
   );

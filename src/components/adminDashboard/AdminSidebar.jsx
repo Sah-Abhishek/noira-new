@@ -10,6 +10,7 @@ import {
   BookOpen,
   Megaphone,
   Settings,
+  UserStar,
 } from "lucide-react";
 
 const AdminSidebar = () => {
@@ -27,6 +28,11 @@ const AdminSidebar = () => {
       name: "User Management",
       icon: <Users className="w-5 h-5" />,
       path: "/admin/users",
+    },
+    {
+      name: "Therapist Management",
+      icon: <UserStar className="w-5 h-5" />,
+      path: "/admin/therapistmanagement",
     },
     {
       name: "Content Manager",
@@ -48,6 +54,7 @@ const AdminSidebar = () => {
       icon: <Settings className="w-5 h-5" />,
       path: "/admin/settings",
     },
+
   ];
 
   return (

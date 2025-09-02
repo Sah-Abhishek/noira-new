@@ -27,7 +27,7 @@ const generateMonthDays = (year, month) => {
   return days;
 };
 
-const DateTimePicker = ({ availableTimes = [], setIsAbled, isAbled }) => {
+const DateTimePicker = ({ availableTimes = [] }) => {
   const today = new Date();
   const {
     cart,
@@ -93,13 +93,6 @@ const DateTimePicker = ({ availableTimes = [], setIsAbled, isAbled }) => {
     }
   }, [date, time]);
 
-  useEffect(() => {
-    if (date && time) {
-      setIsAbled(true);
-    } else {
-      setIsAbled(false);
-    }
-  }, [date, time]);
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
