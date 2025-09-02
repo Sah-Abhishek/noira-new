@@ -35,20 +35,7 @@ export default function UserLogin() {
   const location = useLocation();
 
   // figure out where to redirect
-  const from = location.state?.from;
-  console.log("This is the from: ", from);
-  let redirectedTo = "/allservicespage"; // default
-
-
-  if (from?.pathname === "/browsetherapists") {
-    redirectedTo = "/findtherapistbyavailability";
-  } else if (from?.pathname === "/allservicespage") {
-    redirectedTo = "/allservicespage"
-  }
-  else if (from?.pathname) {
-    redirectedTo = from;
-  }
-
+  const from = location.state?.from?.pathname || "/allservicespage";
   const {
     register,
     handleSubmit,
@@ -68,7 +55,7 @@ export default function UserLogin() {
         toast.success("Login successful");
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
-        navigate(redirectedTo, { replace: true });
+        navigate(from, { replace: true });
       } catch (error) {
         console.error("Google login error:", error);
         setErrorMsg("Google login failed");
@@ -89,7 +76,7 @@ export default function UserLogin() {
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
         localStorage.setItem("userjwt", response.data.token);
-        navigate(redirectedTo, { replace: true });
+        navigate(from, { replace: true }); // ✅ FIXED
       }
     } catch (error) {
       if (error.response) {

@@ -45,8 +45,13 @@ export default function StickyCartSummary() {
           </span>
         </div>
         <div>
-          <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
-          <span className="font-semibold text-white">{selectedTherapist.title}</span>
+
+          {selectedTherapist && (
+            <>
+              <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
+              <span className="font-semibold text-white">{selectedTherapist.profile?.title || selectedTherapist?.title}</span>
+            </>
+          )}
           {/* <span className="mx-2 text-noira-gold">•</span> */}
           {/* <span className="font-semibold text-white">£{cart?.price ?? 0}</span> */}
           {/* <span className="mx-2 text-noira-gold">•</span> */}

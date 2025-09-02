@@ -73,14 +73,14 @@ const AppRoutes = () => {
         />
 
         {/* Protected User Routes */}
-        <Route
-          path="/servicespage"
-          element={
-            <UserProtectedRoute>
-              <ServicesPage />
-            </UserProtectedRoute>
-          }
-        />
+        {/* <Route */}
+        {/*   path="/servicespage" */}
+        {/*   element={ */}
+        {/*     <UserProtectedRoute> */}
+        {/*       <ServicesPage /> */}
+        {/*     </UserProtectedRoute> */}
+        {/*   } */}
+        {/* /> */}
         <Route
           path="/findtherapistbyavailability"
           element={
