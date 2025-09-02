@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import noira from "/noira.svg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
   const [isDarkMode, setIsDarkMode] = useState(true); // Mock theme state
   const navigate = useNavigate();
   const userjwt = localStorage.getItem("userjwt");
@@ -17,8 +19,8 @@ const Navbar = () => {
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  const handleLinkClick = (href) => {
-    navigate(href);
+  const handleLinkClick = (href, state = {}) => {
+    navigate(href, { state });
     setIsOpen(false);
   };
 
@@ -80,7 +82,7 @@ const Navbar = () => {
 
         {!isLoggedIn ? (
           <button
-            onClick={() => handleLinkClick("/userlogin")}
+            onClick={() => handleLinkClick("/userlogin", { state: { from: location } })}
             className="px-4 py-2 rounded-full bg-primary text-black font-medium hover:bg-opacity-80 transition"
           >
             Login
@@ -165,7 +167,7 @@ const Navbar = () => {
                   Services
                 </button>
                 <button
-                  onClick={() => handleLinkClick("/browsetherapists")}
+                  onClick={() => handleLinkClick("/browsetherapists", { state: { from: '/browsetherapists' } })}
                   className="text-base font-medium hover:text-[#C49E5B] transition px-2 py-1 text-left"
                 >
                   Therapists
@@ -197,7 +199,7 @@ const Navbar = () => {
               {/* Login Button for Mobile */}
               {!userEmail && (
                 <button
-                  onClick={() => handleLinkClick("/userlogin")}
+                  onClick={() => handleLinkClick("/userlogin", { state: { from: location } })}
                   className="w-full px-4 py-3 rounded-xl bg-primary text-black font-medium hover:bg-opacity-80 transition"
                 >
                   Login

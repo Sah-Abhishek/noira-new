@@ -217,7 +217,7 @@ const FindTherapistByAvailability = () => {
     <div className="min-h-screen bg-black text-white font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center pt-20 mb-10">
           <h1 className="text-4xl font-bold text-primary mb-2">Select Your Date & Time</h1>
           <p className="text-gray-400">Choose your preferred appointment slot</p>
         </div>

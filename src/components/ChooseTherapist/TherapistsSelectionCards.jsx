@@ -8,7 +8,8 @@ const TherapistSelectionCard = ({ therapist }) => {
   console.log("This is the therapist: ", therapist);
   const navigate = useNavigate();
   console.log("This is the therapist: ", therapist);
-  const isSelected = selectedTherapist?._id === therapist?._id;
+  const isSelected = selectedTherapist?._id === therapist?._id ? true : false;
+
   console.log("This is the value of isSelected: ", isSelected);
   const handleSelect = () => {
     setSelectedTherapist(therapist); // ✅ store therapist in Zustand
