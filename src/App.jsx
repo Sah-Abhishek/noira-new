@@ -24,10 +24,18 @@ function AppLayout() {
     '/admin/therapistmanagement',
     '/paymentsuccess',
     '/paymentfail',
-    '/admin/addnewtherapist'
+    '/admin/addnewtherapist',
+    '/admin/therapistprofile/:id',
+    '/therapist/therapistprofile/:id'
   ];
 
-  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+  const shouldHideNavbar = hideNavbarPaths.some((path) => {
+    // handle dynamic route manually
+    if (path.includes(':id')) {
+      return location.pathname.startsWith('/admin/therapistprofile/');
+    }
+    return location.pathname === path;
+  });
 
   return (
     <>

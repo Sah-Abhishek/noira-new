@@ -14,6 +14,7 @@ const TherapistSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const firstname = localStorage.getItem('firstname');
+  const therapistId = localStorage.getItem('therapistId');
 
   const menuItems = [
     {
@@ -44,7 +45,7 @@ const TherapistSidebar = () => {
     {
       name: "Profile",
       icon: <User className="w-5 h-5" />,
-      path: "/therapist/profile",
+      path: `/therapist/therapistprofile/${therapistId}`,
     },
   ];
 

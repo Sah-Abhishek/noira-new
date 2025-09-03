@@ -39,6 +39,7 @@ import FeaturedTherapists from "./components/FeaturedTherapist.jsx";
 import ServiceByTherapist from "./components/byTherapistFlow/ServicesByTherapist.jsx";
 import TherapistManagement from "./components/Admin/TherapistManagement.jsx";
 import AddNewTherapist from "./components/Admin/AddNewTherapist.jsx";
+import TherapistProfile from "./components/TherspistProfile/TherapistpProfile.jsx";
 
 const AppRoutes = () => {
   return (
@@ -151,6 +152,8 @@ const AppRoutes = () => {
         >
           <Route index element={<Navigate to="therapistdashboard" replace />} />
           <Route path="therapistdashboard" element={<TherapistDashboard />} />
+          <Route path="therapistprofile/:id" element={<TherapistProfile />} />
+
           <Route
             path="therapistschedule"
             element={

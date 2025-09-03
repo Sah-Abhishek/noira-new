@@ -1,15 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaStar, FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
+import FancyCheckbox from "./FancyCheckBox";
+import toast from "react-hot-toast";
+import DeleteTherapistModal from "./DeleteTherapistModal";
+import TherapistProfileModal from "../TherspistProfile/TherapistProfileModal";
 
-export default function TherapistTable({ therapists, loading }) {
+export default function TherapistTable({
+  therapists,
+  loading,
+  selectedTherapists,
+  setSelectedTherapists,
+}) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [therapistToDelete, setTherapistToDelete] = useState(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [selectedTherapistId, setSelectedTherapistId] = useState(null);
+
+  const handleViewProfile = (therapist) => {
+    setSelectedTherapistId(therapist.profile._id);
+    setIsProfileModalOpen(true);
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedTherapists(therapists.map((t) => t._id));
+    } else {
+      setSelectedTherapists([]);
+    }
+  };
+
+  const handleClickTrash = (therapist) => {
+    setTherapistToDelete(therapist);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleSelectOne = (id) => {
+    if (selectedTherapists.includes(id)) {
+      setSelectedTherapists(selectedTherapists.filter((tid) => tid !== id));
+    } else {
+      setSelectedTherapists([...selectedTherapists, id]);
+    }
+  };
+
   if (loading) {
-    // Skeleton rows
     return (
       <div className="overflow-x-auto rounded-xl bg-[#0d0d0d] border border-white/10">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-[#111] z-10">
             <tr className="text-gray-300 border-b border-white/20 text-left">
+              <th className="p-3"></th>
               <th className="p-3">Profile</th>
               <th className="p-3">Name & Title</th>
               <th className="p-3">Rating</th>
@@ -22,36 +62,16 @@ export default function TherapistTable({ therapists, loading }) {
           </thead>
           <tbody>
             {Array.from({ length: 6 }).map((_, i) => (
-              <tr
-                key={i}
-                className="border-b border-white/10 animate-pulse"
-              >
+              <tr key={i} className="border-b border-white/10 animate-pulse">
+                <td className="p-3">
+                  <div className="w-4 h-4 rounded bg-gray-700" />
+                </td>
                 <td className="p-3">
                   <div className="w-12 h-12 rounded-full bg-gray-700" />
                 </td>
                 <td className="p-3">
                   <div className="h-4 w-32 bg-gray-700 rounded mb-2" />
                   <div className="h-3 w-24 bg-gray-800 rounded" />
-                </td>
-                <td className="p-3">
-                  <div className="h-4 w-10 bg-gray-700 rounded" />
-                </td>
-                <td className="p-3">
-                  <div className="h-4 w-20 bg-gray-700 rounded" />
-                </td>
-                <td className="p-3">
-                  <div className="h-4 w-28 bg-gray-700 rounded" />
-                </td>
-                <td className="p-3">
-                  <div className="h-4 w-16 bg-gray-700 rounded" />
-                </td>
-                <td className="p-3">
-                  <div className="h-4 w-20 bg-gray-700 rounded" />
-                </td>
-                <td className="p-3 flex gap-3">
-                  <div className="w-6 h-6 bg-gray-700 rounded" />
-                  <div className="w-6 h-6 bg-gray-700 rounded" />
-                  <div className="w-6 h-6 bg-gray-700 rounded" />
                 </td>
               </tr>
             ))}
@@ -74,6 +94,16 @@ export default function TherapistTable({ therapists, loading }) {
       <table className="w-full text-sm">
         <thead className="sticky top-0 bg-[#111] z-10">
           <tr className="text-gray-300 border-b border-white/20 text-left">
+            <th className="p-3">
+              <FancyCheckbox
+                label=""
+                checked={
+                  therapists.length > 0 &&
+                  selectedTherapists.length === therapists.length
+                }
+                onChange={handleSelectAll}
+              />
+            </th>
             <th className="p-3">Profile</th>
             <th className="p-3">Name & Title</th>
             <th className="p-3">Rating</th>
@@ -88,8 +118,18 @@ export default function TherapistTable({ therapists, loading }) {
           {therapists.map((t) => (
             <tr
               key={t._id}
-              className="border-b border-white/10 hover:bg-[#181818] transition"
+              className={`border-b border-white/10 hover:bg-[#181818] transition ${selectedTherapists.includes(t._id) ? "bg-gray-800" : ""
+                }`}
             >
+              {/* Select */}
+              <td className="p-3">
+                <FancyCheckbox
+                  label=""
+                  checked={selectedTherapists.includes(t._id)}
+                  onChange={() => handleSelectOne(t._id)}
+                />
+              </td>
+
               {/* Profile */}
               <td className="p-3">
                 <img
@@ -110,7 +150,7 @@ export default function TherapistTable({ therapists, loading }) {
               {/* Rating */}
               <td className="p-3 flex items-center gap-1">
                 <FaStar className="text-yellow-400" />
-                {t.profile?.rating || 0}{" "}
+                {t.profile?.rating || 0}
                 <span className="text-gray-400 text-xs">
                   ({t.profile?.ratingCount || 0})
                 </span>
@@ -155,8 +195,8 @@ export default function TherapistTable({ therapists, loading }) {
                 )}
                 <p
                   className={`text-xs ${t.profile?.acceptingNewClients
-                      ? "text-green-300"
-                      : "text-red-400"
+                    ? "text-green-300"
+                    : "text-red-400"
                     }`}
                 >
                   {t.profile?.acceptingNewClients ? "Active" : "Inactive"}
@@ -166,14 +206,24 @@ export default function TherapistTable({ therapists, loading }) {
               {/* Actions */}
               <td className="p-3 flex gap-3">
                 <button title="View">
-                  <MdVisibility className="cursor-pointer text-blue-400 hover:text-blue-500" />
+                  <MdVisibility onClick={() => handleViewProfile(t)} className="cursor-pointer text-blue-400 hover:text-blue-500" />
                 </button>
                 <button title="Edit">
                   <MdEdit className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
                 </button>
-                <button title="Delete">
+                <button title="Delete" onClick={() => handleClickTrash(t)}>
                   <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
                 </button>
+                <DeleteTherapistModal
+                  therapist={therapistToDelete}
+                  isOpen={isDeleteModalOpen}
+                  onClose={() => setIsDeleteModalOpen(false)}
+                />
+                <TherapistProfileModal
+                  isOpen={isProfileModalOpen}
+                  onClose={() => setIsProfileModalOpen(false)}
+                  therapistId={selectedTherapistId}
+                />
               </td>
             </tr>
           ))}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Eye, Upload, User } from "lucide-react";
-import FancyDropdown from "../browseTherapist/FancyDropdown";
 import axios from "axios";
 
 export default function AddNewTherapist() {
@@ -39,6 +38,7 @@ export default function AddNewTherapist() {
     const fetchServices = async () => {
       try {
         const res = await axios.get(`${apiUrl}/services/list`);
+        console.log("These are the services: ", res.data);
         setServicesList(res.data);
       } catch (err) {
         console.error("Failed to fetch services:", err);
@@ -74,7 +74,10 @@ export default function AddNewTherapist() {
       formData.append("firstName", form.firstName);
       formData.append("lastName", form.lastName);
       formData.append("username", form.username);
-      formData.append("experience", form.experience);
+      formData.append(
+        "experience",
+        form.experience ? Number(form.experience) : 0
+      );
       formData.append("phone", form.phone);
       formData.append("email", form.email);
       formData.append("password", form.password);
@@ -249,14 +252,16 @@ export default function AddNewTherapist() {
         </div>
 
         {/* Experience */}
-        <div className="grid grid-cols-1 gap-4 mb-4">
-          <FancyDropdown
-            label="Experience"
-            options={["0-1 years", "2-5 years", "5-10 years", "10+ years"]}
-            value={form.experience}
-            onChange={(val) => handleChange("experience", val)}
-          />
-        </div>
+
+        <label className="block text-sm text-gray-400 mb-1">Experience</label>
+        <input
+          type="number"
+          value={form.experience}
+          onChange={(e) => handleChange("experience", e.target.value)}
+          className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
+    focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+          placeholder="Years of experience"
+        />
 
         {/* Address */}
         <div className="mb-4">
@@ -278,17 +283,18 @@ export default function AddNewTherapist() {
         </div>
 
         {/* Services Offered */}
+        {/* Services Offered */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">Services Offered</label>
           <div className="grid grid-cols-2 gap-2">
             {servicesList.map((service) => {
-              const name = service.name || service;
-              const isChecked = form.services.includes(name);
+              const serviceId = service._id;
+              const isChecked = form.services.includes(serviceId);
               return (
                 <label
-                  key={name}
+                  key={serviceId}
                   className={`flex items-center gap-3 cursor-pointer rounded-lg border px-3 py-2 transition-all
-                    ${isChecked
+            ${isChecked
                       ? "border-primary bg-primary/10"
                       : "border-white/10 hover:border-primary/50"
                     }`}
@@ -300,15 +306,15 @@ export default function AddNewTherapist() {
                       handleChange(
                         "services",
                         isChecked
-                          ? form.services.filter((s) => s !== name)
-                          : [...form.services, name]
+                          ? form.services.filter((s) => s !== serviceId)
+                          : [...form.services, serviceId]
                       )
                     }
                     className="hidden"
                   />
                   <div
                     className={`w-5 h-5 rounded-md flex items-center justify-center transition-all
-                      ${isChecked
+              ${isChecked
                         ? "bg-primary text-black"
                         : "bg-black border border-white/20"
                       }`}
@@ -325,7 +331,7 @@ export default function AddNewTherapist() {
                       </svg>
                     )}
                   </div>
-                  <span className="text-sm">{name}</span>
+                  <span className="text-sm">{service.name}</span>
                 </label>
               );
             })}
@@ -372,7 +378,7 @@ export default function AddNewTherapist() {
             {form.servicesInPostalCodes.map((pc, i) => (
               <span
                 key={i}
-                className="px-3 py-1 rounded-full bg-gray-800 text-sm flex items-center gap-2"
+                className="px-3 py-1 rounded-full border border-white/10 text-sm flex items-center gap-2"
               >
                 {pc}
                 <button
@@ -537,7 +543,7 @@ export default function AddNewTherapist() {
             type="submit"
             className="px-4 py-2 rounded-lg bg-primary text-black font-semibold hover:opacity-90"
           >
-            Save Therapist
+            Create Therapist
           </button>
         </div>
       </form>
