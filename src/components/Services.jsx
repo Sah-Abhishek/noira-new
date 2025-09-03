@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import devineHand from '../assets/devineHand.png';
 import dumbell from '../assets/dumbell.png';
 import leave from '../assets/leaf.png';
@@ -8,61 +8,17 @@ import cartWheel from '../assets/cartWheel.png';
 import { FaArrowRight } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
-import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 
-// Mock service data with real images from Unsplash
-const services = [
-  {
-    title: 'Quick Reset',
-    description: 'An express immersion for back, neck, and shoulders — melting tension inminutes, awakening the senses.',
-    prices: ['45 mins – £65'],
-    icon: devineHand,
-    image: '/quick-reset.png'
-  },
-  {
-    title: 'Deep Comfort Massage',
-    description: 'Slow, precise, muscle-focused indulgence that releases knots,restores balance, and quiets the mind.',
-    prices: ['60 mins – £85', '90 mins – £120', '120 mins – £155', '150 mins – £190'],
-    icon: dumbell,
-    image: '/deep-comfort.png'
-  },
-  {
-    title: 'Jet Lag Reset',
-    description: 'A circulation-boosting ritual that reduces swelling, reawakens energy,and leaves your body light and renewed',
-    prices: ['60 mins – £95', '90 mins – £135', '120 mins – £175', '150 mins – £215'],
-    icon: leave,
-    image: '/jet-lag.png',
-  },
-  {
-    title: 'The Executive Reset',
-    description: 'Deep tissue meets refined pressure-point therapy — a focused revival for mental clarity and physical ease.',
-    prices: ['60 mins – £105', '90 mins – £145', '120 mins – £185'],
-    icon: heart,
-    image: '/executive-reset.png'
-  },
-  {
-    title: 'Couple’s Bespoke Escape',
-    description: 'Two therapists in perfect synchrony — an intimate shared indulgence for private moments.',
-    prices: ['60 mins – £180', '90 mins – £250', '120 mins – £320'],
-    icon: twoLeaves,
-    image: '/couples-massage.png'
-  },
-  {
-    title: 'The Black Label Experience',
-    description: 'Full-body indulgence with warm oil infusion and flowing strokes — the ultimate Noira signature.',
-    prices: ['60 mins – £115', '90 mins – £155', '120 mins – £195'],
-    icon: cartWheel,
-    image: '/massage2.png'
-  },
-  // {
-  //   title: 'The Black Label Experience',
-  //   description: 'Full-body indulgence with warm oil infusion and flowing, luxurious strokes.',
-  //   prices: ['90 mins – £200', '120 mins – £270', '150 mins – £340'],
-  //   icon: devineHand,
-  //   image: '/photo3.jpg'
-  // },
-];
+// Map tier or name to your existing icons
+const iconMap = {
+  'Classic Reset': devineHand,
+  'Deep Release': dumbell,
+  'The NOIRA Ritual': leave,
+  // add more mappings if needed
+};
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -70,23 +26,45 @@ const fadeInUp = {
 };
 
 const Services = () => {
-  // Assuming a context provider for theme is set up
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
 
-  // Dynamic classes for dark/light mode
   const sectionBg = isDarkMode ? 'bg-black text-white' : 'bg-gray-200/70 text-black';
   const descriptionText = isDarkMode ? 'text-gray-400' : 'text-gray-600';
 
-  const handleOnClick = () => {
-    navigate('/allservicespage',);
-  }
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/services/list`);
+
+        const data = await res.json();
+
+        // Map API data to the format your component expects
+        const mappedServices = data.map(service => ({
+          title: service.name,
+          description: service.description,
+          prices: service.options.map(
+            option => `${option.durationMinutes} mins – £${option.price.amount}`
+          ),
+          icon: iconMap[service.name] || devineHand, // fallback icon
+          image: service.image_url,
+        }));
+
+        setServices(mappedServices);
+      } catch (err) {
+        console.error('Failed to fetch services:', err);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const handleOnClick = () => navigate('/allservicespage');
 
   return (
-    <section
-      className={`${sectionBg} py-16 px-4 sm:px-6 md:px-10 lg:px-20`}
-      id="services"
-    >
+    <section className={`${sectionBg} py-16 px-4 sm:px-6 md:px-10 lg:px-20`} id="services">
       {/* Section Header */}
       <motion.div
         className="text-center mb-22"
@@ -126,20 +104,20 @@ const Services = () => {
             transition={{ delay: index * 0.15 }}
           >
             {/* Image section with gradient overlay */}
-            <div className="relative w-full h-52">
+            <div className="relative w-full h-52 bg-black">
               <img
                 src={service.image}
                 alt={service.title}
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70 transition-opacity duration-300"></div>
+              < div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70 transition-opacity duration-300" ></div>
             </div>
 
             {/* Main content wrapper with padding */}
-            <div className="p-8 flex-grow">
+            < div className="p-8 flex-grow" >
               {/* Icon and Title Section */}
-              <div className="flex items-center gap-4 mb-4">
+              < div className="flex items-center gap-4 mb-4" >
                 <div className="bg-gradient-to-br from-[#f5e18c] via-[#e0a528] to-[#a66c00] p-3 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-current ring-[#C49E5B]">
                   <img
                     src={service.icon}
@@ -160,30 +138,26 @@ const Services = () => {
 
               <div>
                 <button onClick={handleOnClick} className='bg-[#D59940] font-bold text-black rounded-full px-3 py-2'>
-
-                  Request Prices</button>
-
-
+                  Request Prices
+                </button>
               </div>
 
               {/* Prices List */}
-              {/* <ul className="space-y-3"> */}
-              {/* {service.prices.map((price, idx) => ( */}
-              {/*   <li */}
-              {/*     key={idx} */}
-              {/*     className={`flex items-center text-sm font-braven text-gray-300`} */}
-              {/*   > */}
-              {/*     <FaArrowRight className="text-xs mr-2 text-yellow-500" /> */}
-              {/*     <span className="text-yellow-500 font-bold mr-1">{price.split(' – ')[0]}</span> */}
-              {/*     <span className="text-gray-400"> – </span> */}
-              {/*     <span className="text-white font-bold ml-1">{price.split(' – ')[1]}</span> */}
-              {/*   </li> */}
-              {/* ))} */}
-              {/* </ul> */}
+              {/* Uncomment if you want to show prices */}
+              {/* <ul className="space-y-3">
+                {service.prices.map((price, idx) => (
+                  <li key={idx} className="flex items-center text-sm font-braven text-gray-300">
+                    <FaArrowRight className="text-xs mr-2 text-yellow-500" />
+                    <span className="text-yellow-500 font-bold mr-1">{price.split(' – ')[0]}</span>
+                    <span className="text-gray-400"> – </span>
+                    <span className="text-white font-bold ml-1">{price.split(' – ')[1]}</span>
+                  </li>
+                ))}
+              </ul> */}
             </div>
-          </motion.div>
+          </motion.div >
         ))}
-      </div>
+      </div >
     </section >
   );
 };

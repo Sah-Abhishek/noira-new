@@ -5,22 +5,36 @@ import axios from "axios";
 
 export default function AddNewTherapist() {
   const [servicesList, setServicesList] = useState([]);
-  const [profileImage, setProfileImage] = useState(null); // store selected file
-  const [previewUrl, setPreviewUrl] = useState(""); // for showing preview
+  const [profileImage, setProfileImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [postalCodeInput, setPostalCodeInput] = useState("");
 
   const [form, setForm] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     username: "",
     experience: "",
-    address: "",
+    phone: "",
+    email: "",
+    password: "",
+    address: {
+      Building_No: "",
+      Street: "",
+      Locality: "",
+      PostTown: "",
+      PostalCode: "",
+    },
     services: [],
     languages: [],
+    servicesInPostalCodes: [],
+    acceptingNewClients: false,
+    gender: "",
+    isVerified: false,
     bio: "",
   });
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // Fetch services
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -33,12 +47,17 @@ export default function AddNewTherapist() {
     fetchServices();
   }, []);
 
-  // Handle normal form input changes
-  const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field, value, nested = false) => {
+    if (nested) {
+      setForm((prev) => ({
+        ...prev,
+        address: { ...prev.address, [field]: value },
+      }));
+    } else {
+      setForm((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
-  // Handle file change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -47,51 +66,79 @@ export default function AddNewTherapist() {
     }
   };
 
-  // Handle submit with FormData
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const formData = new FormData();
-      formData.append("fullName", form.fullName);
+      formData.append("firstName", form.firstName);
+      formData.append("lastName", form.lastName);
       formData.append("username", form.username);
       formData.append("experience", form.experience);
-      formData.append("address", form.address);
+      formData.append("phone", form.phone);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
       formData.append("bio", form.bio);
 
-      // append arrays
+      Object.entries(form.address).forEach(([key, value]) => {
+        formData.append(`address[${key}]`, value);
+      });
+
       form.services.forEach((s) => formData.append("services[]", s));
       form.languages.forEach((l) => formData.append("languages[]", l));
+      form.servicesInPostalCodes.forEach((pc) =>
+        formData.append("servicesInPostalCodes[]", pc)
+      );
 
-      // append file if exists
+      formData.append("acceptingNewClients", form.acceptingNewClients);
+      formData.append("gender", form.gender);
+      formData.append("isVerified", form.isVerified);
+
       if (profileImage) {
         formData.append("profileImage", profileImage);
       }
-      console.table("This is the form data: ", formData);
 
-      const res = await axios.post("/admin/addnewtherapists", formData, {
+      const res = await axios.post(`${apiUrl}/admin/createtherapist`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       console.log("Therapist saved:", res.data);
       alert("Therapist added successfully!");
 
-      // reset form
-      setForm({
-        fullName: "",
-        username: "",
-        experience: "",
-        address: "",
-        services: [],
-        languages: [],
-        bio: "",
-      });
-      setProfileImage(null);
-      setPreviewUrl("");
+      resetForm();
     } catch (err) {
       console.error("Error saving therapist:", err);
       alert("Failed to add therapist. Check console.");
     }
+  };
+
+  const resetForm = () => {
+    setForm({
+      firstName: "",
+      lastName: "",
+      username: "",
+      experience: "",
+      phone: "",
+      email: "",
+      password: "",
+      address: {
+        Building_No: "",
+        Street: "",
+        Locality: "",
+        PostTown: "",
+        PostalCode: "",
+      },
+      services: [],
+      languages: [],
+      servicesInPostalCodes: [],
+      acceptingNewClients: false,
+      gender: "",
+      isVerified: false,
+      bio: "",
+    });
+    setProfileImage(null);
+    setPreviewUrl("");
+    setPostalCodeInput("");
   };
 
   return (
@@ -132,18 +179,25 @@ export default function AddNewTherapist() {
           </label>
         </div>
 
-        {/* Full Name + Username */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* First Name + Last Name + Username */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Full Name</label>
+            <label className="block text-sm text-gray-400 mb-1">First Name</label>
             <input
               type="text"
-              value={form.fullName}
-              onChange={(e) => handleChange("fullName", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
-                focus:border-primary focus:ring-1 focus:ring-primary 
-                hover:ring-1 hover:ring-primary"
+              value={form.firstName}
+              onChange={(e) => handleChange("firstName", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
               required
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Last Name (Optional)</label>
+            <input
+              type="text"
+              value={form.lastName}
+              onChange={(e) => handleChange("lastName", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
             />
           </div>
           <div>
@@ -154,9 +208,41 @@ export default function AddNewTherapist() {
               type="text"
               value={form.username}
               onChange={(e) => handleChange("username", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
-                focus:border-primary focus:ring-1 focus:ring-primary 
-                hover:ring-1 hover:ring-primary"
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Phone + Email + Password */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Phone Number</label>
+            <input
+              type="text"
+              value={form.phone}
+              onChange={(e) => handleChange("phone", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Email</label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Password</label>
+            <input
+              type="text"
+              value={form.password}
+              onChange={(e) => handleChange("password", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
               required
             />
           </div>
@@ -174,16 +260,21 @@ export default function AddNewTherapist() {
 
         {/* Address */}
         <div className="mb-4">
-          <label className="block text-sm text-gray-400 mb-1">Current Address</label>
-          <input
-            type="text"
-            value={form.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-            className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
-              focus:border-primary focus:ring-1 focus:ring-primary 
-              hover:ring-1 hover:ring-primary"
-            required
-          />
+          <label className="block text-sm text-gray-400 mb-2">Address</label>
+          <div className="grid grid-cols-2 gap-2">
+            {["Building_No", "Street", "Locality", "PostTown", "PostalCode"].map(
+              (field) => (
+                <input
+                  key={field}
+                  type="text"
+                  placeholder={field}
+                  value={form.address[field]}
+                  onChange={(e) => handleChange(field, e.target.value, true)}
+                  className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+                />
+              )
+            )}
+          </div>
         </div>
 
         {/* Services Offered */}
@@ -230,16 +321,150 @@ export default function AddNewTherapist() {
                         strokeWidth={3}
                         viewBox="0 0 24 24"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     )}
                   </div>
                   <span className="text-sm">{name}</span>
                 </label>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Services Provided In PostalCodes */}
+        <div className="mb-4">
+          <label className="block text-sm text-gray-400 mb-1">
+            Services Available in Postal Codes
+          </label>
+
+          {/* Input + Add button */}
+          <div className="flex gap-2 mb-2">
+            <input
+              type="text"
+              value={postalCodeInput}
+              onChange={(e) => setPostalCodeInput(e.target.value)}
+              placeholder="Enter postal code"
+              className="flex-1 bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (postalCodeInput.trim() !== "" && !form.servicesInPostalCodes.includes(postalCodeInput.trim())) {
+                  setForm((prev) => ({
+                    ...prev,
+                    servicesInPostalCodes: [
+                      ...prev.servicesInPostalCodes,
+                      postalCodeInput.trim(),
+                    ],
+                  }));
+                  setPostalCodeInput("");
+                }
+              }}
+              className="px-3 py-2 rounded-lg bg-primary text-black text-sm hover:bg-primary/80"
+            >
+              Add
+            </button>
+          </div>
+
+          {/* Display chips */}
+          <div className="flex flex-wrap gap-2">
+            {form.servicesInPostalCodes.map((pc, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 rounded-full bg-gray-800 text-sm flex items-center gap-2"
+              >
+                {pc}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm((prev) => ({
+                      ...prev,
+                      servicesInPostalCodes: prev.servicesInPostalCodes.filter(
+                        (_, idx) => idx !== i
+                      ),
+                    }))
+                  }
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Accepting New Clients + Gender */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* Accepting New Clients Toggle */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">
+              Accepting New Clients
+            </label>
+            <div className="flex gap-2">
+              {["Yes", "No"].map((option) => {
+                const isActive =
+                  (option === "Yes" && form.acceptingNewClients) ||
+                  (option === "No" && !form.acceptingNewClients);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() =>
+                      handleChange("acceptingNewClients", option === "Yes")
+                    }
+                    className={`px-3 py-1.5 rounded-lg text-sm border transition-all
+                      ${isActive
+                        ? "bg-primary text-black border-primary"
+                        : "bg-black border-white/10 text-white hover:border-primary/50"
+                      }`}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">Gender</label>
+            <select
+              value={form.gender}
+              onChange={(e) => handleChange("gender", e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Verified Therapist Toggle */}
+        <div className="mb-4">
+          <label className="block text-sm text-gray-400 mb-1">
+            Verified Therapist
+          </label>
+          <div className="flex gap-2">
+            {["Yes", "No"].map((option) => {
+              const isActive =
+                (option === "Yes" && form.isVerified) ||
+                (option === "No" && !form.isVerified);
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleChange("isVerified", option === "Yes")}
+                  className={`px-3 py-1.5 rounded-lg text-sm border transition-all
+                    ${isActive
+                      ? "bg-primary text-black border-primary"
+                      : "bg-black border-white/10 text-white hover:border-primary/50"
+                    }`}
+                >
+                  {option}
+                </button>
               );
             })}
           </div>
@@ -271,12 +496,9 @@ export default function AddNewTherapist() {
             rows={4}
             value={form.bio}
             onChange={(e) => handleChange("bio", e.target.value)}
-            className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
-              focus:border-primary focus:ring-1 focus:ring-primary 
-              hover:ring-1 hover:ring-primary"
+            className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
           />
         </div>
-
         {/* Actions */}
         <div className="flex justify-end gap-3">
           <button
@@ -286,9 +508,22 @@ export default function AddNewTherapist() {
                 fullName: "",
                 username: "",
                 experience: "",
-                address: "",
+                phone: "",
+                email: "",
+                password: "",
+                address: {
+                  Building_No: "",
+                  Street: "",
+                  Locality: "",
+                  PostTown: "",
+                  PostalCode: "",
+                },
                 services: [],
                 languages: [],
+                servicesInPostcode: "",
+                acceptingNewClients: false,
+                gender: "",
+                isVerified: false,
                 bio: "",
               });
               setProfileImage(null);

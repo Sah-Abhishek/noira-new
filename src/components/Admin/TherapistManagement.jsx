@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TherapistTable from "./TherapistTable";
+import { useNavigate } from "react-router-dom";
 
 export default function TherapistManagement() {
   const [therapists, setTherapists] = useState([]);
@@ -8,6 +9,7 @@ export default function TherapistManagement() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // ✅ store total therapists
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Filters
   const [search, setSearch] = useState("");
@@ -43,7 +45,7 @@ export default function TherapistManagement() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl text-primary font-bold">Therapist Management</h2>
-        <button className="bg-primary hover:bg-primary text-black font-semibold px-4 py-2 rounded">
+        <button onClick={() => navigate('/admin/addnewtherapist')} className="bg-primary hover:bg-primary text-black font-semibold px-4 py-2 rounded">
           + Add New Therapist
         </button>
       </div>
