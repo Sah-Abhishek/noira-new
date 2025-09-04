@@ -153,7 +153,7 @@ export default function AddNewTherapist() {
           type="button"
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm"
         >
-          <Eye size={18} /> Preview Profile
+          {/* <Eye size={18} /> Preview Profile */}
         </button>
       </div>
 

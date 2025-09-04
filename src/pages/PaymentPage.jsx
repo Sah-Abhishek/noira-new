@@ -104,7 +104,7 @@ const PaymentPage = () => {
                 className="cursor-pointer w-full bg-primary text-black font-semibold py-3 px-6 rounded-full hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Lock className="w-4 h-4" />
-                {loading ? "Redirecting..." : `Confirm and Pay $${bookingData.total}`}
+                {loading ? "Redirecting..." : `Confirm and Pay `}
               </button>
             </div>
           </div>

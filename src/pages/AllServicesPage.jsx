@@ -12,7 +12,7 @@ import massage from "../assets/icons/icons8-spa-48.png";
 import useBookingStore from "../store/bookingStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary";
-import AddressModal from "../components/AddressModal";
+import PostalCodeModal from "../components/PostalCodeModal";
 
 export default function AllServicesPage() {
   const [services, setServices] = useState([]);
@@ -21,6 +21,9 @@ export default function AllServicesPage() {
   const { cart, setCart } = useBookingStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const isPostalCodeSaved = sessionStorage.getItem("postalCode") ? true : false;
+  const [isPostalCodeModalOpen, setIsPostalCodeModalOpen] = useState(!isPostalCodeSaved);
+
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -216,7 +219,7 @@ export default function AllServicesPage() {
           <StickyCartSummary isAbled={true} />
         )}
       </div>
-      <AddressModal isOpen={false} />
+      <PostalCodeModal isOpen={isPostalCodeModalOpen} onClose={() => setIsPostalCodeModalOpen(false)} />
     </div>
   );
 }

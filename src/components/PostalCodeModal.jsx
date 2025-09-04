@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Lock } from "lucide-react";
 
-export default function LocationModal({ isOpen, onClose, }) {
+export default function PostalCodeModal({ isOpen, onClose, }) {
   const [postalCode, setPostalCode] = useState("");
 
-  const onSubmit = () => {
+  const onSubmit = (postalCode) => {
+    sessionStorage.setItem("postalCode", postalCode);
+
 
   }
   const handleSubmit = (e) => {
@@ -31,12 +33,12 @@ export default function LocationModal({ isOpen, onClose, }) {
             className="bg-black text-white rounded-2xl shadow-2xl w-[90%] max-w-3xl p-10 relative border border-primary/20"
           >
             {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-primary transition"
-            >
-              <X size={24} />
-            </button>
+            {/* <button */}
+            {/*   onClick={onClose} */}
+            {/*   className="absolute top-4 right-4 text-gray-400 hover:text-primary transition" */}
+            {/* > */}
+            {/*   <X size={24} /> */}
+            {/* </button> */}
 
             {/* Branding */}
             <div className="flex justify-center mb-4">

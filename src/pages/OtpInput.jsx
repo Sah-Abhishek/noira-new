@@ -34,6 +34,7 @@ const OtpInput = () => {
 
       if (response.data.success) {
         localStorage.setItem("userjwt", response.data.token);
+        localStorage.setItem("userId", response.data.user._id);
 
         // Redirect based on purpose
         if (purpose === "login") {

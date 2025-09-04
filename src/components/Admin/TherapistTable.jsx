@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaStar, FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
 import FancyCheckbox from "./FancyCheckBox";
-import toast from "react-hot-toast";
 import DeleteTherapistModal from "./DeleteTherapistModal";
 import TherapistProfileModal from "../TherspistProfile/TherapistProfileModal";
 
@@ -17,14 +16,17 @@ export default function TherapistTable({
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedTherapistId, setSelectedTherapistId] = useState(null);
 
+  // ✅ use profile._id instead of _id
+  const getTherapistId = (t) => t.profile?._id || t.email;
+
   const handleViewProfile = (therapist) => {
-    setSelectedTherapistId(therapist.profile._id);
+    setSelectedTherapistId(getTherapistId(therapist));
     setIsProfileModalOpen(true);
   };
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedTherapists(therapists.map((t) => t._id));
+      setSelectedTherapists(therapists.map((t) => getTherapistId(t)));
     } else {
       setSelectedTherapists([]);
     }
@@ -115,118 +117,125 @@ export default function TherapistTable({
           </tr>
         </thead>
         <tbody>
-          {therapists.map((t) => (
-            <tr
-              key={t._id}
-              className={`border-b border-white/10 hover:bg-[#181818] transition ${selectedTherapists.includes(t._id) ? "bg-gray-800" : ""
-                }`}
-            >
-              {/* Select */}
-              <td className="p-3">
-                <FancyCheckbox
-                  label=""
-                  checked={selectedTherapists.includes(t._id)}
-                  onChange={() => handleSelectOne(t._id)}
-                />
-              </td>
+          {therapists.map((t) => {
+            const id = getTherapistId(t);
+            return (
+              <tr
+                key={id}
+                className={`border-b border-white/10 hover:bg-[#181818] transition ${selectedTherapists.includes(id) ? "bg-gray-800" : ""
+                  }`}
+              >
+                {/* Select */}
+                <td className="p-3">
+                  <FancyCheckbox
+                    label=""
+                    checked={selectedTherapists.includes(id)}
+                    onChange={() => handleSelectOne(id)}
+                  />
+                </td>
 
-              {/* Profile */}
-              <td className="p-3">
-                <img
-                  src={t.avatar_url}
-                  alt={t.profile?.title || t.name.first}
-                  className="w-12 h-12 rounded-full object-cover border border-white/20"
-                />
-              </td>
+                {/* Profile */}
+                <td className="p-3">
+                  <img
+                    src={t.avatar_url || "https://via.placeholder.com/48"}
+                    alt={t.profile?.title || t.name?.first}
+                    className="w-12 h-12 rounded-full object-cover border border-white/20"
+                  />
+                </td>
 
-              {/* Name */}
-              <td className="p-3">
-                <p className="font-semibold text-white">
-                  {t.profile?.title || `${t.name.first} ${t.name.last}`}
-                </p>
-                <p className="text-gray-400 text-xs">{t.email}</p>
-              </td>
+                {/* Name */}
+                <td className="p-3">
+                  <p className="font-semibold text-white">
+                    {t.profile?.title || `${t.name?.first} ${t.name?.last}`}
+                  </p>
+                  <p className="text-gray-400 text-xs">{t.email}</p>
+                </td>
 
-              {/* Rating */}
-              <td className="p-3 flex items-center gap-1">
-                <FaStar className="text-yellow-400" />
-                {t.profile?.rating || 0}
-                <span className="text-gray-400 text-xs">
-                  ({t.profile?.ratingCount || 0})
-                </span>
-              </td>
+                {/* Rating */}
+                <td className="p-3 flex items-center gap-1">
+                  <FaStar className="text-yellow-400" />
+                  {t.profile?.rating || 0}
+                  <span className="text-gray-400 text-xs">
+                    ({t.profile?.ratingCount || 0})
+                  </span>
+                </td>
 
-              {/* Location */}
-              <td className="p-3">
-                {t.address?.PostTown || "—"}, {t.address?.Postcode || "—"}
-              </td>
+                {/* Location */}
+                <td className="p-3">
+                  {t.address?.PostTown || "—"},{" "}
+                  {t.address?.PostalCode || "—"}
+                </td>
 
-              {/* Languages */}
-              <td className="p-3">
-                <div className="flex gap-1 flex-wrap">
-                  {t.profile?.languages?.length ? (
-                    t.profile.languages.map((lang) => (
-                      <span
-                        key={lang}
-                        className="bg-[#111] border border-white/20 text-xs px-2 py-1 rounded-lg"
-                      >
-                        {lang}
-                      </span>
-                    ))
+                {/* Languages */}
+                <td className="p-3">
+                  <div className="flex gap-1 flex-wrap">
+                    {t.profile?.languages?.length ? (
+                      t.profile.languages.map((lang) => (
+                        <span
+                          key={lang}
+                          className="bg-[#111] border border-white/20 text-xs px-2 py-1 rounded-lg"
+                        >
+                          {lang}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-500 text-xs">—</span>
+                    )}
+                  </div>
+                </td>
+
+                {/* Experience */}
+                <td className="p-3">{t.profile?.experience || 0}+ years</td>
+
+                {/* Status */}
+                <td className="p-3">
+                  {t.profile?.isVerified ? (
+                    <span className="flex items-center gap-1 text-green-400 text-xs">
+                      <FaCheckCircle /> Verified
+                    </span>
                   ) : (
-                    <span className="text-gray-500 text-xs">—</span>
+                    <span className="flex items-center gap-1 text-yellow-400 text-xs">
+                      <FaHourglassHalf /> Pending
+                    </span>
                   )}
-                </div>
-              </td>
+                  <p
+                    className={`text-xs ${t.profile?.acceptingNewClients
+                        ? "text-green-300"
+                        : "text-red-400"
+                      }`}
+                  >
+                    {t.profile?.acceptingNewClients ? "Active" : "Inactive"}
+                  </p>
+                </td>
 
-              {/* Experience */}
-              <td className="p-3">{t.profile?.experience || 0}+ years</td>
-
-              {/* Status */}
-              <td className="p-3">
-                {t.profile?.isVerified ? (
-                  <span className="flex items-center gap-1 text-green-400 text-xs">
-                    <FaCheckCircle /> Verified
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-yellow-400 text-xs">
-                    <FaHourglassHalf /> Pending
-                  </span>
-                )}
-                <p
-                  className={`text-xs ${t.profile?.acceptingNewClients
-                    ? "text-green-300"
-                    : "text-red-400"
-                    }`}
-                >
-                  {t.profile?.acceptingNewClients ? "Active" : "Inactive"}
-                </p>
-              </td>
-
-              {/* Actions */}
-              <td className="p-3 flex gap-3">
-                <button title="View">
-                  <MdVisibility onClick={() => handleViewProfile(t)} className="cursor-pointer text-blue-400 hover:text-blue-500" />
-                </button>
-                <button title="Edit">
-                  <MdEdit className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
-                </button>
-                <button title="Delete" onClick={() => handleClickTrash(t)}>
-                  <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
-                </button>
-                <DeleteTherapistModal
-                  therapist={therapistToDelete}
-                  isOpen={isDeleteModalOpen}
-                  onClose={() => setIsDeleteModalOpen(false)}
-                />
-                <TherapistProfileModal
-                  isOpen={isProfileModalOpen}
-                  onClose={() => setIsProfileModalOpen(false)}
-                  therapistId={selectedTherapistId}
-                />
-              </td>
-            </tr>
-          ))}
+                {/* Actions */}
+                <td className="p-3 flex gap-3">
+                  <button title="View">
+                    <MdVisibility
+                      onClick={() => handleViewProfile(t)}
+                      className="cursor-pointer text-blue-400 hover:text-blue-500"
+                    />
+                  </button>
+                  <button title="Edit">
+                    <MdEdit className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
+                  </button>
+                  <button title="Delete" onClick={() => handleClickTrash(t)}>
+                    <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
+                  </button>
+                  <DeleteTherapistModal
+                    therapist={therapistToDelete}
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                  />
+                  <TherapistProfileModal
+                    isOpen={isProfileModalOpen}
+                    onClose={() => setIsProfileModalOpen(false)}
+                    therapistId={selectedTherapistId}
+                  />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

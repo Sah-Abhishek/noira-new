@@ -19,6 +19,7 @@ import axios from "axios";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
+import useBookingStore from "../store/bookingStore";
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -33,6 +34,7 @@ export default function UserLogin() {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
   const location = useLocation();
+  const { userDetails, setUserDetails, userId, setUserId, setUserAddress, userAddress } = useBookingStore();
 
   // figure out where to redirect
   const from = location.state?.from?.pathname || "/allservicespage";
@@ -53,8 +55,11 @@ export default function UserLogin() {
         });
 
         toast.success("Login successful");
+        console.log("This is the userId: ", res.data.user._id);
+        localStorage.setItem("userId", res.data.user._id);
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
+        setUserId(res.data.user._id);
         navigate(from, { replace: true });
       } catch (error) {
         console.error("Google login error:", error);
@@ -76,6 +81,11 @@ export default function UserLogin() {
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
         localStorage.setItem("userjwt", response.data.token);
+        setUserDetails(response.data.user);
+        setUserAddress(response.data.user.address);
+        console.log("This is the userId: ", response.data.user._id);
+        localStorage.setItem("userId", response.data.user._id);
+
         navigate(from, { replace: true }); // ✅ FIXED
       }
     } catch (error) {

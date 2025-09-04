@@ -26,7 +26,9 @@ function AppLayout() {
     '/paymentfail',
     '/admin/addnewtherapist',
     '/admin/therapistprofile/:id',
-    '/therapist/therapistprofile/:id'
+    '/therapist/therapistprofile/:id',
+    '/admin/createnewservice',
+    '/admin/servicemanagement'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

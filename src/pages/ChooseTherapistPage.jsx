@@ -4,10 +4,16 @@ import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary";
 import TherapistSelection from "../components/ChooseTherapist/TherapistSelection";
 import BookingStepper from "../components/ServicesPage/BookingStepper";
 import useBookingStore from "../store/bookingStore";
+import AddressModal from "../components/Modals/AddressModal";
 
 const ChooseTherapistPage = () => {
   const [isDateAndTimeSelected, setIsDateAndTimeSelected] = useState(false);
   const { selectedTherapist, setSelectedTherapist, date, time } = useBookingStore();
+  const { userAddress } = useBookingStore();
+  const [isAddressSaved, setIsAddressSaved] = useState(userAddress ? true : false);
+  console.log("This is the isAddressSaved: ", isAddressSaved);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(!isAddressSaved);
+
 
   useEffect(() => {
     if (selectedTherapist && date && time) {
@@ -37,6 +43,7 @@ const ChooseTherapistPage = () => {
       </div>
       <div>
         <StickyCartSummary setIsAbled={setIsDateAndTimeSelected} isAbled={isDateAndTimeSelected} />
+        <AddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} />
       </div>
     </div>
   );

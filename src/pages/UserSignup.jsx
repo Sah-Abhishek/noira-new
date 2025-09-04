@@ -269,9 +269,9 @@ export default function UserSignup() {
 
           {/* Sign up */}
           <div className="text-center text-sm text-gray-400 mt-4">
-            Don’t have an account?{" "}
-            <Link to="/usersignup" className="text-primary hover:underline">
-              Sign Up
+            Already have an account?{" "}
+            <Link to="/userlogin" className="text-primary hover:underline">
+              Login
             </Link>
           </div>
         </form>

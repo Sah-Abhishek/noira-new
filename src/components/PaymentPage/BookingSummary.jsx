@@ -6,11 +6,11 @@ const BookingSummary = () => {
   const selectedTherapist = useBookingStore((state) => state.selectedTherapist);
   const date = useBookingStore((state) => state.date);
   const time = useBookingStore((state) => state.time);
-  const { cart } = useBookingStore();
+  const { cart, userAddress } = useBookingStore(); // ✅ add userAddress
 
   if (!selectedTherapist) {
     return (
-      <div className="bg-black rounded-2xl p-6 border border-white/10 text-white">
+      <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 text-white">
         No therapist selected.
       </div>
     );
@@ -48,14 +48,14 @@ const BookingSummary = () => {
   const total = serviceFee + processingFee + eliteHoursFee;
 
   return (
-    <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full">
+    <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full space-y-6">
       {/* Heading */}
       <h2 className="text-primary text-lg font-semibold mb-6">
         Booking Summary
       </h2>
 
       {/* Therapist Info */}
-      <div className="bg-[#0e1219] rounded-2xl p-4 mb-6">
+      <div className="bg-[#111] rounded-2xl p-4">
         <div className="flex items-center gap-3">
           <img
             src={avatar}
@@ -86,7 +86,7 @@ const BookingSummary = () => {
       </div>
 
       {/* Appointment Info */}
-      <div className="bg-[#0e1219] rounded-2xl p-4 mb-6 space-y-2">
+      <div className="bg-[#111] rounded-2xl p-4 space-y-2">
         <div className="flex justify-between">
           <span className="text-gray-400 text-sm">Date:</span>
           <span className="text-white text-sm">
@@ -113,8 +113,20 @@ const BookingSummary = () => {
         </div>
       </div>
 
+      {/* User Address */}
+      {userAddress && (
+        <div className="bg-[#111] rounded-2xl p-4 space-y-2">
+          <h3 className="text-primary font-semibold text-sm mb-2">
+            Your Address
+          </h3>
+          <p className="text-white text-sm">
+            {userAddress.buildingNo}, {userAddress.street}, {userAddress.locality}, {userAddress.postTown}, {userAddress.postalCode}
+          </p>
+        </div>
+      )}
+
       {/* Pricing */}
-      <div className="space-y-2 mb-4">
+      <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Service Fee:</span>
           <span className="text-white">₤{serviceFee.toFixed(2)}</span>

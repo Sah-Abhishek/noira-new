@@ -5,6 +5,7 @@ import useBookingStore from "../store/bookingStore.jsx";
 import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import StickyCartSummary from "./ChooseTherapist/StickyCartSummary.jsx";
+import AddressModal from "./Modals/AddressModal.jsx";
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -325,6 +326,7 @@ const FindTherapistByAvailability = () => {
         <div ref={therapistSelectionRef}></div>
       </div>
       <StickyCartSummary isAbled={isAbled} />
+      <AddressModal isOpen={true} />
     </div>
   );
 };

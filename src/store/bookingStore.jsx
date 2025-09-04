@@ -12,6 +12,8 @@ const useBookingStore = create(
       date: null,
       time: null,
       hasSearched: false,
+      userId: null,
+      userDetails: null,
 
       // services list from API
       services: [],
@@ -28,6 +30,9 @@ const useBookingStore = create(
       setTime: (time) => set({ time }),
       resetCart: () => set({ cart: [], date: null, time: null }), // better to reset cart to [] instead of null
       setSelectedTherapist: (therapist) => set({ selectedTherapist: therapist }),
+      setUserAddress: (address) => set({ userAddress: address }),
+      setUerId: (userId) => set({ userId }),
+      setUserDetails: (user) => set({ userDetails: user }),
 
       // save services API response
       setServices: (services) => set({ services }),

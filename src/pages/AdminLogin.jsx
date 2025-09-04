@@ -154,11 +154,11 @@ export default function AdminLogin() {
           </div>
 
           {/* Forgot Password */}
-          <div className="text-right">
-            <a href="#" className="text-sm text-yellow-400 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
+          {/* <div className="text-right"> */}
+          {/*   <a href="#" className="text-sm text-yellow-400 hover:underline"> */}
+          {/*     Forgot Password? */}
+          {/*   </a> */}
+          {/* </div> */}
 
           {/* Sign In Button */}
           <button
@@ -188,21 +188,20 @@ export default function AdminLogin() {
         </form>
 
         {/* Or Divider */}
-        <div className="flex items-center gap-2 text-gray-400 text-sm">
-          <hr className="flex-1 border-gray-600" />
-          Or continue with
-          <hr className="flex-1 border-gray-600" />
-        </div>
-
-        {/* Social Buttons */}
-        <div className="flex gap-4">
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white">
-            <FaGoogle /> Google
-          </button>
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white">
-            <FaApple /> Apple
-          </button>
-        </div>
+        {/* <div className="flex items-center gap-2 text-gray-400 text-sm"> */}
+        {/*   <hr className="flex-1 border-gray-600" /> */}
+        {/*   Or continue with */}
+        {/*   <hr className="flex-1 border-gray-600" /> */}
+        {/* </div> */}
+        {/**/}
+        {/* <div className="flex gap-4"> */}
+        {/*   <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"> */}
+        {/*     <FaGoogle /> Google */}
+        {/*   </button> */}
+        {/*   <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"> */}
+        {/*     <FaApple /> Apple */}
+        {/*   </button> */}
+        {/* </div> */}
 
         {/* Footer */}
         <div className="text-center text-xs text-gray-500 pt-6 space-y-2">
