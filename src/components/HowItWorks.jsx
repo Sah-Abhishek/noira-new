@@ -1,6 +1,7 @@
 import React from "react";
 import { useTheme } from "../context/ThemeContext";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   {
@@ -8,21 +9,21 @@ const steps = [
     title: "Your Request",
     description:
       "You select your ritual, your setting, and your preferred time. Noira’s concierge confirms availability discreetly.",
-    image: "/works.png",
+    image: "/1.png",
   },
   {
     number: 2,
     title: "The Arrival",
     description:
       "Your therapist arrives — immaculate, poised, and carrying the Noira kit to transform your space.",
-    image: "/theArrival.jpg",
+    image: "/2.png",
   },
   {
     number: 3,
     title: "The Ritual",
     description:
       "From first touch to final breath, you’re immersed in a sensory journey — layered scents, warm oils, and quiet mastery.",
-    image: "/consol.jpeg",
+    image: "/3.png",
   },
 ];
 
@@ -33,6 +34,7 @@ const fadeInUp = {
 
 const HowItWorks = () => {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <div className={`py-16 px-4 transition-colors duration-500 bg-black`}>
@@ -102,7 +104,7 @@ const HowItWorks = () => {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <button
+          <button onClick={() => navigate('/allservicespage')}
             className="group relative px-8 py-4 font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300
             bg-[#D59940] text-black shadow-[#C49E5B]/25 hover:shadow-[#C49E5B]/40"
           >

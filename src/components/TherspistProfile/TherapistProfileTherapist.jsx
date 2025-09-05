@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   MapPin,
   Phone,
@@ -12,9 +12,12 @@ import {
   Calendar,
 } from "lucide-react";
 
-const TherapistProfile = () => {
-  const { id } = useParams(); // therapistId from URL
+const TherapistProfileTherapist = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const therapistId = localStorage.getItem('therapistId');
+  console.log("This is the therapistId: ", therapistId);
+  const navigate = useNavigate();
+
 
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +25,10 @@ const TherapistProfile = () => {
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/therapist/${id}`);
+        const resolvedId = therapistId || id; // localStorage takes priority, fallback to URL
+        if (!resolvedId) return;
+
+        const res = await axios.get(`${apiUrl}/therapist/${resolvedId}`);
         setTherapist(res.data.therapist || res.data);
       } catch (error) {
         console.error("Failed to fetch therapist:", error);
@@ -31,8 +37,8 @@ const TherapistProfile = () => {
       }
     };
 
-    if (id) fetchTherapist();
-  }, [id, apiUrl]);
+    fetchTherapist();
+  }, [therapistId, apiUrl]);
 
   if (loading) {
     return (
@@ -182,9 +188,15 @@ const TherapistProfile = () => {
             )}
           </div>
         </div>
+        <button onClick={() => navigate('/therapist/edittherapistprofile')}
+          className="bg-primary text-black px-5 mt-4 py-2 rounded-lg font-semibold shadow-md 
+             hover:bg-primary/90 active:scale-95 transition-all duration-200"
+        >
+          Edit Profile
+        </button>
       </div>
     </div>
   );
 };
 
-export default TherapistProfile;
+export default TherapistProfileTherapist;

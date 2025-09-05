@@ -45,7 +45,7 @@ const TherapistSidebar = () => {
     {
       name: "Profile",
       icon: <User className="w-5 h-5" />,
-      path: `/therapist/therapistprofile/${therapistId}`,
+      path: `/therapist/therapistprofiletherapist`,
     },
   ];
 

@@ -39,10 +39,12 @@ import FeaturedTherapists from "./components/FeaturedTherapist.jsx";
 import ServiceByTherapist from "./components/byTherapistFlow/ServicesByTherapist.jsx";
 import TherapistManagement from "./components/Admin/TherapistManagement.jsx";
 import AddNewTherapist from "./components/Admin/AddNewTherapist.jsx";
-import TherapistProfile from "./components/TherspistProfile/TherapistpProfile.jsx";
+import TherapistProfile from "./components/TherspistProfile/TherapistProfileTherapist.jsx";
 import CreateNewService from "./components/createNewService.jsx";
 import ServiceManagement from "./components/serviceManagement/ServiceManagement.jsx";
 import UserProfile from "./components/user/UserProfile.jsx";
+import EditTherapistProfile from "./components/therapist/EditTherapistProfile.jsx";
+import TherapistProfileTherapist from "./components/TherspistProfile/TherapistProfileTherapist.jsx";
 
 const AppRoutes = () => {
   return (
@@ -153,6 +155,9 @@ const AppRoutes = () => {
           <Route path="addnewtherapist" element={<AddNewTherapist />} />
           <Route path="createnewservice" element={<CreateNewService />} />
           <Route path="servicemanagement" element={<ServiceManagement />} />
+          <Route path="edittherapistprofileadmin" element={<EditTherapistProfile />} />
+
+
         </Route>
 
         {/* Therapist Protected Routes */}
@@ -167,7 +172,8 @@ const AppRoutes = () => {
           <Route index element={<Navigate to="therapistdashboard" replace />} />
           <Route path="therapistdashboard" element={<TherapistDashboard />} />
           <Route path="therapistprofile/:id" element={<TherapistProfile />} />
-
+          <Route path="therapistprofiletherapist" element={<TherapistProfileTherapist />} />
+          <Route path="edittherapistprofile/" element={<EditTherapistProfile />} />
           <Route
             path="therapistschedule"
             element={

@@ -1,8 +1,10 @@
+// TherapistManagement.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TherapistTable from "./TherapistTable";
 import { useNavigate } from "react-router-dom";
 import { Check, Trash } from "lucide-react";
+import BulkActionConfirmModal from "./BulkActionConfirmationModal";
 
 export default function TherapistManagement() {
   const [therapists, setTherapists] = useState([]);
@@ -11,6 +13,9 @@ export default function TherapistManagement() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
 
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -27,32 +32,35 @@ export default function TherapistManagement() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-      setPage(1); // reset page on new search
+      setPage(1);
     }, 500);
     return () => clearTimeout(handler);
   }, [search]);
 
+  const getTherapistId = (t) => t?.profile?._id || t?._id || null;
+
   // Fetch therapists
-  const fetchTherapists = async (page) => {
+  const fetchTherapists = async (pageNum = 1) => {
     try {
       setLoading(true);
+
       let statusParam;
       if (statusFilter === "true") statusParam = true;
       else if (statusFilter === "false") statusParam = false;
-      else statusParam = undefined;
 
       const res = await axios.get(api, {
         params: {
-          page,
+          page: pageNum,
           limit,
           search: debouncedSearch,
           ...(statusParam !== undefined && { status: statusParam }),
         },
       });
 
-      setTherapists(res.data.therapists || []);
-      setTotalPages(res.data.totalPages || 1);
-      setTotalCount(res.data.total || 0);
+      const { therapists: list, totalPages, total } = res?.data || {};
+      setTherapists(Array.isArray(list) ? list : []);
+      setTotalPages(totalPages || 1);
+      setTotalCount(total || 0);
     } catch (err) {
       console.error("Error fetching therapists:", err);
     } finally {
@@ -62,6 +70,7 @@ export default function TherapistManagement() {
 
   useEffect(() => {
     fetchTherapists(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, debouncedSearch, statusFilter]);
 
   const startIndex = (page - 1) * limit + 1;
@@ -69,12 +78,12 @@ export default function TherapistManagement() {
 
   // Bulk action handler
   const handleBulkAction = async (action) => {
-    if (action === "delete") {
-      if (!window.confirm("Are you sure you want to delete selected therapists?")) return;
-    }
-
     try {
-      const therapistIds = selectedTherapists.map(t => t.profile._id);
+      const therapistIds = selectedTherapists
+        .map((t) => getTherapistId(t))
+        .filter(Boolean);
+
+      if (therapistIds.length === 0) return;
 
       await axios.post(`${apiUrl}/admin/therapist/bulkaction`, {
         therapistIds,
@@ -86,6 +95,17 @@ export default function TherapistManagement() {
     } catch (err) {
       console.error("Error performing bulk action:", err);
     }
+  };
+
+  const handleOpenModal = (action) => {
+    setPendingAction(action);
+    setShowModal(true);
+  };
+
+  const handleConfirmAction = async () => {
+    await handleBulkAction(pendingAction);
+    setShowModal(false);
+    setPendingAction(null);
   };
 
   return (
@@ -124,22 +144,24 @@ export default function TherapistManagement() {
       {/* Bulk Actions */}
       {selectedTherapists.length > 0 && (
         <div className="mb-4 p-3 bg-gray-800 border border-gray-700 rounded-lg flex justify-between items-center">
-          <p className="text-sm text-gray-300">{selectedTherapists.length} selected</p>
+          <p className="text-sm text-gray-300">
+            {selectedTherapists.length} selected
+          </p>
           <div className="flex gap-3">
             <button
-              onClick={() => handleBulkAction("delete")}
+              onClick={() => handleOpenModal("delete")}
               className="bg-red-500 inline-flex items-center justify-center gap-x-1 hover:bg-red-600 text-white text-sm px-3 py-1 rounded"
             >
               <Trash size={15} /> Delete
             </button>
             <button
-              onClick={() => handleBulkAction("active")}
+              onClick={() => handleOpenModal("active")}
               className="bg-green-500 inline-flex items-center justify-center gap-x-1 hover:bg-green-600 text-white text-sm px-3 py-1 rounded"
             >
               <Check size={15} /> Set Active
             </button>
             <button
-              onClick={() => handleBulkAction("inactive")}
+              onClick={() => handleOpenModal("inactive")}
               className="bg-yellow-500 hover:bg-yellow-600 text-black text-sm px-3 py-1 rounded"
             >
               Set Inactive
@@ -173,8 +195,8 @@ export default function TherapistManagement() {
               key={i}
               onClick={() => setPage(i + 1)}
               className={`px-3 py-1 rounded ${page === i + 1
-                  ? "bg-primary text-black font-semibold"
-                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                ? "bg-primary text-black font-semibold"
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                 }`}
             >
               {i + 1}
@@ -182,6 +204,15 @@ export default function TherapistManagement() {
           ))}
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <BulkActionConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        action={pendingAction}
+        therapists={selectedTherapists} // full objects for the modal
+        onConfirm={handleConfirmAction}
+      />
     </div>
   );
 }

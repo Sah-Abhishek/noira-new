@@ -31,13 +31,13 @@ const Footer = () => {
           </div>
 
           <div className="flex gap-4 text-[#C49E5B] text-lg">
-            <a href="#" aria-label="Instagram" className="hover:opacity-80">
+            <a href="https://www.instagram.com/noira._london/" aria-label="Instagram" className="hover:opacity-80">
               <FaInstagram />
             </a>
-            <a href="#" aria-label="Facebook" className="hover:opacity-80">
+            <a href="https://www.facebook.com/profile.php?id=61579799001823" aria-label="Facebook" className="hover:opacity-80">
               <FaFacebookF />
             </a>
-            <a href="#" aria-label="Twitter" className="hover:opacity-80">
+            <a href="https://www.linkedin.com/in/noira-a62aa8378/" aria-label="Twitter" className="hover:opacity-80">
               <FaTwitter />
             </a>
           </div>
@@ -47,12 +47,12 @@ const Footer = () => {
         <div>
           <h4 className="text-[#C49E5B] font-semibold mb-4">Services</h4>
           <ul className={`space-y-2 text-sm ${mutedText}`}>
-            <li>Quick Reset</li>
-            <li>Deep Comfort Massage</li>
-            <li>Jet Lag Reset</li>
-            <li>The Executive Reset</li>
-            <li>Couple’s Bespoke Escape</li>
-            <li>The Black Label Experience</li>
+            <li>Classic Reset</li>
+            <li>Deep Release</li>
+            <li>The NOIRA Ritual</li>
+            {/* <li>The Executive Reset</li> */}
+            {/* <li>Couple’s Bespoke Escape</li> */}
+            {/* <li>The Black Label Experience</li> */}
           </ul>
         </div>
 

@@ -4,6 +4,7 @@ import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
 import FancyCheckbox from "./FancyCheckBox";
 import DeleteTherapistModal from "./DeleteTherapistModal";
 import TherapistProfileModal from "../TherspistProfile/TherapistProfileModal";
+import { useNavigate } from "react-router-dom";
 
 export default function TherapistTable({
   therapists,
@@ -15,8 +16,9 @@ export default function TherapistTable({
   const [therapistToDelete, setTherapistToDelete] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedTherapistId, setSelectedTherapistId] = useState(null);
+  const navigate = useNavigate();
 
-  // ✅ use profile._id instead of _id
+  // ✅ consistently grab unique id
   const getTherapistId = (t) => t.profile?._id || t.email;
 
   const handleViewProfile = (therapist) => {
@@ -26,7 +28,7 @@ export default function TherapistTable({
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedTherapists(therapists.map((t) => getTherapistId(t)));
+      setSelectedTherapists([...therapists]); // store full objects
     } else {
       setSelectedTherapists([]);
     }
@@ -37,11 +39,18 @@ export default function TherapistTable({
     setIsDeleteModalOpen(true);
   };
 
-  const handleSelectOne = (id) => {
-    if (selectedTherapists.includes(id)) {
-      setSelectedTherapists(selectedTherapists.filter((tid) => tid !== id));
+  const handleSelectOne = (therapist) => {
+    const id = getTherapistId(therapist);
+    const alreadySelected = selectedTherapists.some(
+      (t) => getTherapistId(t) === id
+    );
+
+    if (alreadySelected) {
+      setSelectedTherapists(
+        selectedTherapists.filter((t) => getTherapistId(t) !== id)
+      );
     } else {
-      setSelectedTherapists([...selectedTherapists, id]);
+      setSelectedTherapists([...selectedTherapists, therapist]);
     }
   };
 
@@ -119,18 +128,22 @@ export default function TherapistTable({
         <tbody>
           {therapists.map((t) => {
             const id = getTherapistId(t);
+            const isChecked = selectedTherapists.some(
+              (st) => getTherapistId(st) === id
+            );
+
             return (
               <tr
                 key={id}
-                className={`border-b border-white/10 hover:bg-[#181818] transition ${selectedTherapists.includes(id) ? "bg-gray-800" : ""
+                className={`border-b border-white/10 hover:bg-[#181818] transition ${isChecked ? "bg-gray-800" : ""
                   }`}
               >
                 {/* Select */}
                 <td className="p-3">
                   <FancyCheckbox
                     label=""
-                    checked={selectedTherapists.includes(id)}
-                    onChange={() => handleSelectOne(id)}
+                    checked={isChecked}
+                    onChange={() => handleSelectOne(t)}
                   />
                 </td>
 
@@ -199,12 +212,10 @@ export default function TherapistTable({
                     </span>
                   )}
                   <p
-                    className={`text-xs ${t.profile?.acceptingNewClients
-                        ? "text-green-300"
-                        : "text-red-400"
+                    className={`text-xs ${t.profile?.active ? "text-green-300" : "text-red-400"
                       }`}
                   >
-                    {t.profile?.acceptingNewClients ? "Active" : "Inactive"}
+                    {t.profile?.active ? "Active" : "Inactive"}
                   </p>
                 </td>
 
@@ -217,27 +228,29 @@ export default function TherapistTable({
                     />
                   </button>
                   <button title="Edit">
-                    <MdEdit className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
+                    <MdEdit onClick={() => navigate(`/admin/edittherapistprofileadmin/${t?.profile?._id}`)} className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
                   </button>
                   <button title="Delete" onClick={() => handleClickTrash(t)}>
                     <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
                   </button>
-                  <DeleteTherapistModal
-                    therapist={therapistToDelete}
-                    isOpen={isDeleteModalOpen}
-                    onClose={() => setIsDeleteModalOpen(false)}
-                  />
-                  <TherapistProfileModal
-                    isOpen={isProfileModalOpen}
-                    onClose={() => setIsProfileModalOpen(false)}
-                    therapistId={selectedTherapistId}
-                  />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
+      {/* Modals */}
+      <DeleteTherapistModal
+        therapist={therapistToDelete}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      />
+      <TherapistProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        therapistId={selectedTherapistId}
+      />
     </div>
   );
 }

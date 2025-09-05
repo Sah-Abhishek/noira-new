@@ -24,10 +24,10 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // ✅ List of London & Greater London postal code prefixes
-const LONDON_POSTCODES = [
-  "E", "EC", "N", "NW", "SE", "SW", "W", "WC", // London core
-  "BR", "CR", "DA", "EN", "HA", "IG", "KT", "RM", "SM", "TW", "UB", "WD" // Greater London
-];
+// const LONDON_POSTCODES = [
+//   "E", "EC", "N", "NW", "SE", "SW", "W", "WC", // London core
+//   "BR", "CR", "DA", "EN", "HA", "IG", "KT", "RM", "SM", "TW", "UB", "WD" // Greater London
+// ];
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -38,13 +38,13 @@ const schema = Yup.object().shape({
     .required("Phone number is required")
     .matches(/^[0-9]{10,15}$/, "Phone number must be 10–15 digits"),
   password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
-  postalCode: Yup.string()
-    .required("Postal code is required")
-    .test("is-london", "We do not provide service in your area", (value) => {
-      if (!value) return false;
-      const code = value.trim().toUpperCase();
-      return LONDON_POSTCODES.some((prefix) => code.startsWith(prefix));
-    }),
+  // postalCode: Yup.string()
+  //   .required("Postal code is required")
+  //   .test("is-london", "We do not provide service in your area", (value) => {
+  //     if (!value) return false;
+  //     const code = value.trim().toUpperCase();
+  //     return LONDON_POSTCODES.some((prefix) => code.startsWith(prefix));
+  //   }),
 });
 
 export default function UserSignup() {
@@ -212,21 +212,21 @@ export default function UserSignup() {
           </div>
 
           {/* Postal Code */}
-          <div className="space-y-1">
-            <label className="text-sm text-gray-300 flex items-center gap-2">
-              <FaMapMarkerAlt className="text-primary" /> Postal Code
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your postal code"
-              {...register("postalCode")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.postalCode ? "ring-red-500" : "focus:ring-primary"
-                }`}
-            />
-            {errors.postalCode && (
-              <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p>
-            )}
-          </div>
+          {/* <div className="space-y-1"> */}
+          {/*   <label className="text-sm text-gray-300 flex items-center gap-2"> */}
+          {/*     <FaMapMarkerAlt className="text-primary" /> Postal Code */}
+          {/*   </label> */}
+          {/*   <input */}
+          {/*     type="text" */}
+          {/*     placeholder="Enter your postal code" */}
+          {/*     {...register("postalCode")} */}
+          {/*     className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.postalCode ? "ring-red-500" : "focus:ring-primary" */}
+          {/*       }`} */}
+          {/*   /> */}
+          {/*   {errors.postalCode && ( */}
+          {/*     <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p> */}
+          {/*   )} */}
+          {/* </div> */}
 
           {/* Sign Up Button */}
           <button
@@ -262,9 +262,9 @@ export default function UserSignup() {
             >
               <FaGoogle /> Google
             </button>
-            <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600">
-              <FaApple /> Apple
-            </button>
+            {/* <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600"> */}
+            {/*   <FaApple /> Apple */}
+            {/* </button> */}
           </div>
 
           {/* Sign up */}

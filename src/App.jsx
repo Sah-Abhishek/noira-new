@@ -28,14 +28,18 @@ function AppLayout() {
     '/admin/therapistprofile/:id',
     '/therapist/therapistprofile/:id',
     '/admin/createnewservice',
-    '/admin/servicemanagement'
+    '/admin/servicemanagement',
+    '/admin/edittherapistprofile/:id',
+    '/therapist/edittherapistprofile/:id'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {
-    // handle dynamic route manually
+    // Handle dynamic route with ":id"
     if (path.includes(':id')) {
-      return location.pathname.startsWith('/admin/therapistprofile/');
+      const basePath = path.split('/:')[0]; // remove the :id part
+      return location.pathname.startsWith(basePath);
     }
+
     return location.pathname === path;
   });
 
