@@ -19,7 +19,7 @@ function AtHomeTreatment() {
         <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            src="/mavideo1.mp4"
+            src="/massagevideo3.mp4"
             autoPlay
             muted
             loop
@@ -28,14 +28,14 @@ function AtHomeTreatment() {
             Your browser does not support the video tag.
           </video>
           {/* Overlay */}
-          <div className={`absolute inset-0 ${overlayColor} z-10`} />
+          {/* <div className={`absolute inset-0 ${overlayColor} z-10`} /> */}
         </div>
 
         {/* Second Video */}
         <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            src="/mavideo3.mp4"
+            src="/massagevideo4.mp4"
             autoPlay
             muted
             loop
@@ -44,7 +44,7 @@ function AtHomeTreatment() {
             Your browser does not support the video tag.
           </video>
           {/* Overlay */}
-          <div className={`absolute inset-0 ${overlayColor} z-10`} />
+          {/* <div className={`absolute inset-0 ${overlayColor} z-10`} /> */}
         </div>
       </div>
     </div>

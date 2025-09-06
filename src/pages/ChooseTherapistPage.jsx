@@ -22,6 +22,9 @@ const ChooseTherapistPage = () => {
       setIsDateAndTimeSelected(false);
     }
   }, [selectedTherapist, date, time]);
+  useEffect(() => {
+    setSelectedTherapist();
+  }, []);
 
   return (
     <div className="min-h-screen pb-30 pt-10 bg-black justify-center  flex flex-col items-center">
@@ -43,7 +46,7 @@ const ChooseTherapistPage = () => {
       </div>
       <div>
         <StickyCartSummary setIsAbled={setIsDateAndTimeSelected} isAbled={isDateAndTimeSelected} />
-        <AddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} />
+        {/* <AddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} /> */}
       </div>
     </div>
   );

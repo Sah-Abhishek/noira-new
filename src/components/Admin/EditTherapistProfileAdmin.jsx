@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Upload, User } from "lucide-react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function EditTherapistProfileAdmin() {
   const [servicesList, setServicesList] = useState([]);
@@ -53,6 +54,7 @@ export default function EditTherapistProfileAdmin() {
   }, [apiUrl]);
 
   // Fetch therapist details
+  // Fetch therapist details
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
@@ -74,7 +76,8 @@ export default function EditTherapistProfileAdmin() {
             PostTown: t.userId?.address?.PostTown || "",
             PostalCode: t.userId?.address?.PostalCode || "",
           },
-          services: t.specializations?.map((s) => s.name) || [],
+          // 🔥 store IDs instead of names
+          services: t.specializations?.map((s) => s._id) || [],
           languages: t.languages || [],
           servicesInPostalCodes: t.servicePostcodes || [],
           acceptingNewClients: t.active || false,
@@ -82,6 +85,7 @@ export default function EditTherapistProfileAdmin() {
           isVerified: t.isVerified || false,
           bio: t.bio || "",
         });
+        console.log("These are the services: ", form.services);
 
         if (t.userId?.avatar_url) {
           setPreviewUrl(t.userId.avatar_url);
@@ -139,11 +143,11 @@ export default function EditTherapistProfileAdmin() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Therapist updated successfully!");
+      toast.success("Therapist updated successfully!");
       navigate("/admin/therapists");
     } catch (err) {
       console.error("Error updating therapist:", err);
-      alert("Failed to update therapist. Check console.");
+      toast.error("Failed to update therapist.");
     }
   };
 
@@ -297,13 +301,12 @@ export default function EditTherapistProfileAdmin() {
           </label>
           <div className="grid grid-cols-2 gap-2">
             {servicesList.map((service) => {
-              const serviceName = service.name;
-              const isChecked = form.services.includes(serviceName);
+              const isChecked = form.services.includes(service._id);
               return (
                 <label
                   key={service._id}
                   className={`flex items-center gap-3 cursor-pointer rounded-lg border px-3 py-2 transition-all
-                  ${isChecked
+            ${isChecked
                       ? "border-primary bg-primary/10"
                       : "border-white/10 hover:border-primary/50"
                     }`}
@@ -315,15 +318,15 @@ export default function EditTherapistProfileAdmin() {
                       handleChange(
                         "services",
                         isChecked
-                          ? form.services.filter((s) => s !== serviceName)
-                          : [...form.services, serviceName]
+                          ? form.services.filter((s) => s !== service._id)
+                          : [...form.services, service._id]
                       )
                     }
                     className="hidden"
                   />
                   <div
                     className={`w-5 h-5 rounded-md flex items-center justify-center transition-all
-                    ${isChecked
+              ${isChecked
                         ? "bg-primary text-black"
                         : "bg-black border border-white/20"
                       }`}
@@ -350,7 +353,6 @@ export default function EditTherapistProfileAdmin() {
             })}
           </div>
         </div>
-
         {/* Postal codes */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1">

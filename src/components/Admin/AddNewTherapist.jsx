@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Eye, Upload, User } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function AddNewTherapist() {
   const [servicesList, setServicesList] = useState([]);
@@ -106,12 +107,12 @@ export default function AddNewTherapist() {
       });
 
       console.log("Therapist saved:", res.data);
-      alert("Therapist added successfully!");
+      toast.success("Therapist added successfully!");
 
       resetForm();
     } catch (err) {
       console.error("Error saving therapist:", err);
-      alert("Failed to add therapist. Check console.");
+      toast.error("Failed to add therapist .");
     }
   };
 

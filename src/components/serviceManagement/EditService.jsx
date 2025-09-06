@@ -1,24 +1,51 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, Eye, Upload, Trash2 } from "lucide-react";
 import axios from "axios";
-import FancyDropdown from "./browseTherapist/FancyDropdown";
-import FancyCheckbox from "./Admin/FancyCheckBox";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import FancyDropdown from "../browseTherapist/FancyDropdown";
 
-export default function CreateNewService() {
+export default function EditService() {
   const [serviceName, setServiceName] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
   const [tier, setTier] = useState("Normal");
-  // const [status, setStatus] = useState("Active");
   const [imageFile, setImageFile] = useState(null);
-  const [options, setOptions] = useState([
-    { durationMinutes: 0, price: { amount: 0 }, label: "Standard session" },
-  ]);
-  const navigate = useNavigate();
+  const [imagePreview, setImagePreview] = useState(null);
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const { id } = useParams(); // expect route like /admin/editservice/:id
+
+  /* ----------- Fetch Service Data ----------- */
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/admin/services/${id}`);
+        const data = res.data;
+
+        setServiceName(data.name || "");
+        setDescription(data.description || "");
+        setTier(data.tier || "Normal");
+        setOptions(
+          data.options?.map((opt) => ({
+            durationMinutes: opt.durationMinutes,
+            price: { amount: opt.price.amount },
+            label: opt.label || "",
+          })) || []
+        );
+        setImagePreview(data.image_url || null);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load service data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchService();
+  }, [apiUrl, id]);
 
   /* ----------- Duration & Price Handling ----------- */
   const addOption = () => {
@@ -45,38 +72,43 @@ export default function CreateNewService() {
   };
 
   /* ----------- Submit Form ----------- */
-  const handleSubmit = async () => {
+  /* ----------- Submit Form ----------- */
+  const handleUpdate = async () => {
     try {
       const formData = new FormData();
       formData.append("name", serviceName);
       formData.append("tier", tier);
       formData.append("description", description);
-      // formData.append("status", status);
       formData.append("options", JSON.stringify(options));
 
       if (imageFile) {
         formData.append("image", imageFile);
       }
 
-      const res = await axios.post(`${apiUrl}/admin/addservices`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.put(
+        `${apiUrl}/admin/editservices/${id}`, // ✅ updated endpoint
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-      if (res.status === 201) {
-        toast.success("Service create successfully");
-        setServiceName("");
-        setShortDescription("");
-        setDescription("");
-        setTier("Normal");
-        // setStatus("Active");
-        setImageFile(null);
-        setOptions([{ durationMinutes: 0, price: { amount: 0 }, label: "Standard session" }]);
+      if (res.status === 200) {
+        toast.success(res.data?.message || "Service updated successfully");
+        navigate(-1); // go back to previous page
       }
     } catch (err) {
       console.error(err);
-      toast.error(" Failed to create service");
+      toast.error(err.response?.data?.message || "Failed to update service");
     }
   };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        Loading service...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -86,26 +118,25 @@ export default function CreateNewService() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <button onClick={() => navigate(-1)} className="p-2 hover:bg-[#111] rounded-lg transition-colors">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 hover:bg-[#111] rounded-lg transition-colors"
+              >
                 <ArrowLeft size={20} className="text-primary" />
               </button>
               <div>
-                <h1 className="text-xl font-semibold">Create New Service</h1>
+                <h1 className="text-xl font-semibold">Edit Service</h1>
                 <p className="text-sm text-white/60 mt-1">
-                  Add a new massage service to your offerings
+                  Update this massage service
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {/* <button className="flex items-center gap-2 px-4 py-2 bg-[#111] text-white rounded-lg hover:bg-[#0d0d0d] transition"> */}
-              {/*   <Eye size={16} className="text-primary" /> */}
-              {/*   Preview */}
-              {/* </button> */}
               <button
-                onClick={handleSubmit}
+                onClick={handleUpdate}
                 className="px-4 py-2 bg-primary text-black rounded-lg hover:opacity-90 font-medium"
               >
-                ✓ Publish Service
+                ✓ Save Changes
               </button>
             </div>
           </div>
@@ -127,7 +158,6 @@ export default function CreateNewService() {
                 type="text"
                 value={serviceName}
                 onChange={(e) => setServiceName(e.target.value)}
-                placeholder="e.g., Classic Reset, Deep Release"
                 className="w-full bg-[#0d0d0d] border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -139,14 +169,12 @@ export default function CreateNewService() {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Write a detailed description of the service..."
                 rows={4}
                 className="w-full bg-[#0d0d0d] border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {/* Fancy Dropdown for Tier */}
               <div>
                 <FancyDropdown
                   label="Tier"
@@ -155,23 +183,6 @@ export default function CreateNewService() {
                   onChange={setTier}
                 />
               </div>
-
-              {/* Fancy Checkbox Group for Status */}
-              {/* <div> */}
-              {/*   <label className="block text-sm font-medium mb-2">Status</label> */}
-              {/*   <div className="flex items-center gap-6"> */}
-              {/*     <FancyCheckbox */}
-              {/*       label="Active" */}
-              {/*       checked={status === "Active"} */}
-              {/*       onChange={() => setStatus("Active")} */}
-              {/*     /> */}
-              {/*     <FancyCheckbox */}
-              {/*       label="Inactive" */}
-              {/*       checked={status === "Inactive"} */}
-              {/*       onChange={() => setStatus("Inactive")} */}
-              {/*     /> */}
-              {/*   </div> */}
-              {/* </div> */}
             </div>
           </div>
 
@@ -185,12 +196,16 @@ export default function CreateNewService() {
             </h2>
 
             <div className="border-2 border-dashed border-white/20 rounded-lg p-8 text-center hover:border-primary transition">
+              {imagePreview && !imageFile && (
+                <img
+                  src={imagePreview}
+                  alt="Service"
+                  className="w-full h-40 object-cover mb-4 rounded-lg"
+                />
+              )}
               <Upload size={32} className="mx-auto mb-4 text-white/40" />
               <p className="text-sm text-white/70 mb-2">
                 Drag & drop or click to browse
-              </p>
-              <p className="text-xs text-white/50 mb-4">
-                Recommended: 800×600px, PNG/JPG, max 10MB
               </p>
               <input
                 type="file"
@@ -289,6 +304,12 @@ export default function CreateNewService() {
                 alt="Preview"
                 className="w-full h-40 object-cover"
               />
+            ) : imagePreview ? (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-full h-40 object-cover"
+              />
             ) : (
               <div className="w-full h-40 flex items-center justify-center bg-[#222] text-white/40">
                 No Image Selected
@@ -299,17 +320,9 @@ export default function CreateNewService() {
                 <h3 className="text-lg font-bold">
                   {serviceName || "Service Name"}
                 </h3>
-                {/* <span */}
-                {/*   className={`text-xs px-2 py-1 rounded ${status === "Active" */}
-                {/*     ? "bg-green-500/20 text-green-400" */}
-                {/*     : "bg-red-500/20 text-red-400" */}
-                {/*     }`} */}
-                {/* > */}
-                {/*   {status} */}
-                {/* </span> */}
               </div>
               <p className="text-sm text-white/60 mb-3">
-                {shortDescription || "Service short description here..."}
+                {description || "Service short description here..."}
               </p>
               <ul className="space-y-1 text-sm mb-4">
                 {options.map((opt, i) => (

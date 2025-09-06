@@ -119,9 +119,17 @@ const BookingSummary = () => {
           <h3 className="text-primary font-semibold text-sm mb-2">
             Your Address
           </h3>
-          <p className="text-white text-sm">
-            {userAddress.buildingNo}, {userAddress.street}, {userAddress.locality}, {userAddress.postTown}, {userAddress.postalCode}
-          </p>
+          <div className="text-white text-sm leading-relaxed">
+            {[
+              [userAddress?.building_No, userAddress?.Street].filter(Boolean).join(", "),
+              [userAddress?.Locality, userAddress?.PostTown].filter(Boolean).join(", "),
+              userAddress?.PostalCode,
+            ]
+              .filter(Boolean) // remove empty lines
+              .map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+          </div>
         </div>
       )}
 

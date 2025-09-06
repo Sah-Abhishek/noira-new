@@ -2,19 +2,45 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Plus, Search, Trash2, Edit, Eye } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast"; // Make sure you have react-toastify
+import ConfirmDeleteModal from "./ConfirmDeleteServiceModal";
 
 export default function ServiceManagement() {
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState(null);
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [loading, setLoading] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
+  // 🔹 Handle delete request
+  const handleDelete = async (serviceId) => {
+    try {
+      const res = await axios.delete(`${apiUrl}/admin/deleteservices/${serviceId}`);
+      if (res.status === 200) {
+        toast.success(res.data.message || "Service deleted successfully");
+        // remove service from state
+        setServices((prev) => prev.filter((s) => s._id !== serviceId));
+        setFilteredServices((prev) => prev.filter((s) => s._id !== serviceId));
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete service");
+      console.error("Error deleting service:", error);
+    } finally {
+      setIsConfirmDeleteModalOpen(false);
+      setServiceToDelete(null);
+    }
+  };
+
+  // 🔹 Fetch services
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get("http://192.168.1.13:3000/services/list");
+        const res = await axios.get(`${apiUrl}/services/list`);
         setServices(res.data);
         setFilteredServices(res.data);
       } catch (error) {
@@ -26,7 +52,7 @@ export default function ServiceManagement() {
     fetchServices();
   }, []);
 
-  // 🔹 Filter services on search
+  // 🔹 Search filter
   useEffect(() => {
     if (!searchTerm) {
       setFilteredServices(services);
@@ -70,30 +96,16 @@ export default function ServiceManagement() {
         </button>
       </div>
 
-      {/* Search + Filters */}
-      <div className="flex flex-wrap items-center gap-4 mb-8">
-        <div className="flex items-center bg-[#0d0d0d] px-4 py-2 rounded-lg border border-white/10 flex-1">
-          <Search size={18} className="text-white/40" />
-          <input
-            type="text"
-            placeholder="Search services or features..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-transparent outline-none px-2 flex-1 text-sm text-white"
-          />
-        </div>
-        {/* <select className="bg-[#0d0d0d] px-3 py-2 rounded-lg border border-white/10 text-sm"> */}
-        {/*   <option>All Tiers</option> */}
-        {/*   <option>Normal</option> */}
-        {/*   <option>Premium</option> */}
-        {/* </select> */}
-        {/* <select className="bg-[#0d0d0d] px-3 py-2 rounded-lg border border-white/10 text-sm"> */}
-        {/*   <option>All Durations</option> */}
-        {/*   <option>45 min</option> */}
-        {/*   <option>60 min</option> */}
-        {/*   <option>90 min</option> */}
-        {/*   <option>120 min</option> */}
-        {/* </select> */}
+      {/* Search */}
+      <div className="flex items-center bg-[#0d0d0d] px-4 py-2 rounded-lg border border-white/10 flex-1 mb-8">
+        <Search size={18} className="text-white/40" />
+        <input
+          type="text"
+          placeholder="Search services or features..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="bg-transparent outline-none px-2 flex-1 text-sm text-white"
+        />
       </div>
 
       {/* Services Grid */}
@@ -131,7 +143,7 @@ export default function ServiceManagement() {
                 </p>
 
                 {/* Features */}
-                {service.features && service.features.length > 0 && (
+                {service.features?.length > 0 && (
                   <ul className="mb-4 space-y-1">
                     {service.features.map((feat, i) => (
                       <li
@@ -159,14 +171,20 @@ export default function ServiceManagement() {
                 {/* Actions */}
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <button className="flex items-center gap-1 bg-primary text-black text-sm font-medium px-3 py-1 rounded-md hover:opacity-90 transition">
+                    <button onClick={() => navigate(`/admin/editservice/${service._id}`)} className="flex items-center gap-1 bg-primary text-black text-sm font-medium px-3 py-1 rounded-md hover:opacity-90 transition">
                       <Edit size={14} /> Edit
                     </button>
-                    <button className="flex items-center gap-1 bg-[#222] text-white text-sm font-medium px-3 py-1 rounded-md hover:bg-[#333] transition">
-                      <Eye size={14} /> Preview
-                    </button>
+                    {/* <button className="flex items-center gap-1 bg-[#222] text-white text-sm font-medium px-3 py-1 rounded-md hover:bg-[#333] transition"> */}
+                    {/*   <Eye size={14} /> Preview */}
+                    {/* </button> */}
                   </div>
-                  <button className="p-2 bg-red-500/10 text-red-500 rounded-md hover:bg-red-500/20 transition">
+                  <button
+                    onClick={() => {
+                      setServiceToDelete(service._id);
+                      setIsConfirmDeleteModalOpen(true);
+                    }}
+                    className="p-2 bg-red-500/10 text-red-500 rounded-md hover:bg-red-500/20 transition"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -175,6 +193,16 @@ export default function ServiceManagement() {
           ))}
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmDeleteModal
+        isOpen={isConfirmDeleteModalOpen}
+        onConfirm={() => handleDelete(serviceToDelete)}
+        onClose={() => {
+          setIsConfirmDeleteModalOpen(false);
+          setServiceToDelete(null);
+        }}
+      />
     </div>
   );
 }

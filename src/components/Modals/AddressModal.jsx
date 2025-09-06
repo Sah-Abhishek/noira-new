@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import useBookingStore from "../../store/bookingStore";
+import { X } from "lucide-react";
 
 const AddressModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -35,29 +36,46 @@ const AddressModal = ({ isOpen, onClose }) => {
     try {
       const res = await axios.put(`${apiUrl}/user/${userId}/address`, formData);
 
-      if (res.status === 200) {
-        // Update Zustand store
-        setUserAddress(formData);
+      // Success toast
+      toast.success("Address saved successfully");
 
-        // Persist in session storage
-        sessionStorage.setItem("postalCode", formData.postalCode);
-        sessionStorage.setItem("userAddress", JSON.stringify(formData));
+      // Update Zustand store
+      setUserAddress(formData);
 
-        toast.success("Address saved successfully");
-        onClose();
-      }
+      // Persist in session storage
+      sessionStorage.setItem("postalCode", formData.postalCode);
+      sessionStorage.setItem("userAddress", JSON.stringify(formData));
+
+      onClose();
     } catch (error) {
-      toast.error(error.message);
-      console.error("Error saving address:", error.message);
+      // Axios error handling
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+      console.error("Error saving address:", error);
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
       <div className="bg-black text-[#D4AF37] border border-white/20 rounded-2xl p-8 w-full max-w-2xl">
-        <h2 className="text-3xl font-bold mb-2 text-primary">
-          Where should the therapist come?
-        </h2>
+
+        {/* Modal Header with Close Button */}
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-3xl font-bold text-primary">
+            Where should the therapist come?
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-white hover:text-red-500 transition"
+            aria-label="Close modal"
+          >
+            <X />
+          </button>
+        </div>
+
         <p className="text-sm text-gray-200 mb-6">
           To ensure a seamless in-home therapy experience, we need your complete
           address.
@@ -106,7 +124,7 @@ const AddressModal = ({ isOpen, onClose }) => {
             placeholder="Postal Code"
             value={formData.postalCode}
             onChange={handleChange}
-            className="w-full bg-transparent border border-white/40 hover:border-primary/80 text-white placeholder-white/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white transition"
+            className="w-full bg-transparent caret-white border border-white/40 hover:border-primary/80 text-white placeholder-white/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white transition"
           />
 
           <button

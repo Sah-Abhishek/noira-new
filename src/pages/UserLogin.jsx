@@ -108,8 +108,10 @@ export default function UserLogin() {
       <div className="max-w-md w-full bg-[#1c1c1c] rounded-xl shadow-lg p-8 space-y-6 relative">
         {/* Logo and Title */}
         <div className="flex flex-col items-center">
-          <img src={noira} alt="Logo" className="h-10 sm:h-12 mb-2" />
-          <p className="text-gray-400 font-medium">Wellness Platform</p>
+          <Link to='/' >
+            <img src={noira} alt="Logo" className="h-10 sm:h-12 mb-2" />
+            <p className="text-gray-400 font-medium">Wellness Platform</p>
+          </Link>
         </div>
 
         {/* Form */}

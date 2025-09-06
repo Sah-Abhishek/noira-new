@@ -14,7 +14,7 @@ import ServicesPage from "./pages/ServicesPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import ChooseTherapistPage from "./pages/ChooseTherapistPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import PaymentPage from "./pages/PaymentPage.jsx";
+import PaymentPage from "./pages/PaymentFinalPage.jsx";
 import LoaderPage from "./pages/LoaderPage.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentFail from "./pages/PaymentFail.jsx";
@@ -45,6 +45,8 @@ import ServiceManagement from "./components/serviceManagement/ServiceManagement.
 import UserProfile from "./components/user/UserProfile.jsx";
 import EditTherapistProfile from "./components/therapist/EditTherapistProfile.jsx";
 import TherapistProfileTherapist from "./components/TherspistProfile/TherapistProfileTherapist.jsx";
+import EditService from "./components/serviceManagement/EditService.jsx";
+import EditTherapistProfileAdmin from "./components/Admin/EditTherapistProfileAdmin.jsx";
 
 const AppRoutes = () => {
   return (
@@ -155,7 +157,8 @@ const AppRoutes = () => {
           <Route path="addnewtherapist" element={<AddNewTherapist />} />
           <Route path="createnewservice" element={<CreateNewService />} />
           <Route path="servicemanagement" element={<ServiceManagement />} />
-          <Route path="edittherapistprofileadmin" element={<EditTherapistProfile />} />
+          <Route path="edittherapistprofileadmin/:id" element={<EditTherapistProfileAdmin />} />
+          <Route path="editservice/:id" element={<EditService />} />
 
 
         </Route>

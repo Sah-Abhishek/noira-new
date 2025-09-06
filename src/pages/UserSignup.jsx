@@ -98,13 +98,18 @@ export default function UserSignup() {
     try {
       setIsLoading(true);
       const response = await axios.post(endpoint, transformedData);
+      if (response.status == 200) {
+
+      }
       if (response.status === 201) {
         localStorage.setItem("userEmail", data.email);
+
         navigate("/otpinput/register");
       }
     } catch (error) {
       if (error.response) {
         setErrorMsg(`Signup failed: ${error.response.data.message || error.response.statusText}`);
+        toast.error(error.response.message)
       } else if (error.request) {
         setErrorMsg("No response from server. Please try again later.");
       } else {
@@ -121,7 +126,10 @@ export default function UserSignup() {
         {/* Logo and Title */}
         <div className="flex flex-col items-center space-y-2">
           <div className="flex items-center h-10 mt-10">
-            <img src={noira} alt="Logo" className="h-10 sm:h-15 mb-10" />
+            <Link to="/">
+
+              <img src={noira} alt="Logo" className="h-10 sm:h-15 mb-10" />
+            </Link>
           </div>
           <p className="text-gray-400 text-medium font-medium">Wellness Platform</p>
         </div>
@@ -276,6 +284,6 @@ export default function UserSignup() {
           </div>
         </form>
       </div>
-    </div>
+    </div >
   );
 }

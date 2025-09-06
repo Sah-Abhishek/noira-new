@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Upload, User } from "lucide-react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function EditTherapistProfile() {
   const [servicesList, setServicesList] = useState([]);
@@ -9,7 +10,7 @@ export default function EditTherapistProfile() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const therapistId = localStorage.getItem('therapistId');
+  const { id } = useParams();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -55,7 +56,7 @@ export default function EditTherapistProfile() {
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/therapist/${therapistId}`);
+        const res = await axios.get(`${apiUrl}/therapist/${id}`);
         const t = res.data.therapist;
 
         setForm({
@@ -134,15 +135,15 @@ export default function EditTherapistProfile() {
         formData.append("profileImage", profileImage);
       }
 
-      await axios.put(`${apiUrl}/admin/updatetherapist/${therapistId}`, formData, {
+      await axios.post(`${apiUrl}/admin/updatetherapist/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Therapist updated successfully!");
+      toast.success("Therapist updated successfully!");
       navigate("/admin/therapists");
     } catch (err) {
       console.error("Error updating therapist:", err);
-      alert("Failed to update therapist. Check console.");
+      toast.error("Failed to update therapist.");
     }
   };
 

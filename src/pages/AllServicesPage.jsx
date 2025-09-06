@@ -18,12 +18,15 @@ export default function AllServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const { cart, setCart } = useBookingStore();
+  const { cart, setCart, setSelectedTherapist } = useBookingStore();
   const navigate = useNavigate();
   const location = useLocation();
   const isPostalCodeSaved = sessionStorage.getItem("postalCode") ? true : false;
   const [isPostalCodeModalOpen, setIsPostalCodeModalOpen] = useState(!isPostalCodeSaved);
 
+  useEffect(() => {
+    setSelectedTherapist();
+  }, [])
 
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;

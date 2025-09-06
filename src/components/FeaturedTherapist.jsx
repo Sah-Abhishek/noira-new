@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Star, MapPin } from "lucide-react";
+import { Star, MapPin, Award } from "lucide-react";
 
 const FeaturedTherapists = () => {
   const { isDarkMode } = useTheme();
@@ -54,22 +54,26 @@ const FeaturedTherapists = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {therapists.map((therapist) => {
-          const fullName = therapist?.profile?.title || `${therapist.name?.first || ""} ${therapist.name?.last || ""}`;
-          const rawBio = therapist.profile?.bio || "Certified Therapist";
-          const bio =
-            rawBio.length > 50 ? rawBio.slice(0, 50) + "..." : rawBio;
+          const fullName =
+            therapist?.profile?.title ||
+            `${therapist.name?.first || ""} ${therapist.name?.last || ""}`;
+          const username = therapist?.username || "therapist";
+          const therapistId = therapist?.therapistId || "N/A";
           const rating = therapist.profile?.rating || 0;
+          const sessions = therapist.profile?.sessions || 0;
           const experience = therapist.profile?.experience || 0;
           const specializations = therapist.profile?.specializations || [];
           const image = therapist.avatar_url;
           const location = therapist.address
-            ? `${therapist.address.PostTown || ""}, ${therapist.address.PostalCode || ""}`
+            ? `${therapist.address.PostTown || ""}, ${therapist.address.PostalCode || ""
+            }`
             : "Location not available";
+          const coverageAreas = therapist?.coverageAreas || [];
 
           return (
             <div key={therapist._id} className="relative">
               {/* Card */}
-              <div className="relative bg-[#1a1a1a] rounded-2xl p-8 border border-primary shadow-lg hover:shadow-primary/30 transition-all duration-300">
+              <div className="relative bg-[#1a1a1a] rounded-2xl p-8 border shadow-lg shadow-yellow-400 border-primary shadow-lg transition-all duration-300">
                 <div className="relative z-10 text-center space-y-5">
                   {/* Profile Image */}
                   <div className="relative inline-block">
@@ -88,28 +92,23 @@ const FeaturedTherapists = () => {
                     </div>
                   </div>
 
-                  {/* Name & Bio */}
+                  {/* Name & ID */}
                   <div>
                     <h3 className="text-xl font-bold text-white">{fullName}</h3>
-                    <p className="text-primary/80 text-sm">{bio}</p>
+                    <p className="text-primary/80 text-sm">
+                      @{username} • ID: {therapistId}
+                    </p>
                   </div>
 
-                  {/* Location & Experience */}
-                  <div className="flex flex-col items-center gap-1 text-gray-400 text-sm">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      <span>{location}</span>
-                    </div>
-                    <span>{experience} years experience</span>
-                  </div>
-
-                  {/* Rating */}
+                  {/* Rating + Sessions */}
                   <div className="flex items-center justify-center space-x-2">
                     <div className="flex text-primary">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${rating >= i + 1 ? "fill-primary" : "fill-gray-600"
+                          className={`w-4 h-4 ${rating >= i + 1
+                            ? "fill-primary"
+                            : "fill-gray-600"
                             }`}
                         />
                       ))}
@@ -117,11 +116,17 @@ const FeaturedTherapists = () => {
                     <span className="text-gray-300 text-sm font-medium">
                       {rating.toFixed(1)}
                     </span>
+                    <span className="text-gray-500 text-sm">
+                      | {sessions} sessions
+                    </span>
                   </div>
 
                   {/* Specializations */}
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    {specializations.slice(0, 3).map((tag, i) => (
+                    <h4 className="w-full text-white font-semibold">
+                      Specializations
+                    </h4>
+                    {specializations.slice(0, 4).map((tag, i) => (
                       <span
                         key={i}
                         className="px-3 py-1 rounded-full text-xs font-semibold bg-primary text-black shadow"
@@ -131,12 +136,51 @@ const FeaturedTherapists = () => {
                     ))}
                   </div>
 
+                  {/* Location */}
+                  <div className="flex flex-col mt-10 mr-15 items-start gap-1 text-gray-400 text-sm mt-3 text-left">
+                    {/* Address lines */}
+                    {therapist.address ? (
+                      <>
+                        {[
+                          [therapist.address?.building_No, therapist.address?.Street].filter(Boolean).join(", "),
+                          [therapist.address?.Locality, therapist.address?.PostTown].filter(Boolean).join(", "),
+                          therapist.address?.PostalCode,
+                        ]
+                          .filter(Boolean)
+                          .map((line, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <MapPin className="w-4 h-4 text-primary mt-0.5" />
+                              <span>{line}</span>
+                            </div>
+                          ))}
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        <span>Location not available</span>
+                      </div>
+                    )}
+
+                    {/* Coverage Areas */}
+                    {coverageAreas.length > 0 && (
+                      <p className="text-xs text-gray-400 mt-1">
+                        {coverageAreas.join(" • ")}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Experience */}
+                  <div className="flex items-center gap-2 text-sm font-semibold text-white mt-3 text-left">
+                    <Award className="w-4 h-4 text-primary" />
+                    <span>{experience}+ Years Experience</span>
+                  </div>
+
                   {/* CTA */}
                   <button
                     onClick={() => navigate("/browsetherapists")}
                     className="w-full py-3 rounded-xl bg-primary text-black font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/40 hover:scale-[1.02] active:scale-95 mt-6"
                   >
-                    Book Now
+                    Select Therapist
                   </button>
                 </div>
               </div>

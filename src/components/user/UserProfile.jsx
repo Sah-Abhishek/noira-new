@@ -30,7 +30,7 @@ export default function UserProfile() {
           </div>
           <div className="flex-1">
             <h2 className="text-2xl sm:text-3xl font-bold text-primary">{name?.first} {name?.last}</h2>
-            <p className="text-gray-300 mt-1">Role: <span className="text-white">{userDetails.role}</span></p>
+            {/* <p className="text-gray-300 mt-1">Role: <span className="text-white">{userDetails.role}</span></p> */}
             <p className="text-gray-300 mt-1">Gender: <span className="text-white">{gender || "Not specified"}</span></p>
             <p className="text-gray-300 mt-1">Joined: <span className="text-white">{new Date(createdAt).toLocaleDateString()}</span></p>
           </div>
