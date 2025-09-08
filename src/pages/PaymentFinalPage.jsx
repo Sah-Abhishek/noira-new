@@ -9,6 +9,8 @@ import confetti from "canvas-confetti";
 import ComingSoonModal from "../components/PaymentPage/ComingSoonModal.jsx";
 import AddressModal from "../components/Modals/AddressModal.jsx";
 import SavedAddresses from "../components/PaymentPage/SavedAddresses.jsx";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const PaymentPage = () => {
   const { userAddress } = useBookingStore();
@@ -19,6 +21,8 @@ const PaymentPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem('userId');
 
   const handlePayment = () => {
     if (userAddress) {
@@ -35,7 +39,6 @@ const PaymentPage = () => {
       setIsAddressModalOpen(true);
     }
   };
-
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
       <div className="max-w-6xl mx-auto">

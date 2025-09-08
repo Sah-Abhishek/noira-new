@@ -31,7 +31,8 @@ function AppLayout() {
     '/admin/servicemanagement',
     '/admin/edittherapistprofileadmin/:id',
     '/therapist/edittherapistprofile/:id',
-    `/admin/editservice/:id`
+    `/admin/editservice/:id`,
+    '/user/userprofile'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {
