@@ -32,6 +32,8 @@ function AppLayout() {
     '/admin/edittherapistprofileadmin/:id',
     '/therapist/edittherapistprofile/:id',
     `/admin/editservice/:id`,
+    '/user/userprofile',
+    '/admin/bookingsmanagement',
     '/user/userprofile'
   ];
 

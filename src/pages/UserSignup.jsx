@@ -135,7 +135,7 @@ export default function UserSignup() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 caret-white">
           {/* First Name */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">

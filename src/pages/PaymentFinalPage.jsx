@@ -13,7 +13,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const PaymentPage = () => {
-  const { userAddress } = useBookingStore();
+  const { userAddress, cart, date, time, selectedTherapist, userEmail } = useBookingStore();
+
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,16 +25,33 @@ const PaymentPage = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const userId = localStorage.getItem('userId');
 
-  const handlePayment = () => {
+  console.log("This is the selected TherapistId: ", cart.id);
+
+
+  const handlePayment = async () => {
     if (userAddress) {
       // ✅ User has an address → open payment modal
-      setIsModalOpen(true);
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.9 },
-      });
+      // setIsModalOpen(true);
+      // confetti({
+      //   particleCount: 120,
+      //   spread: 70,
+      //   origin: { y: 0.9 },
+      // });
       // TODO: Replace with real payment API
+      const res = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
+        email: userEmail,
+        therapistId: selectedTherapist._id,
+        serviceId: cart.serviceId,
+        optionIndex: cart.optionIndex,
+        date,  // format: YYYY-MM-DD
+        time,       // format: HH:mm
+        notes: "Please focus on back pain",
+      });
+
+      if (res.data.url) {
+        window.location.href = res.data.url;
+      }
+
     } else {
       // ❌ No address → ask user to add one
       setIsAddressModalOpen(true);

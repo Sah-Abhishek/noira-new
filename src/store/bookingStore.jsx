@@ -6,7 +6,7 @@ const useBookingStore = create(
     (set) => ({
       // booking state
 
-      useEmail: localStorage.getItem("userEmail") || null,
+      userEmail: localStorage.getItem("userEmail") || null,
       findingTherapist: false,
       cart: [], // previously service
       date: null,

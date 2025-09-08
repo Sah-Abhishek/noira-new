@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Public pages
@@ -47,6 +48,9 @@ import EditTherapistProfile from "./components/therapist/EditTherapistProfile.js
 import TherapistProfileTherapist from "./components/TherspistProfile/TherapistProfileTherapist.jsx";
 import EditService from "./components/serviceManagement/EditService.jsx";
 import EditTherapistProfileAdmin from "./components/Admin/EditTherapistProfileAdmin.jsx";
+import BookingsManagement from "./components/Admin/BookingsManagement.jsx"
+import UserLayout from "./layouts/UserLayout.jsx";
+
 
 const AppRoutes = () => {
   return (
@@ -99,14 +103,14 @@ const AppRoutes = () => {
             </UserProtectedRoute>
           }
         />
-        <Route
-          path="/user/userprofile"
-          element={
-            <UserProtectedRoute>
-              <UserProfile />
-            </UserProtectedRoute>
-          }
-        />
+        {/* <Route */}
+        {/*   path="/user/userprofile" */}
+        {/*   element={ */}
+        {/*     <UserProtectedRoute> */}
+        {/*       <UserProfile /> */}
+        {/*     </UserProtectedRoute> */}
+        {/*   } */}
+        {/* /> */}
 
         <Route
           path="/browsetherapists"
@@ -159,7 +163,22 @@ const AppRoutes = () => {
           <Route path="servicemanagement" element={<ServiceManagement />} />
           <Route path="edittherapistprofileadmin/:id" element={<EditTherapistProfileAdmin />} />
           <Route path="editservice/:id" element={<EditService />} />
+          <Route path="bookingsmanagement" element={<BookingsManagement />} />
 
+
+        </Route>
+
+        {/* User Protected Route */}
+        <Route
+          path="/user"
+          element={
+            <UserProtectedRoute>
+              <UserLayout />
+            </UserProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="userprofile" replace />} />
+          <Route path="userProfile" element={<UserProfile />} />
 
         </Route>
 
