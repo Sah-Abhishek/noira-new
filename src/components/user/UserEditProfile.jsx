@@ -10,6 +10,7 @@ export default function UserEditProfile() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   const [form, setForm] = useState({
     firstName: "",
@@ -93,6 +94,7 @@ export default function UserEditProfile() {
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
+
 
   const handleAddAddress = () => {
     if (!newAddress.Building_No || !newAddress.Street || !newAddress.PostalCode) {

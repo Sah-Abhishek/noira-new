@@ -228,7 +228,7 @@ const Navbar = () => {
               opacity-0 group-hover:opacity-100 invisible group-hover:visible 
               transition-all duration-200 z-50">
                   <button
-                    onClick={() => navigate("/profile")}
+                    onClick={() => navigate("/userprofile")}
                     className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-[#C49E5B]/20 rounded-t-lg transition"
                   >
                     Profile
