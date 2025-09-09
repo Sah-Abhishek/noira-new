@@ -4,17 +4,24 @@ import logo from "/noira.png";
 import {
   BookOpen,
   Calendar,
-  FileText,
   Home,
   MessageSquare,
   User,
 } from "lucide-react";
+import useUserStore from "../../store/UserStore.jsx"; // adjust path if needed
 
 const TherapistSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const firstname = localStorage.getItem('firstname');
-  const therapistId = localStorage.getItem('therapistId');
+
+  // Access Zustand user store
+  const { user, clearUser } = useUserStore();
+
+  const logOut = () => {
+    localStorage.clear();
+    clearUser(); // clear from Zustand as well
+    navigate("/");
+  };
 
   const menuItems = [
     {
@@ -37,17 +44,18 @@ const TherapistSidebar = () => {
       icon: <MessageSquare className="w-5 h-5" />,
       path: "/therapist/feedback",
     },
-    // {
-    //   name: "Training",
-    //   icon: <FileText className="w-5 h-5" />,
-    //   path: "/therapist/training",
-    // },
     {
       name: "Profile",
       icon: <User className="w-5 h-5" />,
       path: `/therapist/therapistprofiletherapist`,
     },
   ];
+
+  const fullName = user?.name
+    ? `${user.name.first} ${user.name.last}`
+    : "Therapist";
+
+  const avatarUrl = user?.avatar_url;
 
   return (
     <>
@@ -83,34 +91,34 @@ const TherapistSidebar = () => {
           </nav>
         </div>
 
-        {/* Profile */}
-        <div className="px-6 py-4 flex items-center gap-4 border-t border-gray-800 ">
-          {/* Profile Icon */}
-          <div className="flex-shrink-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-8 h-8 text-gray-300"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        {/* Profile Section */}
+        <div className="px-6 py-4 flex items-center gap-4 border-t border-gray-800">
+          {/* Avatar */}
+          <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-700">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="w-full h-full object-cover"
               />
-            </svg>
+            ) : (
+              <div className="w-full h-full bg-gray-700 flex items-center justify-center text-sm">
+                {user?.name?.first?.[0]?.toUpperCase() || "T"}
+              </div>
+            )}
           </div>
 
           {/* User Info */}
           <div className="flex flex-col text-white">
-            <span className="text-sm font-semibold capitalize">
-              {firstname
-                ? firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase()
-                : "Therapist"}
+            <span className="text-sm font-semibold capitalize truncate">
+              {fullName}
             </span>
-            <button className="text-xs text-red-500 mt-1 hover:underline">Logout</button>
+            <button
+              onClick={logOut}
+              className="text-xs text-red-500 mt-1 hover:underline"
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>

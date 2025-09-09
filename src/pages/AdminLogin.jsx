@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/UserStore";
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -33,6 +34,7 @@ export default function AdminLogin() {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
   const apiUrl = import.meta.env.VITE_API_URL;
+  const { user, setUser } = useUserStore();
 
   const {
     register,
@@ -59,6 +61,7 @@ export default function AdminLogin() {
         localStorage.setItem(`${role}Id`, response.data.therapistId);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("firstname", response.data.name.first);
+        setUser(response.data.therapist.userId);
 
 
         console.log("This is the token: ", response.data);
