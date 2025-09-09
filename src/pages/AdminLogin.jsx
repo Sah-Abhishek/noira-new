@@ -61,7 +61,7 @@ export default function AdminLogin() {
         localStorage.setItem(`${role}Id`, response.data.therapistId);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("firstname", response.data.name.first);
-        setUser(response.data.therapist.userId);
+        setUser(response.data.therapist?.userId);
 
 
         console.log("This is the token: ", response.data);

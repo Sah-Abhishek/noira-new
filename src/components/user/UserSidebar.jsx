@@ -32,6 +32,11 @@ const UserSidebar = () => {
     },
   ];
 
+  const handleLogOut = () => {
+    localStorage.clear();
+    navigate('/userlogin');
+  }
+
   return (
     <>
       {/* Desktop Sidebar */}
@@ -94,7 +99,7 @@ const UserSidebar = () => {
                 firstname.slice(1).toLowerCase()
                 : "User"}
             </span>
-            <button className="text-xs text-red-500 mt-1 hover:underline">
+            <button onClick={handleLogOut} className="text-xs text-red-500 mt-1 hover:underline">
               Logout
             </button>
           </div>
