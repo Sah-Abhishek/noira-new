@@ -30,7 +30,7 @@ const TherapistSidebar = () => {
     {
       name: "Bookings",
       icon: <BookOpen className="w-5 h-5" />,
-      path: "/therapist/bookings",
+      path: "/therapist/therapistbookingspage",
     },
     {
       name: "Feedback",

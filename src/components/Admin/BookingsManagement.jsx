@@ -104,7 +104,7 @@ export default function BookingsManagement() {
                 <th className="py-3 px-4 text-left">Duration</th>
                 <th className="py-3 px-4 text-left">Status</th>
                 <th className="py-3 px-4 text-left">Payment</th>
-                <th className="py-3 px-4 text-left">Actions</th>
+                {/* <th className="py-3 px-4 text-left">Actions</th> */}
               </tr>
             </thead>
             <tbody>
@@ -196,17 +196,17 @@ export default function BookingsManagement() {
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3 px-4 space-x-2">
-                      <button className="bg-primary text-black px-3 py-1 rounded text-xs">
-                        Assign
-                      </button>
-                      <button className="bg-blue-600 px-3 py-1 rounded text-xs">
-                        Edit
-                      </button>
-                      <button className="bg-red-600 px-3 py-1 rounded text-xs">
-                        Cancel
-                      </button>
-                    </td>
+                    {/* <td className="py-3 px-4 space-x-2"> */}
+                    {/*   <button className="bg-primary text-black px-3 py-1 rounded text-xs"> */}
+                    {/*     Assign */}
+                    {/*   </button> */}
+                    {/*   <button className="bg-blue-600 px-3 py-1 rounded text-xs"> */}
+                    {/*     Edit */}
+                    {/*   </button> */}
+                    {/*   <button className="bg-red-600 px-3 py-1 rounded text-xs"> */}
+                    {/*     Cancel */}
+                    {/*   </button> */}
+                    {/* </td> */}
                   </tr>
                 ))
               )}

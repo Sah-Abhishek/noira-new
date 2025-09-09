@@ -53,6 +53,7 @@ import UserLayout from "./layouts/UserLayout.jsx";
 import UserEditProfile from "./components/user/UserEditProfile.jsx";
 import MyBookings from "./components/user/MyBookings.jsx";
 import UserDashboard from "./components/user/UserDashboard.jsx";
+import TherapistBookingsPage from "./components/therapist/TherapistMyBookings.jsx";
 
 
 const AppRoutes = () => {
@@ -201,7 +202,8 @@ const AppRoutes = () => {
           <Route path="therapistdashboard" element={<TherapistDashboard />} />
           <Route path="therapistprofile/:id" element={<TherapistProfile />} />
           <Route path="therapistprofiletherapist" element={<TherapistProfileTherapist />} />
-          <Route path="edittherapistprofile/" element={<EditTherapistProfile />} />
+          <Route path="edittherapistprofile" element={<EditTherapistProfile />} />
+          <Route path="therapistbookingspage" element={<TherapistBookingsPage />} />
           <Route
             path="therapistschedule"
             element={
