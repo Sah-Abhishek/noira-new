@@ -52,6 +52,7 @@ import BookingsManagement from "./components/Admin/BookingsManagement.jsx"
 import UserLayout from "./layouts/UserLayout.jsx";
 import UserEditProfile from "./components/user/UserEditProfile.jsx";
 import MyBookings from "./components/user/MyBookings.jsx";
+import UserDashboard from "./components/user/UserDashboard.jsx";
 
 
 const AppRoutes = () => {
@@ -183,6 +184,7 @@ const AppRoutes = () => {
           <Route path="userProfile" element={<UserProfile />} />
           <Route path="usereditprofile" element={<UserEditProfile />} />
           <Route path="mybookings" element={<MyBookings />} />
+          <Route path="dashboard" element={<UserDashboard />} />
 
         </Route>
 

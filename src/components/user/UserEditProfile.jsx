@@ -145,12 +145,15 @@ export default function UserEditProfile() {
         formData.append("profileImage", profileImage);
       }
 
-      await axios.post(`${apiUrl}/user/update/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await axios.put(`${apiUrl}/user/editprofile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${userjwt}`
+        },
       });
 
       toast.success("Profile updated successfully!");
-      navigate("/dashboard");
+      navigate("/user/userprofile");
     } catch (err) {
       console.error("Error updating user:", err);
       toast.error("Failed to update profile");

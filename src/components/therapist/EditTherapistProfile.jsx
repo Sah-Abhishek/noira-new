@@ -10,7 +10,8 @@ export default function EditTherapistProfile() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
+
+  const therapistId = localStorage.getItem("therapistId");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -56,7 +57,7 @@ export default function EditTherapistProfile() {
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/therapist/${id}`);
+        const res = await axios.get(`${apiUrl}/therapist/${therapistId}`);
         const t = res.data.therapist;
 
         setForm({
@@ -250,17 +251,17 @@ export default function EditTherapistProfile() {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Password</label>
-            <input
-              disabled
-              type="text"
-              value={form.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-              className="w-full bg-black border border-white/10 disabled:cursor-not-allowed rounded-lg p-2 text-white focus:border-primary"
-              placeholder="Leave blank to keep existing"
-            />
-          </div>
+          {/* <div> */}
+          {/*   <label className="block text-sm text-gray-400 mb-1">Password</label> */}
+          {/*   <input */}
+          {/*     disabled */}
+          {/*     type="text" */}
+          {/*     value={form.password} */}
+          {/*     onChange={(e) => handleChange("password", e.target.value)} */}
+          {/*     className="w-full bg-black border border-white/10 disabled:cursor-not-allowed rounded-lg p-2 text-white focus:border-primary" */}
+          {/*     placeholder="Leave blank to keep existing" */}
+          {/*   /> */}
+          {/* </div> */}
         </div>
 
         {/* Experience */}

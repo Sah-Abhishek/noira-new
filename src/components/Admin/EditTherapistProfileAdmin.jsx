@@ -254,17 +254,17 @@ export default function EditTherapistProfileAdmin() {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Password</label>
-            <input
-              disabled
-              type="text"
-              value={form.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-              className="w-full bg-black border border-white/10 disabled:cursor-not-allowed rounded-lg p-2 text-white focus:border-primary"
-              placeholder="Leave blank to keep existing"
-            />
-          </div>
+          {/* <div> */}
+          {/*   <label className="block text-sm text-gray-400 mb-1">Password</label> */}
+          {/*   <input */}
+          {/*     disabled */}
+          {/*     type="text" */}
+          {/*     value={form.password} */}
+          {/*     onChange={(e) => handleChange("password", e.target.value)} */}
+          {/*     className="w-full bg-black border border-white/10 disabled:cursor-not-allowed rounded-lg p-2 text-white focus:border-primary" */}
+          {/*     placeholder="Leave blank to keep existing" */}
+          {/*   /> */}
+          {/* </div> */}
         </div>
 
         {/* Experience */}
