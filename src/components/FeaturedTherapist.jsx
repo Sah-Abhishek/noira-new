@@ -16,7 +16,7 @@ const FeaturedTherapists = () => {
     const fetchTherapists = async () => {
       try {
         const res = await axios.get(
-          `${apiUrl}/therapist/getalltherapists?page=1&limit=4`
+          `${apiUrl}/therapist/getalltherapists?page=1&limit=3`
         );
         if (res.data?.therapists) {
           setTherapists(res.data.therapists);
@@ -52,7 +52,7 @@ const FeaturedTherapists = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-50">
         {therapists.map((therapist) => {
           const fullName =
             therapist?.profile?.title ||

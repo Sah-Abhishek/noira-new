@@ -23,9 +23,9 @@ const AdminSidebar = () => {
     { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/admin/admindashboard" },
     { name: "User Management", icon: <Users className="w-5 h-5" />, path: "/admin/users" },
     { name: "Therapist Management", icon: <UserStar className="w-5 h-5" />, path: "/admin/therapistmanagement" },
-    { name: "Content Manager", icon: <FileText className="w-5 h-5" />, path: "/admin/content" },
+    // { name: "Content Manager", icon: <FileText className="w-5 h-5" />, path: "/admin/content" },
     { name: "Bookings", icon: <BookOpen className="w-5 h-5" />, path: "/admin/bookingsmanagement" },
-    { name: "Marketing", icon: <Megaphone className="w-5 h-5" />, path: "/admin/marketing" },
+    // { name: "Marketing", icon: <Megaphone className="w-5 h-5" />, path: "/admin/marketing" },
     { name: "Service Management", icon: <Megaphone className="w-5 h-5" />, path: "/admin/servicemanagement" },
     { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/admin/settings" },
   ];
@@ -34,7 +34,7 @@ const AdminSidebar = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
       localStorage.clear(); // clear all saved data
-      navigate("/admin/login"); // redirect to login
+      navigate("/adminlogin"); // redirect to login
     }
   };
 

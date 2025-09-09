@@ -19,6 +19,7 @@ const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
+  console.log("This is the user email: ", userEmail);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);

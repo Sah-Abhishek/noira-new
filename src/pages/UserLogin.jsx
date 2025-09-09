@@ -34,7 +34,7 @@ export default function UserLogin() {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
   const location = useLocation();
-  const { userDetails, setUserDetails, userId, setUserId, setUserAddress, userAddress } = useBookingStore();
+  const { userDetails, setUserDetails, setUserEmail, userId, setUserId, setUserAddress, userAddress } = useBookingStore();
 
   // figure out where to redirect
   const from = location.state?.from?.pathname || "/allservicespage";
@@ -59,6 +59,7 @@ export default function UserLogin() {
         localStorage.setItem("userId", res.data.user._id);
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
+        setUserEmail(res.data.user.email);
         setUserId(res.data.user._id);
         navigate(from, { replace: true });
       } catch (error) {
@@ -81,6 +82,8 @@ export default function UserLogin() {
       if (response.status === 200) {
         localStorage.setItem("userEmail", data.email);
         localStorage.setItem("userjwt", response.data.token);
+        setUserEmail(response.data.user.email);
+        console.log("This is the useremail: ", response.data.user.email)
         setUserDetails(response.data.user);
         setUserAddress(response.data.user.address);
         console.log("This is the userId: ", response.data.user._id);

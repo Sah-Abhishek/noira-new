@@ -23,7 +23,7 @@ const UserSidebar = () => {
     {
       name: "My Bookings",
       icon: <BookOpen className="w-5 h-5" />,
-      path: "/user/bookings",
+      path: "/user/mybookings",
     },
     {
       name: "Settings",

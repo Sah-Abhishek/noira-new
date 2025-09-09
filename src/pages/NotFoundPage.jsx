@@ -18,7 +18,7 @@ const NotFoundPage = () => {
           className="inline-flex items-center mt-6 px-6 py-3 bg-[#C49E5B] text-black font-semibold rounded-md hover:bg-yellow-400 transition"
         >
           <ArrowLeft className="mr-2" size={18} />
-          Back to Home
+          Go Back
         </button>
       </div>
     </div>

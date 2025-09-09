@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Edit, Plus, Bell, MapPin } from "lucide-react";
 import AddressModal from "../Modals/AddressModal";
+import { useNavigate } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -11,6 +12,7 @@ export default function CustomerDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const userjwt = localStorage.getItem("userjwt");
 
@@ -98,34 +100,34 @@ export default function CustomerDashboard() {
             </div>
 
             {/* Totals */}
-            <div className="mt-6 grid grid-cols-2 gap-4 w-full text-center">
-              <div className="bg-[#111] rounded-xl py-4">
-                <p className="text-lg font-bold">{bookings.length}</p>
-                <p className="text-gray-400 text-xs">Total Bookings</p>
-              </div>
-              <div className="bg-[#111] rounded-xl py-4">
-                <p className="text-lg font-bold text-primary">
-                  £
-                  {bookings.reduce(
-                    (sum, b) => sum + (b.price?.amount || 0),
-                    0
-                  )}
-                </p>
-                <p className="text-gray-400 text-xs">Total Spend</p>
-              </div>
-            </div>
+            {/* <div className="mt-6 grid grid-cols-2 gap-4 w-full text-center"> */}
+            {/*   <div className="bg-[#111] rounded-xl py-4"> */}
+            {/*     <p className="text-lg font-bold">{bookings.length}</p> */}
+            {/*     <p className="text-gray-400 text-xs">Total Bookings</p> */}
+            {/*   </div> */}
+            {/*   <div className="bg-[#111] rounded-xl py-4"> */}
+            {/*     <p className="text-lg font-bold text-primary"> */}
+            {/*       £ */}
+            {/*       {bookings.reduce( */}
+            {/*         (sum, b) => sum + (b.price?.amount || 0), */}
+            {/*         0 */}
+            {/*       )} */}
+            {/*     </p> */}
+            {/*     <p className="text-gray-400 text-xs">Total Spend</p> */}
+            {/*   </div> */}
+            {/* </div> */}
 
             {/* Quick Actions */}
             <div className="mt-6 w-full space-y-3">
-              <button className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
+              <button onClick={() => navigate('/user/usereditprofile')} className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
                 <Edit size={16} /> Edit Profile
               </button>
-              <button className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
+              <button onClick={() => navigate('/user/allservicespage')} className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
                 <Plus size={16} /> Add Booking
               </button>
-              <button className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
-                <Bell size={16} /> Send Notification
-              </button>
+              {/* <button className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition"> */}
+              {/*   <Bell size={16} /> Send Notification */}
+              {/* </button> */}
             </div>
           </div>
         </div>

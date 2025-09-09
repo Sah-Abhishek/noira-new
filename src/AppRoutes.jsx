@@ -50,6 +50,8 @@ import EditService from "./components/serviceManagement/EditService.jsx";
 import EditTherapistProfileAdmin from "./components/Admin/EditTherapistProfileAdmin.jsx";
 import BookingsManagement from "./components/Admin/BookingsManagement.jsx"
 import UserLayout from "./layouts/UserLayout.jsx";
+import UserEditProfile from "./components/user/UserEditProfile.jsx";
+import MyBookings from "./components/user/MyBookings.jsx";
 
 
 const AppRoutes = () => {
@@ -168,7 +170,7 @@ const AppRoutes = () => {
 
         </Route>
 
-        {/* User Protected Route */}
+        {/* User Protected Routes */}
         <Route
           path="/user"
           element={
@@ -179,6 +181,8 @@ const AppRoutes = () => {
         >
           <Route index element={<Navigate to="userprofile" replace />} />
           <Route path="userProfile" element={<UserProfile />} />
+          <Route path="usereditprofile" element={<UserEditProfile />} />
+          <Route path="mybookings" element={<MyBookings />} />
 
         </Route>
 

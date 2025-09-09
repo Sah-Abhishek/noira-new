@@ -37,11 +37,11 @@ const TherapistSidebar = () => {
       icon: <MessageSquare className="w-5 h-5" />,
       path: "/therapist/feedback",
     },
-    {
-      name: "Training",
-      icon: <FileText className="w-5 h-5" />,
-      path: "/therapist/training",
-    },
+    // {
+    //   name: "Training",
+    //   icon: <FileText className="w-5 h-5" />,
+    //   path: "/therapist/training",
+    // },
     {
       name: "Profile",
       icon: <User className="w-5 h-5" />,

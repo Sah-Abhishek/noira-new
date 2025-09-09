@@ -7,6 +7,7 @@ import {
   FaBriefcase,
   FaHeart,
   FaPlane,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import useBookingStore from "../../store/bookingStore.jsx";
@@ -21,7 +22,6 @@ export default function ServiceByTherapist() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAbled, setIsabled] = useState(false);
-
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = selectedTherapist.profile._id;
@@ -101,7 +101,14 @@ export default function ServiceByTherapist() {
     <div className="bg-noira-black text-noira-ivory min-h-screen p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16 mt-20">
+        <div className="flex flex-col items-center text-center mb-16 mt-20 relative">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute left-0 top-0 flex border border-transparent hover:border-white rounded-full px-3 py-2 items-center gap-2 text-noira-gold hover:text-noira-gold-light transition"
+          >
+            <FaArrowLeft /> Back
+          </button>
+
           <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 text-primary">
             Massage Menu
           </h1>

@@ -34,7 +34,9 @@ function AppLayout() {
     `/admin/editservice/:id`,
     '/user/userprofile',
     '/admin/bookingsmanagement',
-    '/user/userprofile'
+    '/user/userprofile',
+    '/user/usereditprofile',
+    '/user/mybookings'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {
