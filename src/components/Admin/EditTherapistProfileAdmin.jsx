@@ -128,13 +128,18 @@ export default function EditTherapistProfileAdmin() {
           Object.entries(value).forEach(([k, v]) =>
             formData.append(`address[${k}]`, v)
           );
+        } else if (key === "services") {
+          // Explicit array handling (services IDs)
+          value.forEach((v) => formData.append("services[]", v));
+        } else if (key === "username") {
+          // 🚀 send title instead of username
+          formData.append("title", value);
         } else if (Array.isArray(value)) {
           value.forEach((v) => formData.append(`${key}[]`, v));
         } else {
           formData.append(key, value);
         }
       });
-
       if (profileImage) {
         formData.append("profileImage", profileImage);
       }
@@ -144,7 +149,7 @@ export default function EditTherapistProfileAdmin() {
       });
 
       toast.success("Therapist updated successfully!");
-      navigate("/admin/therapists");
+      navigate("/admin/therapistmanagement");
     } catch (err) {
       console.error("Error updating therapist:", err);
       toast.error("Failed to update therapist.");

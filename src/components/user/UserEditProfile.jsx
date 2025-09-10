@@ -10,7 +10,7 @@ export default function UserEditProfile() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -18,7 +18,7 @@ export default function UserEditProfile() {
     email: "",
     phone: "",
     gender: "",
-    address: { // <-- current selected address
+    address: {
       Building_No: "",
       Street: "",
       Locality: "",
@@ -37,7 +37,7 @@ export default function UserEditProfile() {
   });
 
   const apiUrl = import.meta.env.VITE_API_URL;
-  const userjwt = localStorage.getItem('userjwt');
+  const userjwt = localStorage.getItem("userjwt");
 
   // Fetch user details
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function UserEditProfile() {
         const res = await axios.get(`${apiUrl}/user/profile`, {
           headers: { Authorization: `Bearer ${userjwt}` },
         });
-        const u = res.data.user;
+        const u = res.data.user || {};
 
         setForm({
           firstName: u.name?.first || "",
@@ -74,6 +74,7 @@ export default function UserEditProfile() {
     };
 
     fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiUrl, id]);
 
   const handleChange = (field, value, nested = false) => {
@@ -87,6 +88,11 @@ export default function UserEditProfile() {
     }
   };
 
+  // <-- FIX: define handleNewAddressChange
+  const handleNewAddressChange = (field, value) => {
+    setNewAddress((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -95,17 +101,44 @@ export default function UserEditProfile() {
     }
   };
 
-
   const handleAddAddress = () => {
-    if (!newAddress.Building_No || !newAddress.Street || !newAddress.PostalCode) {
+    // trim required fields
+    const trimmed = {
+      Building_No: (newAddress.Building_No || "").trim(),
+      Street: (newAddress.Street || "").trim(),
+      Locality: (newAddress.Locality || "").trim(),
+      PostTown: (newAddress.PostTown || "").trim(),
+      PostalCode: (newAddress.PostalCode || "").trim(),
+    };
+
+    if (!trimmed.Building_No || !trimmed.Street || !trimmed.PostalCode) {
       toast.error("Building No, Street & Postal Code are required");
       return;
     }
+
+    // Prevent exact duplicates (building, street, postal)
+    const duplicate = form.allAddresses.some(
+      (a) =>
+        (a.Building_No || "").trim() === trimmed.Building_No &&
+        (a.Street || "").trim() === trimmed.Street &&
+        (a.PostalCode || "").trim() === trimmed.PostalCode
+    );
+    if (duplicate) {
+      toast.error("This address is already saved");
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
-      allAddresses: [...prev.allAddresses, { ...newAddress }],
+      allAddresses: [...prev.allAddresses, { ...trimmed }],
     }));
-    setNewAddress({ Building_No: "", Street: "", Locality: "", PostTown: "", PostalCode: "" });
+    setNewAddress({
+      Building_No: "",
+      Street: "",
+      Locality: "",
+      PostTown: "",
+      PostalCode: "",
+    });
     toast.success("Address added");
   };
 
@@ -119,6 +152,7 @@ export default function UserEditProfile() {
       ...prev,
       allAddresses: prev.allAddresses.filter((_, i) => i !== idx),
     }));
+    toast.success("Address removed");
   };
 
   const handleSubmit = async (e) => {
@@ -150,7 +184,7 @@ export default function UserEditProfile() {
       await axios.put(`${apiUrl}/user/editprofile`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${userjwt}`
+          Authorization: `Bearer ${userjwt}`,
         },
       });
 
@@ -169,6 +203,12 @@ export default function UserEditProfile() {
       </div>
     );
   }
+
+  // Derived boolean for Add button disabled state
+  const addDisabled =
+    !newAddress.Building_No.trim() ||
+    !newAddress.Street.trim() ||
+    !newAddress.PostalCode.trim();
 
   return (
     <div className="bg-black text-white min-h-screen p-6 flex flex-col">
@@ -264,7 +304,6 @@ export default function UserEditProfile() {
           </select>
         </div>
 
-        {/* Primary Address */}
         {/* New Address Section */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-primary mb-2">Add New Address</h3>
@@ -290,7 +329,11 @@ export default function UserEditProfile() {
           <button
             type="button"
             onClick={handleAddAddress}
-            className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-black font-medium hover:opacity-90"
+            disabled={addDisabled}
+            className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium ${addDisabled
+                ? "bg-gray-700 text-white cursor-not-allowed"
+                : "bg-primary text-black hover:opacity-90"
+              }`}
           >
             <Plus size={16} /> Add Address
           </button>
@@ -312,6 +355,7 @@ export default function UserEditProfile() {
                     type="button"
                     onClick={() => handleRemoveAddress(idx)}
                     className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
+                    aria-label={`Remove address ${idx + 1}`}
                   >
                     <Trash2 size={18} />
                   </button>

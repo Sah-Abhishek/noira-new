@@ -40,7 +40,7 @@ const OtpInput = () => {
         if (purpose === "login") {
           navigate(from, { replace: true });
         } else if (purpose === "register") {
-          navigate("/allservicespage");
+          navigate("/user/userprofile");
         } else if (purpose === "password_reset") {
           navigate("/reset-password-success");
         } else {

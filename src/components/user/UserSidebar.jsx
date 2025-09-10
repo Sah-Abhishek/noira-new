@@ -16,6 +16,16 @@ const UserSidebar = () => {
       path: "/user/dashboard",
     },
     {
+      name: "Book Sessions",
+      icon: <Home className="w-5 h-5" />,
+      path: "/allservicespage",
+    },
+    {
+      name: "Browse Therapists",
+      icon: <Home className="w-5 h-5" />,
+      path: "/browsetherapists",
+    },
+    {
       name: "Profile",
       icon: <User className="w-5 h-5" />,
       path: "/user/userprofile",

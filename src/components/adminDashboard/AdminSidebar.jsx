@@ -132,7 +132,7 @@ const AdminSidebar = () => {
         onClose={() => setShowLogoutModal(false)}
         onConfirm={() => {
           localStorage.clear();
-          navigate("/admin/login");
+          navigate("/adminlogin");
         }}
       />
     </>

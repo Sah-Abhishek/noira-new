@@ -7,7 +7,9 @@ import {
   CreditCard,
   Hash,
   StickyNote,
+  Star,
 } from "lucide-react";
+import { useNavigate } from 'react-router-dom'
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -17,6 +19,7 @@ export default function BookingsPage() {
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"; // adjust if needed
   const userId = localStorage.getItem("userId");
   const userjwt = localStorage.getItem("userjwt");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -65,6 +68,13 @@ export default function BookingsPage() {
     );
   }
 
+  // Example handler for review button click
+  const handleReview = (bookingId,) => {
+    navigate(`/user/reviewbooking/${bookingId}`);
+    alert(`Review flow for ${therapistName} (Booking ID: ${bookingId})`);
+    // Here you’d likely navigate to a review form or open a modal
+  };
+
   return (
     <div className="min-h-screen bg-[#0d0d0d] py-10 px-6">
       <h1 className="text-3xl font-bold text-primary mb-8 text-center">
@@ -89,8 +99,8 @@ export default function BookingsPage() {
                   </h2>
                   <span
                     className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-yellow-500/20 text-yellow-400"
+                      ? "bg-green-500/20 text-green-400"
+                      : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {booking.paymentStatus}
@@ -135,8 +145,8 @@ export default function BookingsPage() {
 
                   <p className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-primary" />
-                    {booking.price.amount}{" "}
-                    {booking.price.currency?.toUpperCase()}
+                    {booking.price?.amount ?? booking.price}{" "}
+                    {booking.price?.currency?.toUpperCase()}
                   </p>
 
                   {booking.notes && (
@@ -153,6 +163,19 @@ export default function BookingsPage() {
                     </p>
                   )}
                 </div>
+
+                {/* Review Button */}
+                {!booking.isReviewed && therapist && (
+                  <button
+                    onClick={() =>
+                      handleReview(booking._id, therapist.title)
+                    }
+                    className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
+                  >
+                    <Star className="w-4 h-4" />
+                    Review Therapist
+                  </button>
+                )}
               </div>
             </div>
           );

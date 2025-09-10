@@ -40,7 +40,8 @@ function AppLayout() {
     '/therapist/edittherapistprofile',
     '/user/userdashboard',
     '/therapist/therapistbookingspage',
-    '/therapist/therapistprofiletherapist'
+    '/therapist/therapistprofiletherapist',
+    '/user/reviewbooking/:id'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

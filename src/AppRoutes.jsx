@@ -54,6 +54,8 @@ import UserEditProfile from "./components/user/UserEditProfile.jsx";
 import MyBookings from "./components/user/MyBookings.jsx";
 import UserDashboard from "./components/user/UserDashboard.jsx";
 import TherapistBookingsPage from "./components/therapist/TherapistMyBookings.jsx";
+import BookingsPage from "./components/user/MyBookings.jsx";
+import ReviewBookingsPage from "./components/user/ReviewBookingPage.jsx";
 
 
 const AppRoutes = () => {
@@ -186,6 +188,7 @@ const AppRoutes = () => {
           <Route path="usereditprofile" element={<UserEditProfile />} />
           <Route path="mybookings" element={<MyBookings />} />
           <Route path="dashboard" element={<UserDashboard />} />
+          <Route path="reviewbooking/:id" element={<ReviewBookingsPage />} />
 
         </Route>
 
