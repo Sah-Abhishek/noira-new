@@ -46,8 +46,16 @@ const PaymentPage = () => {
         optionIndex: cart.optionIndex,
         date,  // format: YYYY-MM-DD
         time,       // format: HH:mm
-        notes: "Please focus on back pain",
       });
+      console.log("These are the fiels that are send: ", "email", userEmail,
+        "therapistId", selectedTherapist._id,
+        "serviceId", cart.serviceId,
+        "optionIndex", cart.optionIndex,
+        date,  // format: YYYY-MM-DD
+        time,       // format: HH:mm
+
+
+      )
 
       if (res.data.url) {
         window.location.href = res.data.url;
