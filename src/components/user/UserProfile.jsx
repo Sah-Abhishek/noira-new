@@ -84,9 +84,9 @@ export default function CustomerDashboard() {
               {fullName || "Unknown User"}
             </h2>
 
-            <div className={`${profile.profileComplete ? "bg-green-500" : "bg-yellow-500/70"} rounded-full text-black px-2 py-1`}>
-              {profile.profileComplete ? <span>Profile completed</span> : <span>Profile Not Compelted</span>}
-            </div>
+            {/* <div className={`${profile.profileComplete ? "bg-green-500" : "bg-yellow-500/70"} rounded-full text-black px-2 py-1`}> */}
+            {/*   {profile.profileComplete ? <span>Profile completed</span> : <span>Profile Not Compelted</span>} */}
+            {/* </div> */}
 
             <div className="mt-6 space-y-2 text-sm text-gray-400 text-left w-full">
               <p>

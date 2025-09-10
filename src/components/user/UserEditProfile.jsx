@@ -305,40 +305,40 @@ export default function UserEditProfile() {
         </div>
 
         {/* New Address Section */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-primary mb-2">Add New Address</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { key: "Building_No", label: "Building No" },
-              { key: "Street", label: "Street" },
-              { key: "Locality", label: "Locality" },
-              { key: "PostTown", label: "Post Town" },
-              { key: "PostalCode", label: "Postal Code" },
-            ].map(({ key, label }) => (
-              <div key={key} className="col-span-1">
-                <label className="block text-sm text-gray-400 mb-1">{label}</label>
-                <input
-                  type="text"
-                  value={newAddress[key]}
-                  onChange={(e) => handleNewAddressChange(key, e.target.value)}
-                  className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-                />
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={handleAddAddress}
-            disabled={addDisabled}
-            className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium ${addDisabled
-                ? "bg-gray-700 text-white cursor-not-allowed"
-                : "bg-primary text-black hover:opacity-90"
-              }`}
-          >
-            <Plus size={16} /> Add Address
-          </button>
-        </div>
-
+        {/* <div className="mb-6"> */}
+        {/*   <h3 className="text-lg font-semibold text-primary mb-2">Add New Address</h3> */}
+        {/*   <div className="grid grid-cols-2 gap-4"> */}
+        {/*     {[ */}
+        {/*       { key: "Building_No", label: "Building No" }, */}
+        {/*       { key: "Street", label: "Street" }, */}
+        {/*       { key: "Locality", label: "Locality" }, */}
+        {/*       { key: "PostTown", label: "Post Town" }, */}
+        {/*       { key: "PostalCode", label: "Postal Code" }, */}
+        {/*     ].map(({ key, label }) => ( */}
+        {/*       <div key={key} className="col-span-1"> */}
+        {/*         <label className="block text-sm text-gray-400 mb-1">{label}</label> */}
+        {/*         <input */}
+        {/*           type="text" */}
+        {/*           value={newAddress[key]} */}
+        {/*           onChange={(e) => handleNewAddressChange(key, e.target.value)} */}
+        {/*           className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary" */}
+        {/*         /> */}
+        {/*       </div> */}
+        {/*     ))} */}
+        {/*   </div> */}
+        {/*   <button */}
+        {/*     type="button" */}
+        {/*     onClick={handleAddAddress} */}
+        {/*     disabled={addDisabled} */}
+        {/*     className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium ${addDisabled */}
+        {/*         ? "bg-gray-700 text-white cursor-not-allowed" */}
+        {/*         : "bg-primary text-black hover:opacity-90" */}
+        {/*       }`} */}
+        {/*   > */}
+        {/*     <Plus size={16} /> Add Address */}
+        {/*   </button> */}
+        {/* </div> */}
+        {/**/}
         {/* Saved Addresses */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-primary mb-3">Saved Addresses</h3>
