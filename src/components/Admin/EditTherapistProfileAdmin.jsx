@@ -11,6 +11,7 @@ export default function EditTherapistProfileAdmin() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -145,7 +146,10 @@ export default function EditTherapistProfileAdmin() {
       }
 
       await axios.put(`${apiUrl}/admin/updatetherapist/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${adminjwt}`
+        },
       });
 
       toast.success("Therapist updated successfully!");
