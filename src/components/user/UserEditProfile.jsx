@@ -397,7 +397,7 @@ export default function UserEditProfile() {
         <div className="flex justify-end gap-3">
           <button
             type="button"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/user/dashboard")}
             className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
           >
             Cancel
