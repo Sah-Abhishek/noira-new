@@ -8,6 +8,7 @@ export default function TherapistBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [statusLoading, setStatusLoading] = useState(null); // 👈 track booking being updated
 
   const baseUrl = import.meta.env.VITE_API_URL; // adjust if needed
   const therapistjwt = localStorage.getItem("therapistjwt");
@@ -32,6 +33,8 @@ export default function TherapistBookingsPage() {
 
   const updateBookingStatus = async (id, status) => {
     try {
+      setStatusLoading(id); // 👈 start loading for this booking
+
       const endpoint =
         status === "completed"
           ? `${baseUrl}/therapist/completebooking/${id}`
@@ -50,6 +53,8 @@ export default function TherapistBookingsPage() {
     } catch (err) {
       toast.error("Action failed");
       console.error(err);
+    } finally {
+      setStatusLoading(null); // 👈 stop loading
     }
   };
 
@@ -78,31 +83,22 @@ export default function TherapistBookingsPage() {
         <h1 className="text-xl font-bold text-primary">My Bookings</h1>
       </header>
 
-      {/* Filters + Search */}
+      {/* Filters */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
         <div className="flex gap-3">
-          {["all", , "completed", "cancelled", "declined"].map(
-            (tab) => (
-              <button
-                key={tab}
-                onClick={() => setFilter(tab)}
-                className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
+          {["all", "completed", "cancelled", "declined"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
                   ? "bg-primary text-black"
                   : "bg-[#1a1a1a] text-gray-400 hover:text-white"
-                  }`}
-              >
-                {tab}
-              </button>
-            )
-          )}
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
-        {/* <input */}
-        {/*   type="text" */}
-        {/*   placeholder="Search bookings..." */}
-        {/*   value={search} */}
-        {/*   onChange={(e) => setSearch(e.target.value)} */}
-        {/*   className="bg-[#1a1a1a] px-3 py-2 rounded-lg text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary" */}
-        {/* /> */}
       </div>
 
       {/* Booking Cards */}
@@ -174,23 +170,36 @@ export default function TherapistBookingsPage() {
                       {isPast ? (
                         <button
                           onClick={() => updateBookingStatus(b._id, "completed")}
-                          className="bg-primary hover:bg-yellow-600 text-black px-3 py-1 rounded-lg text-sm font-medium"
+                          disabled={statusLoading === b._id}
+                          className="bg-primary hover:bg-yellow-600 text-black px-3 py-1 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Mark Completed
+                          {statusLoading === b._id
+                            ? "Updating..."
+                            : "Mark Completed"}
                         </button>
                       ) : (
                         <>
                           <button
                             onClick={() => updateBookingStatus(b._id, "declined")}
-                            className="bg-red-600 hover:bg-red-700 inline-flex justify-center items-center text-white px-3 py-1 rounded-lg text-sm font-medium"
+                            disabled={statusLoading === b._id}
+                            className="bg-red-600 hover:bg-red-700 inline-flex justify-center items-center text-white px-3 py-1 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <FaTimes className="mr-1" /> Decline
+                            {statusLoading === b._id ? (
+                              "Updating..."
+                            ) : (
+                              <>
+                                <FaTimes className="mr-1" /> Decline
+                              </>
+                            )}
                           </button>
                           <button
                             onClick={() => updateBookingStatus(b._id, "completed")}
-                            className="bg-primary hover:bg-yellow-600 text-black px-3 py-1 rounded-lg text-sm font-medium"
+                            disabled={statusLoading === b._id}
+                            className="bg-primary hover:bg-yellow-600 text-black px-3 py-1 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            Mark Completed
+                            {statusLoading === b._id
+                              ? "Updating..."
+                              : "Mark Completed"}
                           </button>
                         </>
                       )}
@@ -201,13 +210,17 @@ export default function TherapistBookingsPage() {
                 {/* Review Section */}
                 {b.isReviewed && b.review && (
                   <div className="mt-4 border-t border-[#222] pt-3">
-                    <h3 className="text-sm font-semibold text-primary mb-2">Client Review</h3>
+                    <h3 className="text-sm font-semibold text-primary mb-2">
+                      Client Review
+                    </h3>
                     <div className="flex items-center gap-2 mb-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <svg
                           key={star}
                           xmlns="http://www.w3.org/2000/svg"
-                          className={`h-4 w-4 ${star <= b.review.rating ? "text-yellow-400" : "text-gray-600"
+                          className={`h-4 w-4 ${star <= b.review.rating
+                              ? "text-yellow-400"
+                              : "text-gray-600"
                             }`}
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -216,7 +229,9 @@ export default function TherapistBookingsPage() {
                         </svg>
                       ))}
                     </div>
-                    <p className="text-gray-300 text-sm italic">“{b.review.Comment}”</p>
+                    <p className="text-gray-300 text-sm italic">
+                      “{b.review.Comment}”
+                    </p>
                   </div>
                 )}
               </div>
@@ -224,24 +239,6 @@ export default function TherapistBookingsPage() {
           })
         )}
       </main>
-
-      {/* Pagination (dummy UI for now) */}
-      {/* <footer className="flex justify-between items-center px-4 py-3 bg-[#111] border-t border-primary/20"> */}
-      {/*   <p className="text-sm text-gray-400"> */}
-      {/*     Showing {filteredBookings.length} of {bookings.length} bookings */}
-      {/*   </p> */}
-      {/*   <div className="flex gap-2"> */}
-      {/*     <button className="px-3 py-1 rounded bg-[#1a1a1a] text-gray-400 hover:text-white"> */}
-      {/*       Prev */}
-      {/*     </button> */}
-      {/*     <button className="px-3 py-1 rounded bg-primary text-black font-semibold"> */}
-      {/*       1 */}
-      {/*     </button> */}
-      {/*     <button className="px-3 py-1 rounded bg-[#1a1a1a] text-gray-400 hover:text-white"> */}
-      {/*       Next */}
-      {/*     </button> */}
-      {/*   </div> */}
-      {/* </footer> */}
     </div>
   );
 }

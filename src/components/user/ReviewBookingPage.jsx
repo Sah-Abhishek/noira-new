@@ -30,7 +30,7 @@ export default function ReviewBookingsPage() {
         const res = await axios.get(`${apiUrl}/user/booking/order/${id}`, {
           headers: { Authorization: `Bearer ${userjwt}` },
         });
-        setBooking(res.data.data);
+        setBooking(res.data.data); // ✅ store booking object only
       } catch (err) {
         console.error("Failed to fetch booking:", err);
         toast.error("Failed to load booking details");
@@ -50,11 +50,8 @@ export default function ReviewBookingsPage() {
 
     try {
       await axios.put(
-        `${apiUrl}/user/booking/${booking._id}/review`, // ✅ booking id in params
-        {
-          rating, // ✅ only send rating + comment
-          comment,
-        },
+        `${apiUrl}/user/booking/${booking._id}/review`,
+        { rating, comment },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
 
@@ -66,6 +63,7 @@ export default function ReviewBookingsPage() {
       toast.error("Failed to submit review");
     }
   };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-black text-white">
@@ -96,31 +94,36 @@ export default function ReviewBookingsPage() {
       </div>
 
       <div className="bg-[#111] rounded-2xl border border-primary/30 shadow-lg p-6 max-w-3xl mx-auto space-y-6">
-        {/* Client Card */}
+        {/* Therapist Card */}
         <div className="flex items-center gap-4 border-b border-white/10 pb-4">
           <img
-            src={booking.clientId?.avatar_url}
-            alt="Client Avatar"
+            src={booking?.therapistId?.userId?.avatar_url}
+            alt="Therapist Avatar"
             className="w-14 h-14 rounded-full border-2 border-primary object-cover"
           />
           <div>
             <h2 className="text-lg font-semibold text-primary">
-              {booking.clientId?.name?.first} {booking.clientId?.name?.last}
+              {booking?.therapistId?.userId?.name?.first}{" "}
+              {booking?.therapistId?.userId?.name?.last}
             </h2>
-            <p className="text-sm text-gray-400">{booking.clientId?.email}</p>
-            <p className="text-xs text-gray-500">{booking.clientId?.phone}</p>
+            <p className="text-sm text-gray-400">
+              {booking?.therapistId?.userId?.email}
+            </p>
+            <p className="text-xs text-gray-500">
+              {booking?.therapistId?.userId?.phone}
+            </p>
           </div>
         </div>
 
         {/* Service + Status */}
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-primary">
-            {booking.serviceId?.name || "Custom Service"}
+            {booking?.serviceId?.name || "Custom Service"}
           </h2>
           <span
             className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-              ? "bg-green-500/20 text-green-400"
-              : "bg-yellow-500/20 text-yellow-400"
+                ? "bg-green-500/20 text-green-400"
+                : "bg-yellow-500/20 text-yellow-400"
               }`}
           >
             {booking.paymentStatus}
@@ -131,7 +134,7 @@ export default function ReviewBookingsPage() {
         <div className="space-y-3 text-sm text-gray-300">
           <p className="flex items-center gap-2">
             <User className="w-4 h-4 text-primary" />
-            Therapist: {booking.therapistId?.title}
+            Therapist: {booking?.therapistId?.title}
           </p>
 
           <p className="flex items-center gap-2">
@@ -158,7 +161,7 @@ export default function ReviewBookingsPage() {
 
           <p className="flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-primary" />
-            {booking.price} GBP
+            {booking?.price?.amount ?? "N/A"} GBP
           </p>
 
           {booking.notes && (
@@ -188,8 +191,8 @@ export default function ReviewBookingsPage() {
               <Star
                 key={s}
                 className={`w-8 h-8 cursor-pointer transition ${s <= rating
-                  ? "text-yellow-400 fill-yellow-400"
-                  : "text-gray-500"
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-500"
                   }`}
                 onClick={() => setRating(s)}
               />

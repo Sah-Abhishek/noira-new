@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Edit, Plus, Bell, MapPin } from "lucide-react";
+import { Edit, Plus, Bell, MapPin, User } from "lucide-react";
 import AddressModal from "../Modals/AddressModal";
 import { useNavigate } from "react-router-dom";
 
@@ -72,14 +72,20 @@ export default function CustomerDashboard() {
         {/* Left Sidebar */}
         <div className="lg:col-span-1">
           <div className="sticky top-6 bg-[#0d0d0d] rounded-2xl p-6 shadow-lg flex flex-col items-center text-center">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              User Profile
-            </h2>
-            <img
-              src={profile?.avatar_url || "https://via.placeholder.com/150"}
-              alt="Profile"
-              className="w-28 h-28 rounded-full object-cover border-4 border-primary"
-            />
+            <h2 className="text-2xl font-bold text-primary mb-4">User Profile</h2>
+
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt="Profile"
+                className="w-28 h-28 rounded-full object-cover border-4 border-primary"
+              />
+            ) : (
+              <div className="w-28 h-28 flex items-center justify-center rounded-full border-4 border-primary bg-[#111]">
+                <User size={48} className="text-gray-400" />
+              </div>
+            )}
+
             <h2 className="mt-4 text-xl font-semibold">
               {fullName || "Unknown User"}
             </h2>
