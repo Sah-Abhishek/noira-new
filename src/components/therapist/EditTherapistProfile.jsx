@@ -12,6 +12,7 @@ export default function EditTherapistProfile() {
   const [loading, setLoading] = useState(true);
 
   const therapistId = localStorage.getItem("therapistId");
+  const therapistjwt = localStorage.getItem("therapistjwt");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -120,11 +121,21 @@ export default function EditTherapistProfile() {
     try {
       const formData = new FormData();
 
+      // Map selected service names to IDs
+      const selectedServiceIds = form.services
+        .map((name) => {
+          const service = servicesList.find((s) => s.name === name);
+          return service?._id;
+        })
+        .filter(Boolean); // remove undefined just in case
+
       Object.entries(form).forEach(([key, value]) => {
         if (key === "address") {
           Object.entries(value).forEach(([k, v]) =>
             formData.append(`address[${k}]`, v)
           );
+        } else if (key === "services") {
+          selectedServiceIds.forEach((id) => formData.append("services[]", id));
         } else if (Array.isArray(value)) {
           value.forEach((v) => formData.append(`${key}[]`, v));
         } else {
@@ -136,12 +147,19 @@ export default function EditTherapistProfile() {
         formData.append("profileImage", profileImage);
       }
 
-      await axios.post(`${apiUrl}/admin/updatetherapist/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.put(
+        `${apiUrl}/therapist/edittherapist/${therapistId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${therapistjwt}`,
+          },
+        }
+      );
 
       toast.success("Therapist updated successfully!");
-      navigate("/admin/therapists");
+      navigate("/therapist/therapistdashboard");
     } catch (err) {
       console.error("Error updating therapist:", err);
       toast.error("Failed to update therapist.");
