@@ -34,9 +34,7 @@ const schema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string(),
   email: Yup.string().email("Invalid email format").required("Email is required"),
-  phone: Yup.string()
-    .required("Phone number is required")
-    .matches(/^[0-9]{10,15}$/, "Phone number must be 10–15 digits"),
+  phone: Yup.string(),
   password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
   // postalCode: Yup.string()
   //   .required("Postal code is required")
