@@ -357,7 +357,7 @@ export default function UserEditProfile() {
                     className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
                     aria-label={`Remove address ${idx + 1}`}
                   >
-                    <Trash2 size={18} />
+                    {/* <Trash2 size={18} /> */}
                   </button>
 
                   <div className="text-sm text-gray-300 leading-relaxed mb-2">
