@@ -165,7 +165,7 @@ export default function BookingsPage() {
                 </div>
 
                 {/* Review Button */}
-                {!booking.isReviewed && therapist && (
+                {!booking.isReviewed && therapist && (booking.status === "completed") && (
                   <button
                     onClick={() =>
                       handleReview(booking._id, therapist.title)

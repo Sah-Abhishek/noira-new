@@ -41,7 +41,8 @@ function AppLayout() {
     '/user/userdashboard',
     '/therapist/therapistbookingspage',
     '/therapist/therapistprofiletherapist',
-    '/user/reviewbooking/:id'
+    '/user/reviewbooking/:id',
+    '/admin/usermanagement',
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

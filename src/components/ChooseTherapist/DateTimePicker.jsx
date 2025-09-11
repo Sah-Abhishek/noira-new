@@ -14,6 +14,17 @@ const formatDate = (date) => {
   )}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
+const isPastTime = (timeString, selectedDate) => {
+  if (!selectedDate) return false;
+
+  const [hours, minutes] = timeString.split(":").map(Number);
+  const slotDate = new Date(selectedDate);
+  slotDate.setHours(hours, minutes, 0, 0);
+
+  const now = new Date();
+  return slotDate <= now; // disable if time is past or exactly now
+};
+
 const generateMonthDays = (year, month) => {
   const date = new Date(year, month, 1);
   const days = [];
@@ -147,10 +158,13 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               <button
                 key={t}
                 onClick={() => setTime(t)}
+                disabled={isPastTime(t, date)}
                 className={`py-2 text-sm rounded-full transition flex items-center justify-center
-                  ${time === t
-                    ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
-                    : "text-primary border border-primary hover:bg-primary hover:text-black"
+    ${isPastTime(t, date)
+                    ? "bg-gray-800 text-gray-600 cursor-not-allowed"
+                    : time === t
+                      ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
+                      : "text-primary border border-primary hover:bg-primary hover:text-black"
                   }`}
               >
                 {t} {isPremium && <span className="ml-1"><FaCrown /></span>}

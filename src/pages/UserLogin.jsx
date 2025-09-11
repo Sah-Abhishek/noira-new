@@ -20,6 +20,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import useBookingStore from "../store/bookingStore";
+import useUserStore from "../store/UserStore.jsx"
 
 // Validation schema
 const schema = Yup.object().shape({
@@ -35,6 +36,7 @@ export default function UserLogin() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const location = useLocation();
   const { userDetails, setUserDetails, setUserEmail, userId, setUserId, setUserAddress, userAddress } = useBookingStore();
+  const { setUser } = useUserStore();
 
   // figure out where to redirect
   const from = location.state?.from?.pathname || "/allservicespage";
@@ -59,6 +61,7 @@ export default function UserLogin() {
         localStorage.setItem("userId", res.data.user._id);
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
+
         setUserEmail(res.data.user.email);
         setUserId(res.data.user._id);
         navigate(from, { replace: true });
@@ -85,6 +88,8 @@ export default function UserLogin() {
         setUserEmail(response.data.user.email);
         console.log("This is the useremail: ", response.data.user.email)
         setUserDetails(response.data.user);
+        setUser(response.data.user);
+
         setUserAddress(response.data.user.address);
         console.log("This is the userId: ", response.data.user._id);
         localStorage.setItem("userId", response.data.user._id);

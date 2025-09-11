@@ -56,6 +56,7 @@ import UserDashboard from "./components/user/UserDashboard.jsx";
 import TherapistBookingsPage from "./components/therapist/TherapistMyBookings.jsx";
 import BookingsPage from "./components/user/MyBookings.jsx";
 import ReviewBookingsPage from "./components/user/ReviewBookingPage.jsx";
+import UsersManagement from "./components/Admin/UsersManagement.jsx";
 
 
 const AppRoutes = () => {
@@ -170,6 +171,7 @@ const AppRoutes = () => {
           <Route path="edittherapistprofileadmin/:id" element={<EditTherapistProfileAdmin />} />
           <Route path="editservice/:id" element={<EditService />} />
           <Route path="bookingsmanagement" element={<BookingsManagement />} />
+          <Route path="usermanagement" element={<UsersManagement />} />
 
 
         </Route>

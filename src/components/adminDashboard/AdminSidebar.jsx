@@ -21,7 +21,7 @@ const AdminSidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/admin/admindashboard" },
-    { name: "User Management", icon: <Users className="w-5 h-5" />, path: "/admin/users" },
+    { name: "User Management", icon: <Users className="w-5 h-5" />, path: "/admin/usermanagement" },
     { name: "Therapist Management", icon: <UserStar className="w-5 h-5" />, path: "/admin/therapistmanagement" },
     // { name: "Content Manager", icon: <FileText className="w-5 h-5" />, path: "/admin/content" },
     { name: "Bookings", icon: <BookOpen className="w-5 h-5" />, path: "/admin/bookingsmanagement" },

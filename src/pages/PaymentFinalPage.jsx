@@ -13,17 +13,17 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const PaymentPage = () => {
-  const { userAddress, cart, date, time, selectedTherapist, userEmail } = useBookingStore();
+  const { userAddress, cart, date, time, selectedTherapist, } = useBookingStore();
 
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
-  console.log("This is the user email: ", userEmail);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const userEmail = localStorage.getItem("userEmail");
   const userId = localStorage.getItem('userId');
 
   console.log("This is the selected TherapistId: ", cart.id);
@@ -47,15 +47,15 @@ const PaymentPage = () => {
         date,  // format: YYYY-MM-DD
         time,       // format: HH:mm
       });
-      console.log("These are the fiels that are send: ", "email", userEmail,
-        "therapistId", selectedTherapist._id,
-        "serviceId", cart.serviceId,
-        "optionIndex", cart.optionIndex,
-        date,  // format: YYYY-MM-DD
-        time,       // format: HH:mm
-
-
-      )
+      // console.log("These are the fiels that are send: ", "email", userEmail,
+      //   "therapistId", selectedTherapist._id,
+      //   "serviceId", cart.serviceId,
+      //   "optionIndex", cart.optionIndex,
+      //   date,  // format: YYYY-MM-DD
+      //   time,       // format: HH:mm
+      //
+      //
+      // )
 
       if (res.data.url) {
         window.location.href = res.data.url;
@@ -92,7 +92,7 @@ const PaymentPage = () => {
 
           {/* Right: Saved Addresses */}
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses />
+            <SavedAddresses isAddressInputModalOpen={isAddressModalOpen} />
           </div>
         </div>
 

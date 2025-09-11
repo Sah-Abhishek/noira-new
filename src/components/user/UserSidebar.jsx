@@ -3,11 +3,13 @@ import React from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "/noira.png";
 import { Home, User, BookOpen, Settings } from "lucide-react";
+import useUserStore from "../../store/UserStore";
 
 const UserSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const firstname = localStorage.getItem("firstname");
+  const { user } = useUserStore();
+  const firstname = user.name.first;
 
   const menuItems = [
     {

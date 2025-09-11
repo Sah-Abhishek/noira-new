@@ -4,7 +4,7 @@ import { Home, Plus } from "lucide-react";
 import useBookingStore from "../../store/bookingStore.jsx";
 import AddressModal from "../Modals/AddressModal.jsx";
 
-export default function SavedAddresses() {
+export default function SavedAddresses({ isAddressInputModalOpen }) {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,7 +37,7 @@ export default function SavedAddresses() {
     };
 
     fetchAddresses();
-  }, [userAddress?._id]);
+  }, [userAddress?._id, isAddressInputModalOpen]);
 
   const handleSelectAddress = async (id) => {
     setSelectedId(id);
