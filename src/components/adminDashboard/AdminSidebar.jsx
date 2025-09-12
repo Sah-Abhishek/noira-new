@@ -10,6 +10,7 @@ import {
   Megaphone,
   Settings,
   UserStar,
+  UserPen,
 } from "lucide-react";
 import ConfirmLogoutModal from "./ConfirmLogOutModal";
 
@@ -27,6 +28,8 @@ const AdminSidebar = () => {
     { name: "Bookings", icon: <BookOpen className="w-5 h-5" />, path: "/admin/bookingsmanagement" },
     // { name: "Marketing", icon: <Megaphone className="w-5 h-5" />, path: "/admin/marketing" },
     { name: "Service Management", icon: <Megaphone className="w-5 h-5" />, path: "/admin/servicemanagement" },
+    { name: "Profile", icon: <UserPen className="w-5 h-5" />, path: "/admin/adminprofile" },
+
     { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/admin/settings" },
   ];
 

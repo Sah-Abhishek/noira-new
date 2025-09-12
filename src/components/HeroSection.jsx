@@ -66,8 +66,7 @@ const HeroSection = () => {
 
         {/* CTA Button */}
         <button onClick={() => navigate("/allservicespage")} className="bg-[#C49E5B] text-black font-semibold px-6 py-3 rounded-full hover:opacity-90 transition">
-          Request Black Label Access
-        </button>
+          Book Now        </button>
       </motion.div>
     </div>
   );

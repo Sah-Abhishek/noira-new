@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Edit, Plus, Bell, MapPin, User } from "lucide-react";
+import { Edit, Plus, MapPin, User, Trash2 } from "lucide-react";
 import AddressModal from "../Modals/AddressModal";
+import ConfirmDeleteAddressModal from "./ConfirmDeleteAddressModal";
 import { useNavigate } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -12,6 +13,7 @@ export default function CustomerDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [deleteAddressId, setDeleteAddressId] = useState(null);
   const navigate = useNavigate();
 
   const userjwt = localStorage.getItem("userjwt");
@@ -19,13 +21,11 @@ export default function CustomerDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch profile
         const res = await axios.get(`${apiUrl}/user/profile`, {
           headers: { Authorization: `Bearer ${userjwt}` },
         });
         setProfile(res.data.user);
 
-        // Fetch bookings
         const userId = res.data.user?._id;
         if (userId) {
           const bookingsRes = await axios.get(
@@ -46,7 +46,24 @@ export default function CustomerDashboard() {
       setError("User not authenticated");
       setLoading(false);
     }
-  }, [userjwt, isAddressModalOpen]);
+  }, [userjwt, isAddressModalOpen, deleteAddressId]);
+
+  const handleDeleteAddress = async () => {
+    try {
+      console.log("This is the userjwt: ", userjwt);
+
+      const response = await axios.put(`${apiUrl}/user/deleteaddress/${deleteAddressId}`, {}, {
+        headers: { authorization: `Bearer ${userjwt}` },
+      });
+      setProfile((prev) => ({
+        ...prev,
+        allAddresses: prev.allAddresses.filter((a) => a._id !== deleteAddressId),
+      }));
+      setDeleteAddressId(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (loading) {
     return (
@@ -73,7 +90,6 @@ export default function CustomerDashboard() {
         <div className="lg:col-span-1">
           <div className="sticky top-6 bg-[#0d0d0d] rounded-2xl p-6 shadow-lg flex flex-col items-center text-center">
             <h2 className="text-2xl font-bold text-primary mb-4">User Profile</h2>
-
             {profile?.avatar_url ? (
               <img
                 src={profile.avatar_url}
@@ -85,55 +101,31 @@ export default function CustomerDashboard() {
                 <User size={48} className="text-gray-400" />
               </div>
             )}
-
-            <h2 className="mt-4 text-xl font-semibold">
-              {fullName || "Unknown User"}
-            </h2>
-
-            {/* <div className={`${profile.profileComplete ? "bg-green-500" : "bg-yellow-500/70"} rounded-full text-black px-2 py-1`}> */}
-            {/*   {profile.profileComplete ? <span>Profile completed</span> : <span>Profile Not Compelted</span>} */}
-            {/* </div> */}
+            <h2 className="mt-4 text-xl font-semibold">{fullName || "Unknown User"}</h2>
 
             <div className="mt-6 space-y-2 text-sm text-gray-400 text-left w-full">
               <p>
-                <span className="font-medium text-gray-300">Email:</span>{" "}
-                {profile?.email}
+                <span className="font-medium text-gray-300">Email:</span> {profile?.email}
               </p>
               <p>
-                <span className="font-medium text-gray-300">Phone:</span>{" "}
-                {profile?.phone || "Not provided"}
+                <span className="font-medium text-gray-300">Phone:</span> {profile?.phone || "Not provided"}
               </p>
             </div>
 
-            {/* Totals */}
-            {/* <div className="mt-6 grid grid-cols-2 gap-4 w-full text-center"> */}
-            {/*   <div className="bg-[#111] rounded-xl py-4"> */}
-            {/*     <p className="text-lg font-bold">{bookings.length}</p> */}
-            {/*     <p className="text-gray-400 text-xs">Total Bookings</p> */}
-            {/*   </div> */}
-            {/*   <div className="bg-[#111] rounded-xl py-4"> */}
-            {/*     <p className="text-lg font-bold text-primary"> */}
-            {/*       £ */}
-            {/*       {bookings.reduce( */}
-            {/*         (sum, b) => sum + (b.price?.amount || 0), */}
-            {/*         0 */}
-            {/*       )} */}
-            {/*     </p> */}
-            {/*     <p className="text-gray-400 text-xs">Total Spend</p> */}
-            {/*   </div> */}
-            {/* </div> */}
-
             {/* Quick Actions */}
             <div className="mt-6 w-full space-y-3">
-              <button onClick={() => navigate('/user/usereditprofile')} className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
+              <button
+                onClick={() => navigate("/user/usereditprofile")}
+                className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition"
+              >
                 <Edit size={16} /> Edit Profile
               </button>
-              <button onClick={() => navigate('/user/allservicespage')} className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition">
+              <button
+                onClick={() => navigate("/user/allservicespage")}
+                className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition"
+              >
                 <Plus size={16} /> Add Booking
               </button>
-              {/* <button className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition"> */}
-              {/*   <Bell size={16} /> Send Notification */}
-              {/* </button> */}
             </div>
           </div>
         </div>
@@ -146,7 +138,10 @@ export default function CustomerDashboard() {
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <MapPin size={18} className="text-primary" /> Your Addresses
               </h3>
-              <button onClick={() => setIsAddressModalOpen(true)} className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-primary text-sm px-3 py-1 rounded-lg transition">
+              <button
+                onClick={() => setIsAddressModalOpen(true)}
+                className="flex items-center gap-2 bg-primary/20 hover:bg-primary/30 text-primary text-sm px-3 py-1 rounded-lg transition"
+              >
                 <Plus size={14} /> Add Address
               </button>
             </div>
@@ -156,35 +151,30 @@ export default function CustomerDashboard() {
                 {profile.allAddresses.map((addr) => (
                   <div
                     key={addr._id}
-                    className="p-4 bg-[#111] rounded-xl border border-gray-700 text-sm"
+                    className="relative p-4 bg-[#111] rounded-xl border border-gray-700 text-sm"
                   >
+                    {/* Trash Button */}
+                    <button
+                      onClick={() => setDeleteAddressId(addr._id)}
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-400"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+
                     <p>
-                      <span className="font-medium text-gray-300">
-                        Building No:
-                      </span>{" "}
-                      {addr.Building_No}
+                      <span className="font-medium text-gray-300">Building No:</span> {addr.Building_No}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-300">Street:</span>{" "}
-                      {addr.Street}
+                      <span className="font-medium text-gray-300">Street:</span> {addr.Street}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-300">
-                        Locality:
-                      </span>{" "}
-                      {addr.Locality}
+                      <span className="font-medium text-gray-300">Locality:</span> {addr.Locality}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-300">
-                        PostTown:
-                      </span>{" "}
-                      {addr.PostTown}
+                      <span className="font-medium text-gray-300">PostTown:</span> {addr.PostTown}
                     </p>
                     <p>
-                      <span className="font-medium text-gray-300">
-                        Postal Code:
-                      </span>{" "}
-                      {addr.PostalCode}
+                      <span className="font-medium text-gray-300">Postal Code:</span> {addr.PostalCode}
                     </p>
                   </div>
                 ))}
@@ -211,49 +201,28 @@ export default function CustomerDashboard() {
                         {booking.bookingCode || "BOOKING"}
                       </p>
                       <p className="text-xs text-gray-400">
-                        Therapist:{" "}
-                        <span className="text-gray-200">
-                          {booking.therapistId?.title || "N/A"}
-                        </span>
+                        Therapist: <span className="text-gray-200">{booking.therapistId?.title || "N/A"}</span>
                       </p>
                       <p className="text-xs text-gray-400">
-                        Service:{" "}
-                        <span className="text-gray-200">
-                          {booking.serviceId?.name || "N/A"}
-                        </span>
+                        Service: <span className="text-gray-200">{booking.serviceId?.name || "N/A"}</span>
                       </p>
                       <p className="text-xs text-gray-400">
-                        {new Date(booking.slotStart).toLocaleString()} –{" "}
-                        {new Date(booking.slotEnd).toLocaleTimeString()}
+                        {new Date(booking.slotStart).toLocaleString()} – {new Date(booking.slotEnd).toLocaleTimeString()}
                       </p>
                       <p className="text-xs text-gray-400">
                         Status:{" "}
-                        <span
-                          className={`font-medium ${booking.status === "confirmed"
-                            ? "text-green-400"
-                            : "text-yellow-400"
-                            }`}
-                        >
+                        <span className={`font-medium ${booking.status === "confirmed" ? "text-green-400" : "text-yellow-400"}`}>
                           {booking.status}
                         </span>{" "}
                         | Payment:{" "}
-                        <span
-                          className={`font-medium ${booking.paymentStatus === "paid"
-                            ? "text-green-400"
-                            : "text-red-400"
-                            }`}
-                        >
+                        <span className={`font-medium ${booking.paymentStatus === "paid" ? "text-green-400" : "text-red-400"}`}>
                           {booking.paymentStatus}
                         </span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-primary font-semibold">
-                        £{booking.price?.amount}
-                      </p>
-                      <p className="text-xs uppercase text-gray-400">
-                        {booking.price?.currency || "GBP"}
-                      </p>
+                      <p className="text-primary font-semibold">£{booking.price?.amount}</p>
+                      <p className="text-xs uppercase text-gray-400">{booking.price?.currency || "GBP"}</p>
                     </div>
                   </div>
                 ))}
@@ -261,7 +230,16 @@ export default function CustomerDashboard() {
             )}
           </div>
         </div>
+
+        {/* Modals */}
         <AddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} />
+        <ConfirmDeleteAddressModal
+          isOpen={!!deleteAddressId}
+          title="Delete Address"
+          message="Are you sure you want to delete this address?"
+          onClose={() => setDeleteAddressId(null)}
+          onConfirm={handleDeleteAddress}
+        />
       </div>
     </div>
   );

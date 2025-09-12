@@ -6,11 +6,12 @@ import { FaUserMd, FaConciergeBell } from "react-icons/fa";
 export default function RevenueDashboard() {
   const [data, setData] = useState(null);
   const [expanded, setExpanded] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        const res = await axios.get("http://192.168.1.19:3000/admin/revenue");
+        const res = await axios.get(`${apiUrl}/admin/revenue`);
         setData(res.data);
       } catch (error) {
         console.error("Error fetching revenue data:", error);

@@ -57,6 +57,8 @@ import TherapistBookingsPage from "./components/therapist/TherapistMyBookings.js
 import BookingsPage from "./components/user/MyBookings.jsx";
 import ReviewBookingsPage from "./components/user/ReviewBookingPage.jsx";
 import UsersManagement from "./components/Admin/UsersManagement.jsx";
+import AdminProfile from "./components/adminDashboard/AdminProfile.jsx";
+import AdminEditProfile from "./components/Admin/AdminEditProfile.jsx";
 
 
 const AppRoutes = () => {
@@ -172,6 +174,8 @@ const AppRoutes = () => {
           <Route path="editservice/:id" element={<EditService />} />
           <Route path="bookingsmanagement" element={<BookingsManagement />} />
           <Route path="usermanagement" element={<UsersManagement />} />
+          <Route path="adminprofile" element={<AdminProfile />} />
+          <Route path="admineditprofile" element={<AdminEditProfile />} />
 
 
         </Route>

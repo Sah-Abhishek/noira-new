@@ -56,6 +56,7 @@ export default function ReviewBookingsPage() {
       );
 
       toast.success("Review submitted!");
+      navigate('/user/userprofile')
       setComment("");
       setRating(0);
     } catch (err) {
@@ -122,8 +123,8 @@ export default function ReviewBookingsPage() {
           </h2>
           <span
             className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                ? "bg-green-500/20 text-green-400"
-                : "bg-yellow-500/20 text-yellow-400"
+              ? "bg-green-500/20 text-green-400"
+              : "bg-yellow-500/20 text-yellow-400"
               }`}
           >
             {booking.paymentStatus}
@@ -191,8 +192,8 @@ export default function ReviewBookingsPage() {
               <Star
                 key={s}
                 className={`w-8 h-8 cursor-pointer transition ${s <= rating
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-500"
+                  ? "text-yellow-400 fill-yellow-400"
+                  : "text-gray-500"
                   }`}
                 onClick={() => setRating(s)}
               />

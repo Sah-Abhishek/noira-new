@@ -43,6 +43,8 @@ function AppLayout() {
     '/therapist/therapistprofiletherapist',
     '/user/reviewbooking/:id',
     '/admin/usermanagement',
+    '/admin/adminprofile',
+    '/admin/admineditprofile'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {
