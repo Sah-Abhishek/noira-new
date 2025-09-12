@@ -3,6 +3,7 @@ import axios from "axios";
 import { User, Edit, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import AdminListPage from "../Admin/AdminList";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -196,7 +197,7 @@ export default function AdminProfile() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] py-10 px-4 text-gray-200">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sidebar */}
         <aside className="lg:col-span-1">
           <div className="bg-[#111] rounded-2xl p-8 shadow-lg flex flex-col items-center text-center border border-gray-800">
@@ -213,7 +214,9 @@ export default function AdminProfile() {
             )}
 
             <h2 className="mt-4 text-2xl font-bold text-primary">{fullName}</h2>
-            <p className="text-gray-400 mt-1 capitalize">{user.gender || "Not specified"}</p>
+            <p className="text-gray-400 mt-1 capitalize">
+              {user.gender || "Not specified"}
+            </p>
 
             <div className="mt-6 w-full text-left space-y-2 text-sm">
               <p>
@@ -255,7 +258,17 @@ export default function AdminProfile() {
           </div>
 
           {/* Add Admin Form */}
-          {showAddForm && <AddAdminForm onClose={() => setShowAddForm(false)} />}
+          {showAddForm && (
+            <AddAdminForm onClose={() => setShowAddForm(false)} />
+          )}
+
+          {/* Admin List Section */}
+          <div className="bg-[#111] rounded-2xl p-6 shadow-lg border border-gray-800">
+            <h3 className="text-lg font-semibold text-primary mb-4">
+              Admin List
+            </h3>
+            <AdminListPage />
+          </div>
         </section>
       </div>
     </div>
