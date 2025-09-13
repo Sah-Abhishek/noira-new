@@ -11,6 +11,7 @@ import {
   FaMapMarkerAlt,
 } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { isDarkMode } = useTheme();
@@ -46,13 +47,37 @@ const Footer = () => {
         {/* Services */}
         <div>
           <h4 className="text-[#C49E5B] font-semibold mb-4">Services</h4>
-          <ul className={`space-y-2 text-sm ${mutedText}`}>
-            <li>Classic Reset</li>
-            <li>Deep Release</li>
-            <li>The NOIRA Ritual</li>
-            {/* <li>The Executive Reset</li> */}
-            {/* <li>Couple’s Bespoke Escape</li> */}
-            {/* <li>The Black Label Experience</li> */}
+          <ul className={`space-y-2 text-sm text-white ${mutedText}`}>
+            <li>
+              <Link
+                to="/allservicespage"
+                className="block hover:underline hover:text-primary transition"
+              >
+                Classic Reset
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/allservicespage"
+                className="block hover:underline hover:text-primary transition"
+              >
+                Deep Release
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/allservicespage"
+                className="block hover:underline hover:text-primary transition"
+              >
+                The NOIRA Ritual
+              </Link>
+            </li>
+            {/* Uncomment if needed */}
+            {/* <li>
+      <Link to="#" className="block hover:underline hover:text-primary transition">
+        The Executive Reset
+      </Link>
+    </li> */}
           </ul>
         </div>
 

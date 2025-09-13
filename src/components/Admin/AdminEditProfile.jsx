@@ -202,7 +202,7 @@ export default function AdminEditProfile() {
 
           {/* Buttons */}
           <div className="flex justify-end gap-4">
-            <button
+            <button onClick={() => navigate('/admin/adminprofile')}
               type="button"
               className="px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:bg-gray-800 transition"
             >

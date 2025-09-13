@@ -13,7 +13,7 @@ export default function BookingsManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const limit = 6;
+  const limit = 10;
 
   useEffect(() => {
     fetchBookings(page);

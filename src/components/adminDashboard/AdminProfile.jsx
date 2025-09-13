@@ -267,7 +267,9 @@ export default function AdminProfile() {
             <h3 className="text-lg font-semibold text-primary mb-4">
               Admin List
             </h3>
-            <AdminListPage />
+            <div>
+              <AdminListPage />
+            </div>
           </div>
         </section>
       </div>

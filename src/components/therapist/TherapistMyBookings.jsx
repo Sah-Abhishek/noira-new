@@ -2,40 +2,36 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { FaTimes } from "react-icons/fa";
+import DeclineReasonsModal from './DeclineReasonsModal.jsx';
 
 export default function TherapistBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [statusLoading, setStatusLoading] = useState(null); // 👈 track booking being updated
+  const [statusLoading, setStatusLoading] = useState(null);
   const [bookedAtTime, setBookedAtTime] = useState('');
+  const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const baseUrl = import.meta.env.VITE_API_URL; // adjust if needed
+  const baseUrl = import.meta.env.VITE_API_URL;
   const therapistjwt = localStorage.getItem("therapistjwt");
 
-
   const formatToShortMonth = (dateString) => {
-    // Parse the input date string (MM/DD/YYYY HH:MM AM/PM)
     const parsedDate = new Date(dateString);
-
     if (isNaN(parsedDate)) {
       throw new Error("Invalid date format");
     }
-
-    // Format options for short month format
     const options = {
-      month: 'short', // Jan, Feb, Mar...
+      month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
     };
-
     setBookedAtTime(parsedDate.toLocaleString('en-US', options));
   }
-
 
   // Fetch bookings
   useEffect(() => {
@@ -53,17 +49,52 @@ export default function TherapistBookingsPage() {
       }
     };
     fetchBookings();
-    formatToShortMonth
   }, [baseUrl, therapistjwt]);
 
+  // Handle decline with reason
+  const handleDeclineWithReason = async (bookingId, reason) => {
+    try {
+      setStatusLoading(bookingId);
+
+      await axios.put(
+        `${baseUrl}/therapist/decline/${bookingId}`,
+        { reason },
+        { headers: { Authorization: `Bearer ${therapistjwt}` } }
+      );
+
+      toast.success("Booking declined successfully");
+
+      // Update local state
+      setBookings((prev) =>
+        prev.map((b) => (b._id === bookingId ? { ...b, status: "declined" } : b))
+      );
+    } catch (err) {
+      toast.error("Failed to decline booking");
+      console.error(err);
+      throw err;
+    } finally {
+      setStatusLoading(null);
+    }
+  };
+
+  // Handle decline button click
+  const handleDeclineClick = (booking) => {
+    setSelectedBooking(booking);
+    setIsDeclineModalOpen(true);
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setIsDeclineModalOpen(false);
+    setSelectedBooking(null);
+  };
+
+  // Mark as completed
   const updateBookingStatus = async (id, status) => {
     try {
-      setStatusLoading(id); // 👈 start loading for this booking
+      setStatusLoading(id);
 
-      const endpoint =
-        status === "completed"
-          ? `${baseUrl}/therapist/completebooking/${id}`
-          : `${baseUrl}/therapist/decline/${id}`;
+      const endpoint = `${baseUrl}/therapist/completebooking/${id}`;
 
       await axios.put(
         endpoint,
@@ -79,7 +110,7 @@ export default function TherapistBookingsPage() {
       toast.error("Action failed");
       console.error(err);
     } finally {
-      setStatusLoading(null); // 👈 stop loading
+      setStatusLoading(null);
     }
   };
 
@@ -89,7 +120,6 @@ export default function TherapistBookingsPage() {
 
     // Filter logic
     if (filter === "upcoming") {
-      // Show confirmed bookings that are scheduled for the future
       return b.status === "confirmed" && bookingTime > now;
     } else if (filter !== "all" && b.status !== filter) {
       return false;
@@ -127,8 +157,8 @@ export default function TherapistBookingsPage() {
               key={tab}
               onClick={() => setFilter(tab)}
               className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
-                ? "bg-primary text-black"
-                : "bg-[#1a1a1a] text-gray-400 hover:text-white"
+                  ? "bg-primary text-black"
+                  : "bg-[#1a1a1a] text-gray-400 hover:text-white"
                 }`}
             >
               {tab}
@@ -169,13 +199,13 @@ export default function TherapistBookingsPage() {
                     {b.clientId?.name?.first} {b.clientId?.name?.last}
                   </p>
                   <p>
-                    <span className="text-primary font-medium">Booked At:</span>{" "}
-                    {new Date(b.createdAt).toLocaleDateString("en-GB", {
+                    <span className="text-primary font-medium">Service Date:</span>{" "}
+                    {new Date(b.date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     })}{" "}
-                    {new Date(b.createdAt).toLocaleTimeString([], {
+                    {new Date(b.slotStart).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                       hour12: true,
@@ -189,18 +219,18 @@ export default function TherapistBookingsPage() {
                     min
                   </p>
                   <p>
-                    <span className="text-primary font-medium">Price:</span>{" "}
+                    <span className="text-primary font-medium">Price: £</span>
                     {b.price?.amount} {b.price?.currency}
                   </p>
                   <p className="col-span-2">
                     <span className="text-primary font-medium">Booked At:</span>{" "}
                     {new Date(b.createdAt).toLocaleString("en-GB", {
                       day: "numeric",
-                      month: "short",    // Jan, Feb, Mar...
+                      month: "short",
                       year: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: true,      // Ensures AM/PM format
+                      hour12: true,
                     })}
                   </p>
                 </div>
@@ -209,10 +239,10 @@ export default function TherapistBookingsPage() {
                 <div className="flex justify-between items-center">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${b.status === "completed"
-                      ? "bg-green-500/20 text-green-400"
-                      : b.status === "declined" || b.status === "cancelled"
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-yellow-500/20 text-yellow-400"
+                        ? "bg-green-500/20 text-green-400"
+                        : b.status === "declined" || b.status === "cancelled"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {b.status}
@@ -234,12 +264,12 @@ export default function TherapistBookingsPage() {
                       ) : (
                         <>
                           <button
-                            onClick={() => updateBookingStatus(b._id, "declined")}
+                            onClick={() => handleDeclineClick(b)}
                             disabled={statusLoading === b._id}
                             className="bg-red-600 hover:bg-red-700 inline-flex justify-center items-center text-white px-3 py-1 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {statusLoading === b._id ? (
-                              "Updating..."
+                              "Declining..."
                             ) : (
                               <>
                                 <FaTimes className="mr-1" /> Decline
@@ -261,7 +291,6 @@ export default function TherapistBookingsPage() {
                   )}
                 </div>
 
-
                 {/* Review Section */}
                 {b.isReviewed && b.review && (
                   <div className="mt-4 border-t border-[#222] pt-3">
@@ -274,8 +303,8 @@ export default function TherapistBookingsPage() {
                           key={star}
                           xmlns="http://www.w3.org/2000/svg"
                           className={`h-4 w-4 ${star <= b.review.rating
-                            ? "text-yellow-400"
-                            : "text-gray-600"
+                              ? "text-yellow-400"
+                              : "text-gray-600"
                             }`}
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -294,6 +323,15 @@ export default function TherapistBookingsPage() {
           })
         )}
       </main>
+
+      {/* Decline Reasons Modal */}
+      <DeclineReasonsModal
+        isOpen={isDeclineModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleDeclineWithReason}
+        bookingId={selectedBooking?._id}
+        clientName={`${selectedBooking?.clientId?.name?.first || ''} ${selectedBooking?.clientId?.name?.last || ''}`.trim()}
+      />
     </div>
   );
 }

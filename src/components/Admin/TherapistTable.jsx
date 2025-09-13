@@ -202,15 +202,14 @@ export default function TherapistTable({
 
                 {/* Status */}
                 <td className="p-3">
-                  {t.profile?.isVerified ? (
-                    <span className="flex items-center gap-1 text-green-400 text-xs">
-                      <FaCheckCircle /> Verified
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-yellow-400 text-xs">
-                      <FaHourglassHalf /> Pending
-                    </span>
-                  )}
+                  {/* {t.profile?.isVerified ? ( */}
+                  {/*   <span className="flex items-center gap-1 text-green-400 text-xs"> */}
+                  {/*     <FaCheckCircle /> Verified */}
+                  {/*   </span> */}
+                  {/* ) : ( */}
+                  {/*   <span className="flex items-center gap-1 text-yellow-400 text-xs"> */}
+                  {/*     <FaHourglassHalf /> Not Verified                    </span> */}
+                  {/* )} */}
                   <p
                     className={`text-xs ${t.profile?.active ? "text-green-300" : "text-red-400"
                       }`}

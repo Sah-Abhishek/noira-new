@@ -96,7 +96,7 @@ export default function UsersManagement() {
                 <th className="px-6 py-4">Role</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4">Bookings</th>
-                <th className="px-6 py-4">Actions</th>
+                {/* <th className="px-6 py-4">Actions</th> */}
               </tr>
             </thead>
             <tbody>
@@ -163,18 +163,17 @@ export default function UsersManagement() {
                       bookings
                     </td>
 
-                    {/* Actions */}
-                    <td className="px-6 py-4 flex gap-3 text-lg">
-                      <button className="text-primary hover:scale-110 transition">
-                        <FaUser />
-                      </button>
-                      <button className="text-blue-400 hover:scale-110 transition">
-                        <FaEdit />
-                      </button>
-                      <button className="text-red-500 hover:scale-110 transition">
-                        <FaTrash />
-                      </button>
-                    </td>
+                    {/* <td className="px-6 py-4 flex gap-3 text-lg"> */}
+                    {/*   <button className="text-primary hover:scale-110 transition"> */}
+                    {/*     <FaUser /> */}
+                    {/*   </button> */}
+                    {/*   <button className="text-blue-400 hover:scale-110 transition"> */}
+                    {/*     <FaEdit /> */}
+                    {/*   </button> */}
+                    {/*   <button className="text-red-500 hover:scale-110 transition"> */}
+                    {/*     <FaTrash /> */}
+                    {/*   </button> */}
+                    {/* </td> */}
                   </tr>
                 ))
               ) : (

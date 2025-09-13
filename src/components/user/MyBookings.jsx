@@ -15,6 +15,8 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"; // adjust if needed
   const userId = localStorage.getItem("userId");
@@ -44,9 +46,41 @@ export default function BookingsPage() {
     }
   }, [apiUrl, userId, userjwt]);
 
+  // Filter bookings based on selected filter and search
+  const filteredBookings = bookings.filter((b) => {
+    const now = new Date();
+    const bookingTime = new Date(b.slotStart);
+
+    // Filter logic
+    if (filter === "upcoming") {
+      // Show pending/confirmed bookings that are scheduled for the future
+      return (b.status === "pending" || b.status === "confirmed") && bookingTime > now;
+    } else if (filter !== "all" && b.status !== filter) {
+      return false;
+    }
+
+    // Search filter - search by service name or therapist name
+    if (search) {
+      const searchLower = search.toLowerCase();
+      const serviceName = b.serviceId?.name?.toLowerCase() || "";
+      const therapistName = b.therapistId?.title?.toLowerCase() || "";
+
+      if (!serviceName.includes(searchLower) && !therapistName.includes(searchLower)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // Example handler for review button click
+  const handleReview = (bookingId, therapistName) => {
+    navigate(`/user/reviewbooking/${bookingId}`);
+  };
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-gray-400">
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] text-primary">
         Loading bookings...
       </div>
     );
@@ -54,151 +88,226 @@ export default function BookingsPage() {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-red-400">
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] text-red-400">
         {error}
       </div>
     );
   }
 
-  if (!bookings.length) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-gray-400">
-        No bookings found.
-      </div>
-    );
-  }
-
-  // Example handler for review button click
-  const handleReview = (bookingId, therapistName) => {
-    navigate(`/user/reviewbooking/${bookingId}`);
-    alert(`Review flow for ${therapistName} (Booking ID: ${bookingId})`);
-  };
-
   return (
-    <div className="min-h-screen bg-[#0d0d0d] py-10 px-6">
-      <h1 className="text-3xl font-bold text-primary mb-8 text-center">
-        My Bookings
-      </h1>
+    <div className="min-h-screen bg-[#0d0d0d] text-white flex flex-col">
+      {/* Top Navbar */}
+      <header className="flex justify-between items-center bg-[#111] p-4 border-b border-primary/20">
+        <h1 className="text-xl font-bold text-primary">My Bookings</h1>
+      </header>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {bookings.map((booking) => {
-          const therapist = booking.therapistId;
-          const service = booking.serviceId;
-
-          return (
-            <div
-              key={booking._id}
-              className="bg-gradient-to-br from-[#111] to-[#1a1a1a] rounded-2xl shadow-xl border border-primary/30 hover:border-primary/60 transition transform hover:-translate-y-1 hover:shadow-2xl"
+      {/* Filters */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
+        <div className="flex gap-3 flex-wrap">
+          {["all", "upcoming", "completed", "cancelled", "declined"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
+                  ? "bg-primary text-black"
+                  : "bg-[#1a1a1a] text-gray-400 hover:text-white"
+                }`}
             >
-              <div className="p-6 flex flex-col h-full justify-between">
-                {/* Header */}
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-primary tracking-wide">
-                    {service ? service.name : "Custom Session"}
-                  </h2>
-                  <span
-                    className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-yellow-500/20 text-yellow-400"
-                      }`}
-                  >
-                    {booking.paymentStatus}
-                  </span>
-                </div>
+              {tab}
+            </button>
+          ))}
+        </div>
 
-                {/* Info Grid */}
-                <div className="space-y-3 text-sm text-gray-300">
-                  {therapist ? (
-                    <p className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-primary">Name</span>
-                      {therapist.title}
-                    </p>
-                  ) : (
-                    <p className="flex items-center gap-2 italic text-gray-400">
-                      <User className="w-4 h-4 text-gray-500" />
-                      Therapist Not Assigned
-                    </p>
-                  )}
-
-                  <p className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Service Date</span>
-                    {new Date(booking.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
-
-                  <p className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Service Time</span>
-                    {new Date(booking.slotStart).toLocaleTimeString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}{" "}
-                    -{" "}
-                    {new Date(booking.slotEnd).toLocaleTimeString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-
-                  {/* Booked At */}
-                  <p className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Booked At</span>
-                    {new Date(booking.createdAt).toLocaleString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-
-                  <p className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Price</span>
-                    {booking.price?.amount ?? booking.price}{" "}
-                    {booking.price?.currency?.toUpperCase()}
-                  </p>
-
-                  {booking.notes && (
-                    <p className="flex items-start gap-2 text-gray-400">
-                      <StickyNote className="w-4 h-4 text-primary mt-0.5" />
-                      Notes {booking.notes}
-                    </p>
-                  )}
-
-                  {booking.bookingCode && (
-                    <p className="flex items-center gap-2 text-gray-500 text-xs">
-                      <Hash className="w-4 h-4 text-primary" />
-                      {booking.bookingCode}
-                    </p>
-                  )}
-                </div>
-
-                {/* Review Button */}
-                {!booking.isReviewed &&
-                  therapist &&
-                  booking.status === "completed" && (
-                    <button
-                      onClick={() =>
-                        handleReview(booking._id, therapist.title)
-                      }
-                      className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
-                    >
-                      <Star className="w-4 h-4" />
-                      Review Therapist
-                    </button>
-                  )}
-              </div>
-            </div>
-          );
-        })}
+        {/* Search Input */}
+        <div className="ml-4">
+          <input
+            type="text"
+            placeholder="Search services or therapists..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-[#1a1a1a] border border-gray-600 rounded-lg px-3 py-1 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-primary/60 w-64"
+          />
+        </div>
       </div>
+
+      {/* Bookings Content */}
+      <main className="flex-1 p-6">
+        {filteredBookings.length === 0 ? (
+          <div className="flex justify-center items-center min-h-[400px] text-gray-400">
+            {filter === "upcoming"
+              ? "No upcoming bookings found."
+              : search
+                ? `No bookings found matching "${search}".`
+                : "No bookings found."
+            }
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredBookings.map((booking) => {
+              const therapist = booking.therapistId;
+              const service = booking.serviceId;
+              const now = new Date();
+              const bookingTime = new Date(booking.slotStart);
+              const isPast = bookingTime < now;
+
+              return (
+                <div
+                  key={booking._id}
+                  className="bg-gradient-to-br from-[#111] to-[#1a1a1a] rounded-2xl shadow-xl border border-primary/30 hover:border-primary/60 transition transform hover:-translate-y-1 hover:shadow-2xl"
+                >
+                  <div className="p-6 flex flex-col h-full justify-between">
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-lg font-semibold text-primary tracking-wide">
+                        {service ? service.name : "Custom Session"}
+                      </h2>
+                      <div className="flex flex-col items-end gap-1">
+                        <span
+                          className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-yellow-500/20 text-yellow-400"
+                            }`}
+                        >
+                          {booking.paymentStatus}
+                        </span>
+                        <span
+                          className={`px-3 py-1 text-xs rounded-full font-medium ${booking.status === "completed"
+                              ? "bg-green-500/20 text-green-400"
+                              : booking.status === "declined" || booking.status === "cancelled"
+                                ? "bg-red-500/20 text-red-400"
+                                : "bg-yellow-500/20 text-yellow-400"
+                            }`}
+                        >
+                          {booking.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Info Grid */}
+                    <div className="space-y-3 text-sm text-gray-300">
+                      {therapist ? (
+                        <p className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-primary" />
+                          <span className="font-semibold text-primary">Therapist:</span>
+                          {therapist.title}
+                        </p>
+                      ) : (
+                        <p className="flex items-center gap-2 italic text-gray-400">
+                          <User className="w-4 h-4 text-gray-500" />
+                          Therapist Not Assigned
+                        </p>
+                      )}
+
+                      <p className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <span className="font-semibold text-primary">Service Date:</span>
+                        {new Date(booking.date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </p>
+
+                      <p className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-primary" />
+                        <span className="font-semibold text-primary">Service Time:</span>
+                        {new Date(booking.slotStart).toLocaleTimeString("en-GB", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}{" "}
+                        -{" "}
+                        {new Date(booking.slotEnd).toLocaleTimeString("en-GB", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+
+                      {/* Booked At */}
+                      <p className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <span className="font-semibold text-primary">Booked At:</span>
+                        {new Date(booking.createdAt).toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </p>
+
+                      <p className="flex items-center gap-2">
+                        <CreditCard className="w-4 h-4 text-primary" />
+                        <span className="font-semibold text-primary">Price:</span>
+                        £{booking.price?.amount ?? booking.price}{" "}
+                        {booking.price?.currency?.toUpperCase()}
+                      </p>
+
+                      {booking.notes && (
+                        <p className="flex items-start gap-2 text-gray-400">
+                          <StickyNote className="w-4 h-4 text-primary mt-0.5" />
+                          <span className="font-semibold text-primary">Notes:</span>
+                          {booking.notes}
+                        </p>
+                      )}
+
+                      {booking.bookingCode && (
+                        <p className="flex items-center gap-2 text-gray-500 text-xs">
+                          <Hash className="w-4 h-4 text-primary" />
+                          #{booking.bookingCode}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Review Button */}
+                    {!booking.isReviewed &&
+                      therapist &&
+                      booking.status === "completed" && (
+                        <button
+                          onClick={() =>
+                            handleReview(booking._id, therapist.title)
+                          }
+                          className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
+                        >
+                          <Star className="w-4 h-4" />
+                          Review Therapist
+                        </button>
+                      )}
+
+                    {/* Review Display */}
+                    {booking.isReviewed && booking.review && (
+                      <div className="mt-4 border-t border-[#222] pt-3">
+                        <h3 className="text-sm font-semibold text-primary mb-2">
+                          Your Review
+                        </h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <svg
+                              key={star}
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-4 w-4 ${star <= booking.review.rating
+                                  ? "text-yellow-400"
+                                  : "text-gray-600"
+                                }`}
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.382 2.46a1 1 0 00-.364 1.118l1.286 3.966c.3.921-.755 1.688-1.54 1.118l-3.382-2.46a1 1 0 00-1.176 0l-3.382 2.46c-.785.57-1.84-.197-1.54-1.118l1.286-3.966a1 1 0 00-.364-1.118l-3.382-2.46c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <p className="text-gray-300 text-sm italic">
+                          "{booking.review.Comment}"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </main>
     </div>
   );
 }

@@ -32,7 +32,7 @@ const useBookingStore = create(
       resetCart: () => set({ cart: [], date: null, time: null }), // better to reset cart to [] instead of null
       setSelectedTherapist: (therapist) => set({ selectedTherapist: therapist }),
       setUserAddress: (address) => set({ userAddress: address }),
-      setUerId: (userId) => set({ userId }),
+      setUserId: (userId) => set({ userId }),
       setUserDetails: (user) => set({ userDetails: user }),
 
       // save services API response

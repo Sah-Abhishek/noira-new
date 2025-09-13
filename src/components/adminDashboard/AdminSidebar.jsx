@@ -30,7 +30,7 @@ const AdminSidebar = () => {
     { name: "Service Management", icon: <Megaphone className="w-5 h-5" />, path: "/admin/servicemanagement" },
     { name: "Profile", icon: <UserPen className="w-5 h-5" />, path: "/admin/adminprofile" },
 
-    { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/admin/settings" },
+    // { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/admin/settings" },
   ];
 
   const handleLogout = () => {

@@ -37,11 +37,11 @@ const UserSidebar = () => {
       icon: <BookOpen className="w-5 h-5" />,
       path: "/user/mybookings",
     },
-    {
-      name: "Settings",
-      icon: <Settings className="w-5 h-5" />,
-      path: "/user/settings",
-    },
+    // {
+    //   name: "Settings",
+    //   icon: <Settings className="w-5 h-5" />,
+    //   path: "/user/settings",
+    // },
   ];
 
   const handleLogOut = () => {

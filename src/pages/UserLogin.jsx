@@ -35,7 +35,7 @@ export default function UserLogin() {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
   const location = useLocation();
-  const { userDetails, setUserDetails, setUserEmail, userId, setUserId, setUserAddress, userAddress } = useBookingStore();
+  const { userDetails, setUserDetails, setUserEmail, setUserId, setUserAddress, userAddress } = useBookingStore();
   const { setUser } = useUserStore();
 
   // figure out where to redirect
@@ -48,30 +48,73 @@ export default function UserLogin() {
     resolver: yupResolver(schema),
   });
 
-  // 🔹 Google login
+  // 🔹 Google login - FIXED VERSION
   const googleLogin = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
+        setIsLoading(true);
+        setErrorMsg(""); // Clear any previous errors
+        console.log("Starting Google login...");
+        console.log("Credential response:", credentialResponse);
+
         const res = await axios.post(`${apiUrl}/auth/google`, {
-          token: credentialResponse.access_token, // or id_token depending on backend
+          token: credentialResponse.access_token,
         });
 
-        toast.success("Login successful");
-        console.log("This is the userId: ", res.data.user._id);
-        localStorage.setItem("userId", res.data.user._id);
-        localStorage.setItem("userjwt", res.data.token);
-        localStorage.setItem("userEmail", res.data.user.email);
+        console.log("Full Google login response:", res);
+        console.log("Response data:", res.data);
+        console.log("Response status:", res.status);
 
-        setUserEmail(res.data.user.email);
-        setUserId(res.data.user._id);
-        navigate(from, { replace: true });
+        if (res.status === 200 && res.data && res.data.user) {
+          console.log("Login successful, processing data...");
+          console.log("User data:", res.data.user);
+          console.log("Token:", res.data.token);
+
+          // Validate required data exists
+          if (!res.data.user._id || !res.data.token || !res.data.user.email) {
+            throw new Error("Missing required user data from server");
+          }
+
+          // Store user data
+          localStorage.setItem("userId", res.data.user._id);
+          localStorage.setItem("userjwt", res.data.token);
+          localStorage.setItem("userEmail", res.data.user.email);
+          console.log("Data stored in localStorage");
+
+          // Update state
+          setUserEmail(res.data.user.email);
+          setUserId(res.data.user._id);
+          setUserDetails(res.data.user);
+          setUser(res.data.user);
+          console.log("State updated");
+
+          // Show success toast
+          toast.success("Login successful");
+
+          // Small delay to ensure state is set, then navigate
+          setTimeout(() => {
+            console.log("About to navigate to /user/userprofile");
+            navigate('/user/userprofile', { replace: true });
+            console.log("Navigation called");
+          }, 100);
+
+        } else {
+          throw new Error("Invalid response from server");
+        }
       } catch (error) {
         console.error("Google login error:", error);
-        setErrorMsg("Google login failed");
+        console.error("Error details:", error.response?.data);
+        setErrorMsg("Google Login Failed. Please try again.");
+        toast.error("Google Login Failed");
+      } finally {
+        setIsLoading(false);
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Google OAuth error:", error);
       setErrorMsg("Google Login Failed");
+      toast.error("Google Login Failed");
+      setIsLoading(false);
     },
   });
 
@@ -94,7 +137,7 @@ export default function UserLogin() {
         console.log("This is the userId: ", response.data.user._id);
         localStorage.setItem("userId", response.data.user._id);
 
-        navigate(from, { replace: true }); // ✅ FIXED
+        navigate(from, { replace: true });
       }
     } catch (error) {
       if (error.response) {
@@ -214,18 +257,25 @@ export default function UserLogin() {
         <div className="flex gap-4">
           <button
             onClick={() => googleLogin()}
-            className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
+            disabled={isLoading}
+            className={`w-full py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white transition ${isLoading
+              ? "bg-gray-700 cursor-not-allowed"
+              : "bg-[#2b2b2b] hover:bg-[#3b3b3b]"
+              }`}
           >
-            <FaGoogle /> Google
+            {isLoading ? (
+              <span className="text-sm">Logging in...</span>
+            ) : (
+              <>
+                <FaGoogle /> Google
+              </>
+            )}
           </button>
-          {/* <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600"> */}
-          {/*   <FaApple /> Apple */}
-          {/* </button> */}
         </div>
 
         {/* Sign up */}
         <div className="text-center text-sm text-gray-400 mt-4">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/usersignup" className="text-primary hover:underline">
             Sign Up
           </Link>
