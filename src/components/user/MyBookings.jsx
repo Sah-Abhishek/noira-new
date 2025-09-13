@@ -9,7 +9,7 @@ import {
   StickyNote,
   Star,
 } from "lucide-react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -69,10 +69,9 @@ export default function BookingsPage() {
   }
 
   // Example handler for review button click
-  const handleReview = (bookingId,) => {
+  const handleReview = (bookingId, therapistName) => {
     navigate(`/user/reviewbooking/${bookingId}`);
     alert(`Review flow for ${therapistName} (Booking ID: ${bookingId})`);
-    // Here you’d likely navigate to a review form or open a modal
   };
 
   return (
@@ -99,8 +98,8 @@ export default function BookingsPage() {
                   </h2>
                   <span
                     className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-yellow-500/20 text-yellow-400"
+                        ? "bg-green-500/20 text-green-400"
+                        : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {booking.paymentStatus}
@@ -112,6 +111,7 @@ export default function BookingsPage() {
                   {therapist ? (
                     <p className="flex items-center gap-2">
                       <User className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-primary">Name</span>
                       {therapist.title}
                     </p>
                   ) : (
@@ -123,6 +123,7 @@ export default function BookingsPage() {
 
                   <p className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-primary">Date</span>
                     {new Date(booking.date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -132,6 +133,7 @@ export default function BookingsPage() {
 
                   <p className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-primary">Time</span>
                     {new Date(booking.slotStart).toLocaleTimeString("en-GB", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -143,8 +145,22 @@ export default function BookingsPage() {
                     })}
                   </p>
 
+                  {/* Booked At */}
+                  <p className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-primary">Booked At</span>
+                    {new Date(booking.createdAt).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+
                   <p className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-primary">Price</span>
                     {booking.price?.amount ?? booking.price}{" "}
                     {booking.price?.currency?.toUpperCase()}
                   </p>
@@ -152,7 +168,7 @@ export default function BookingsPage() {
                   {booking.notes && (
                     <p className="flex items-start gap-2 text-gray-400">
                       <StickyNote className="w-4 h-4 text-primary mt-0.5" />
-                      {booking.notes}
+                      Notes {booking.notes}
                     </p>
                   )}
 
@@ -165,17 +181,19 @@ export default function BookingsPage() {
                 </div>
 
                 {/* Review Button */}
-                {!booking.isReviewed && therapist && (booking.status === "completed") && (
-                  <button
-                    onClick={() =>
-                      handleReview(booking._id, therapist.title)
-                    }
-                    className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
-                  >
-                    <Star className="w-4 h-4" />
-                    Review Therapist
-                  </button>
-                )}
+                {!booking.isReviewed &&
+                  therapist &&
+                  booking.status === "completed" && (
+                    <button
+                      onClick={() =>
+                        handleReview(booking._id, therapist.title)
+                      }
+                      className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
+                    >
+                      <Star className="w-4 h-4" />
+                      Review Therapist
+                    </button>
+                  )}
               </div>
             </div>
           );

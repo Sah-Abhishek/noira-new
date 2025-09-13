@@ -200,19 +200,33 @@ const FindTherapistByAvailability = () => {
                 {label === "earlyMorning" && "🌅 Early Morning (Premium)"}
               </h3>
               <div className="grid grid-cols-3 gap-2">
-                {filtered.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTime(t)}
-                    className={`py-2 text-sm rounded-full transition flex items-center justify-center
-                      ${time === t
-                        ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
-                        : "text-primary border border-primary hover:bg-primary hover:text-black"
-                      }`}
-                  >
-                    {t} {isPremium && <span className="ml-1"><FaCrown /></span>}
-                  </button>
-                ))}
+                {filtered.map((t) => {
+                  // Disable past times only for today
+                  const [hh, mm] = t.split(":").map(Number);
+                  const slotDateTime = new Date(date);
+                  slotDateTime.setHours(hh, mm, 0, 0);
+
+                  const now = new Date();
+                  const isToday = date === formatDate(now);
+                  const isPastTime = isToday && slotDateTime <= now;
+
+                  return (
+                    <button
+                      key={t}
+                      onClick={() => !isPastTime && setTime(t)}
+                      disabled={isPastTime}
+                      className={`py-2 text-sm rounded-full transition flex items-center justify-center
+        ${isPastTime
+                          ? "text-gray-600 border border-gray-600 cursor-not-allowed"
+                          : time === t
+                            ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
+                            : "text-primary border border-primary hover:bg-primary hover:text-black"
+                        }`}
+                    >
+                      {t} {isPremium && <span className="ml-1"><FaCrown /></span>}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           );
