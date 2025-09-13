@@ -9,9 +9,33 @@ export default function TherapistBookingsPage() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [statusLoading, setStatusLoading] = useState(null); // 👈 track booking being updated
+  const [bookedAtTime, setBookedAtTime] = useState('');
 
   const baseUrl = import.meta.env.VITE_API_URL; // adjust if needed
   const therapistjwt = localStorage.getItem("therapistjwt");
+
+
+  const formatToShortMonth = (dateString) => {
+    // Parse the input date string (MM/DD/YYYY HH:MM AM/PM)
+    const parsedDate = new Date(dateString);
+
+    if (isNaN(parsedDate)) {
+      throw new Error("Invalid date format");
+    }
+
+    // Format options for short month format
+    const options = {
+      month: 'short', // Jan, Feb, Mar...
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    };
+
+    setBookedAtTime(parsedDate.toLocaleString('en-US', options));
+  }
+
 
   // Fetch bookings
   useEffect(() => {
@@ -29,6 +53,7 @@ export default function TherapistBookingsPage() {
       }
     };
     fetchBookings();
+    formatToShortMonth
   }, [baseUrl, therapistjwt]);
 
   const updateBookingStatus = async (id, status) => {
@@ -91,8 +116,8 @@ export default function TherapistBookingsPage() {
               key={tab}
               onClick={() => setFilter(tab)}
               className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
-                  ? "bg-primary text-black"
-                  : "bg-[#1a1a1a] text-gray-400 hover:text-white"
+                ? "bg-primary text-black"
+                : "bg-[#1a1a1a] text-gray-400 hover:text-white"
                 }`}
             >
               {tab}
@@ -149,16 +174,27 @@ export default function TherapistBookingsPage() {
                     <span className="text-primary font-medium">Price:</span>{" "}
                     {b.price?.amount} {b.price?.currency}
                   </p>
+                  <p className="col-span-2">
+                    <span className="text-primary font-medium">Booked At:</span>{" "}
+                    {new Date(b.createdAt).toLocaleString("en-GB", {
+                      day: "numeric",
+                      month: "short",    // Jan, Feb, Mar...
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,      // Ensures AM/PM format
+                    })}
+                  </p>
                 </div>
 
                 {/* Status + Actions */}
                 <div className="flex justify-between items-center">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${b.status === "completed"
-                        ? "bg-green-500/20 text-green-400"
-                        : b.status === "declined" || b.status === "cancelled"
-                          ? "bg-red-500/20 text-red-400"
-                          : "bg-yellow-500/20 text-yellow-400"
+                      ? "bg-green-500/20 text-green-400"
+                      : b.status === "declined" || b.status === "cancelled"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {b.status}
@@ -207,6 +243,7 @@ export default function TherapistBookingsPage() {
                   )}
                 </div>
 
+
                 {/* Review Section */}
                 {b.isReviewed && b.review && (
                   <div className="mt-4 border-t border-[#222] pt-3">
@@ -219,8 +256,8 @@ export default function TherapistBookingsPage() {
                           key={star}
                           xmlns="http://www.w3.org/2000/svg"
                           className={`h-4 w-4 ${star <= b.review.rating
-                              ? "text-yellow-400"
-                              : "text-gray-600"
+                            ? "text-yellow-400"
+                            : "text-gray-600"
                             }`}
                           viewBox="0 0 20 20"
                           fill="currentColor"

@@ -61,7 +61,7 @@ const HeroSection = () => {
 
         {/* Description */}
         <h3 className="text-lg sm:text-lg md:text-2xl text-[#C49E5B] font-whisper font-bold mb-8 px-4 max-w-[90%] sm:max-w-[80%]">
-          The discreet indulgence London’s elite whisper about. By invitation only.
+          The discreet indulgence London’s elite whisper about
         </h3>
 
         {/* CTA Button */}

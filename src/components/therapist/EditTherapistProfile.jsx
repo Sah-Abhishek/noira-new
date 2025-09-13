@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Upload, User } from "lucide-react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function EditTherapistProfile() {
@@ -41,7 +41,6 @@ export default function EditTherapistProfile() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
-  // Fetch services list
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -54,7 +53,6 @@ export default function EditTherapistProfile() {
     fetchServices();
   }, [apiUrl]);
 
-  // Fetch therapist details
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
@@ -121,13 +119,12 @@ export default function EditTherapistProfile() {
     try {
       const formData = new FormData();
 
-      // Map selected service names to IDs
       const selectedServiceIds = form.services
         .map((name) => {
           const service = servicesList.find((s) => s.name === name);
           return service?._id;
         })
-        .filter(Boolean); // remove undefined just in case
+        .filter(Boolean);
 
       Object.entries(form).forEach(([key, value]) => {
         if (key === "address") {
@@ -147,7 +144,7 @@ export default function EditTherapistProfile() {
         formData.append("profileImage", profileImage);
       }
 
-      const response = await axios.put(
+      await axios.put(
         `${apiUrl}/therapist/edittherapist/${therapistId}`,
         formData,
         {
@@ -175,10 +172,10 @@ export default function EditTherapistProfile() {
   }
 
   return (
-    <div className="bg-black text-white min-h-screen p-6 flex flex-col">
+    <div className="bg-black text-white min-h-screen p-4 md:p-6 flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-primary">
+        <h2 className="text-xl md:text-2xl font-bold text-primary">
           Edit Therapist Profile
         </h2>
       </div>
@@ -186,11 +183,11 @@ export default function EditTherapistProfile() {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-black rounded-xl p-6 shadow-lg w-full mx-auto"
+        className="bg-black rounded-xl p-4 md:p-6 shadow-lg w-full mx-auto"
       >
         {/* Profile Picture */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-full bg-black border border-white/20 flex items-center justify-center overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black border border-white/20 flex items-center justify-center overflow-hidden">
             {previewUrl ? (
               <img
                 src={previewUrl}
@@ -198,7 +195,7 @@ export default function EditTherapistProfile() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User className="text-2xl" />
+              <User className="text-2xl sm:text-3xl" />
             )}
           </div>
           <label className="flex items-center gap-2 px-3 py-1.5 text-sm bg-black border border-white/20 hover:bg-[#111] rounded-lg cursor-pointer">
@@ -212,74 +209,40 @@ export default function EditTherapistProfile() {
           </label>
         </div>
 
-        {/* First Name + Last Name + Username */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">
-              First Name
-            </label>
-            <input
-              type="text"
-              value={form.firstName}
-              onChange={(e) => handleChange("firstName", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Last Name</label>
-            <input
-              type="text"
-              value={form.lastName}
-              onChange={(e) => handleChange("lastName", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Username</label>
-            <input
-              type="text"
-              value={form.username}
-              onChange={(e) => handleChange("username", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-              required
-            />
-          </div>
+        {/* Name & Username */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          {["firstName", "lastName", "username"].map((field, idx) => (
+            <div key={idx}>
+              <label className="block text-sm text-gray-400 mb-1 capitalize">
+                {field.replace(/([A-Z])/g, " $1")}
+              </label>
+              <input
+                type="text"
+                value={form[field]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+                required={field !== "lastName"}
+              />
+            </div>
+          ))}
         </div>
 
-        {/* Phone + Email + Password */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Phone</label>
-            <input
-              type="text"
-              value={form.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Email</label>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-              required
-            />
-          </div>
-          {/* <div> */}
-          {/*   <label className="block text-sm text-gray-400 mb-1">Password</label> */}
-          {/*   <input */}
-          {/*     disabled */}
-          {/*     type="text" */}
-          {/*     value={form.password} */}
-          {/*     onChange={(e) => handleChange("password", e.target.value)} */}
-          {/*     className="w-full bg-black border border-white/10 disabled:cursor-not-allowed rounded-lg p-2 text-white focus:border-primary" */}
-          {/*     placeholder="Leave blank to keep existing" */}
-          {/*   /> */}
-          {/* </div> */}
+        {/* Phone + Email */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          {["phone", "email"].map((field, idx) => (
+            <div key={idx}>
+              <label className="block text-sm text-gray-400 mb-1 capitalize">
+                {field}
+              </label>
+              <input
+                type={field === "email" ? "email" : "text"}
+                value={form[field]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+                required
+              />
+            </div>
+          ))}
         </div>
 
         {/* Experience */}
@@ -294,7 +257,7 @@ export default function EditTherapistProfile() {
 
         {/* Address */}
         <label className="block text-sm text-gray-400 mb-2">Address</label>
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
           {["Building_No", "Street", "Locality", "PostTown", "PostalCode"].map(
             (field) => (
               <input
@@ -309,12 +272,12 @@ export default function EditTherapistProfile() {
           )}
         </div>
 
-        {/* Services Offered */}
+        {/* Services */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">
             Services Offered
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {servicesList.map((service) => {
               const serviceName = service.name;
               const isChecked = form.services.includes(serviceName);
@@ -370,12 +333,12 @@ export default function EditTherapistProfile() {
           </div>
         </div>
 
-        {/* Postal codes */}
+        {/* Postal Codes */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1">
             Services Available in Postal Codes
           </label>
-          <div className="flex gap-2 mb-2">
+          <div className="flex flex-col sm:flex-row gap-2 mb-2">
             <input
               type="text"
               value={postalCodeInput}
@@ -431,8 +394,9 @@ export default function EditTherapistProfile() {
           </div>
         </div>
 
-        {/* Accepting New Clients */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* Accepting & Gender */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          {/* Accepting */}
           <div>
             <label className="block text-sm text-gray-400 mb-1">
               Accepting New Clients
@@ -478,34 +442,6 @@ export default function EditTherapistProfile() {
           </div>
         </div>
 
-        {/* Verified Therapist */}
-        {/* <div className="mb-4"> */}
-        {/*   <label className="block text-sm text-gray-400 mb-1"> */}
-        {/*     Verified Therapist */}
-        {/*   </label> */}
-        {/*   <div className="flex gap-2"> */}
-        {/*     {["Yes", "No"].map((option) => { */}
-        {/*       const isActive = */}
-        {/*         (option === "Yes" && form.isVerified) || */}
-        {/*         (option === "No" && !form.isVerified); */}
-        {/*       return ( */}
-        {/*         <button */}
-        {/*           key={option} */}
-        {/*           type="button" */}
-        {/*           onClick={() => handleChange("isVerified", option === "Yes")} */}
-        {/*           className={`px-3 py-1.5 rounded-lg text-sm border transition-all */}
-        {/*             ${isActive */}
-        {/*               ? "bg-primary text-black border-primary" */}
-        {/*               : "bg-black border-white/10 text-white hover:border-primary/50" */}
-        {/*             }`} */}
-        {/*         > */}
-        {/*           {option} */}
-        {/*         </button> */}
-        {/*       ); */}
-        {/*     })} */}
-        {/*   </div> */}
-        {/* </div> */}
-
         {/* Languages */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">Languages</label>
@@ -535,7 +471,7 @@ export default function EditTherapistProfile() {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3">
+        <div className="flex flex-col sm:flex-row justify-end gap-3">
           <button
             type="button"
             onClick={() => navigate("/admin/therapists")}

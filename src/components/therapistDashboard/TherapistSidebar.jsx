@@ -39,11 +39,11 @@ const TherapistSidebar = () => {
       icon: <BookOpen className="w-5 h-5" />,
       path: "/therapist/therapistbookingspage",
     },
-    {
-      name: "Feedback",
-      icon: <MessageSquare className="w-5 h-5" />,
-      path: "/therapist/feedback",
-    },
+    // {
+    //   name: "Feedback",
+    //   icon: <MessageSquare className="w-5 h-5" />,
+    //   path: "/therapist/feedback",
+    // },
     {
       name: "Profile",
       icon: <User className="w-5 h-5" />,
@@ -139,6 +139,31 @@ const TherapistSidebar = () => {
             </button>
           );
         })}
+
+        {/* Logout Button with Avatar */}
+        <button
+          onClick={logOut}
+          className="flex flex-col items-center text-red-500 hover:text-red-400 transition"
+        >
+          {/* Avatar */}
+          <div className="w-5 h-5 rounded-full overflow-hidden border border-gray-600 ">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-700 flex items-center justify-center text-sm text-white">
+                {user?.name?.first?.[0]?.toUpperCase() || "T"}
+              </div>
+            )}
+          </div>
+          {/* Full Name */}
+          {/* <span className="text-[10px] text-white">{fullName}</span> */}
+          {/* Logout Text */}
+          <span className="text-[10px] mt-1">Logout</span>
+        </button>
       </div>
     </>
   );
