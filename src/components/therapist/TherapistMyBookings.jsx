@@ -84,7 +84,18 @@ export default function TherapistBookingsPage() {
   };
 
   const filteredBookings = bookings.filter((b) => {
-    if (filter !== "all" && b.status !== filter) return false;
+    const now = new Date();
+    const bookingTime = new Date(b.slotStart);
+
+    // Filter logic
+    if (filter === "upcoming") {
+      // Show confirmed bookings that are scheduled for the future
+      return b.status === "confirmed" && bookingTime > now;
+    } else if (filter !== "all" && b.status !== filter) {
+      return false;
+    }
+
+    // Search filter
     if (
       search &&
       !b.serviceId?.name?.toLowerCase().includes(search.toLowerCase())
@@ -111,7 +122,7 @@ export default function TherapistBookingsPage() {
       {/* Filters */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
         <div className="flex gap-3">
-          {["all", "completed", "cancelled", "declined"].map((tab) => (
+          {["all", "upcoming", "completed", "cancelled", "declined"].map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
@@ -129,7 +140,9 @@ export default function TherapistBookingsPage() {
       {/* Booking Cards */}
       <main className="flex-1 overflow-y-auto p-4 space-y-4">
         {filteredBookings.length === 0 ? (
-          <p className="text-gray-500">No bookings found.</p>
+          <p className="text-gray-500">
+            {filter === "upcoming" ? "No upcoming bookings found." : "No bookings found."}
+          </p>
         ) : (
           filteredBookings.map((b) => {
             const now = new Date();
@@ -156,11 +169,16 @@ export default function TherapistBookingsPage() {
                     {b.clientId?.name?.first} {b.clientId?.name?.last}
                   </p>
                   <p>
-                    <span className="text-primary font-medium">Date & Time:</span>{" "}
-                    {new Date(b.date).toLocaleDateString()}{" "}
-                    {new Date(b.slotStart).toLocaleTimeString([], {
+                    <span className="text-primary font-medium">Booked At:</span>{" "}
+                    {new Date(b.createdAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}{" "}
+                    {new Date(b.createdAt).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
+                      hour12: true,
                     })}
                   </p>
                   <p>
@@ -267,7 +285,7 @@ export default function TherapistBookingsPage() {
                       ))}
                     </div>
                     <p className="text-gray-300 text-sm italic">
-                      “{b.review.Comment}”
+                      "{b.review.Comment}"
                     </p>
                   </div>
                 )}

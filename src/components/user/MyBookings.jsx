@@ -98,8 +98,8 @@ export default function BookingsPage() {
                   </h2>
                   <span
                     className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-yellow-500/20 text-yellow-400"
+                      ? "bg-green-500/20 text-green-400"
+                      : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {booking.paymentStatus}
@@ -123,7 +123,7 @@ export default function BookingsPage() {
 
                   <p className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Date</span>
+                    <span className="font-semibold text-primary">Service Date</span>
                     {new Date(booking.date).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -133,7 +133,7 @@ export default function BookingsPage() {
 
                   <p className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-primary">Time</span>
+                    <span className="font-semibold text-primary">Service Time</span>
                     {new Date(booking.slotStart).toLocaleTimeString("en-GB", {
                       hour: "2-digit",
                       minute: "2-digit",

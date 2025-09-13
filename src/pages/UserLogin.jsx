@@ -218,9 +218,9 @@ export default function UserLogin() {
           >
             <FaGoogle /> Google
           </button>
-          <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600">
-            <FaApple /> Apple
-          </button>
+          {/* <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600"> */}
+          {/*   <FaApple /> Apple */}
+          {/* </button> */}
         </div>
 
         {/* Sign up */}
