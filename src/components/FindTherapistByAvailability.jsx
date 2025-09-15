@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import axios from "axios";
 import useBookingStore from "../store/bookingStore.jsx";
@@ -37,7 +37,7 @@ const FindTherapistByAvailability = () => {
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimes, setAvailableTimes] = useState({});
   const [isAbled, setIsAbled] = useState(false);
-  const userjwt = localStorage.getItem('userjwt');
+  const userjwt = localStorage.getItem("userjwt");
 
   const therapistId = selectedTherapist?.profile?._id;
 
@@ -63,12 +63,13 @@ const FindTherapistByAvailability = () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
         const res = await axios.get(
-          `${apiUrl}/therapist/availability/${therapistId}`
-          , {
+          `${apiUrl}/therapist/availability/${therapistId}`,
+          {
             headers: {
               Authorization: `Bearer ${userjwt}`,
             },
-          });
+          }
+        );
         const availabilityArray = res.data.availability || [];
 
         const generateSlots = (startTime, endTime) => {
@@ -161,9 +162,11 @@ const FindTherapistByAvailability = () => {
     evening: ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30"],
   };
 
+  // ✅ One continuous premium section for 23:00–09:00
   const nightSections = {
-    lateNight: ["21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
-    earlyMorning: [
+    eliteHours: [
+      "23:00",
+      "23:30",
       "00:00",
       "00:30",
       "01:00",
@@ -176,6 +179,13 @@ const FindTherapistByAvailability = () => {
       "04:30",
       "05:00",
       "05:30",
+      "06:00",
+      "06:30",
+      "07:00",
+      "07:30",
+      "08:00",
+      "08:30",
+      "09:00",
     ],
   };
 
@@ -189,7 +199,9 @@ const FindTherapistByAvailability = () => {
     return (
       <>
         {Object.entries(sections).map(([label, times]) => {
-          const filtered = times.filter((t) => availableTimes[date].includes(t));
+          const filtered = times.filter((t) =>
+            availableTimes[date].includes(t)
+          );
           if (filtered.length === 0) return null;
           return (
             <div key={label} className="mb-4 md:mb-6">
@@ -197,8 +209,7 @@ const FindTherapistByAvailability = () => {
                 {label === "morning" && "☀️ Morning"}
                 {label === "afternoon" && "🌞 Afternoon"}
                 {label === "evening" && "🌙 Evening"}
-                {label === "lateNight" && "🌌 Late Night (Premium)"}
-                {label === "earlyMorning" && "🌅 Early Morning (Premium)"}
+                {label === "eliteHours" && "👑 Elite Hours (23:00 – 09:00)"}
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {filtered.map((t) => {
@@ -220,7 +231,9 @@ const FindTherapistByAvailability = () => {
                           ? "text-gray-600 border border-gray-600 cursor-not-allowed"
                           : time === t
                             ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
-                            : "text-primary border border-primary hover:bg-primary hover:text-black"
+                            : isPremium
+                              ? "border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                              : "text-primary border border-primary hover:bg-primary hover:text-black"
                         }`}
                     >
                       {t} {isPremium && <FaCrown className="ml-1" />}
@@ -236,7 +249,7 @@ const FindTherapistByAvailability = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-black text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-black text-white font-sans flex flex-col">
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 pb-24">
         <div className="max-w-6xl mx-auto">
@@ -323,9 +336,7 @@ const FindTherapistByAvailability = () => {
                 Available Time Slots
               </h2>
               <p className="text-gray-400 mb-3 md:mb-4 text-sm md:text-lg">
-                {date
-                  ? `Selected Date: ${date}`
-                  : "Please select a date"}
+                {date ? `Selected Date: ${date}` : "Please select a date"}
               </p>
 
               {/* Tabs */}
@@ -334,8 +345,8 @@ const FindTherapistByAvailability = () => {
                   <button
                     onClick={() => setActiveTab("day")}
                     className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === "day"
-                      ? "bg-primary text-black font-semibold"
-                      : "text-primary"
+                        ? "bg-primary text-black font-semibold"
+                        : "text-primary"
                       }`}
                   >
                     Day
@@ -343,8 +354,8 @@ const FindTherapistByAvailability = () => {
                   <button
                     onClick={() => setActiveTab("night")}
                     className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === "night"
-                      ? "bg-primary text-black font-semibold"
-                      : "text-primary"
+                        ? "bg-primary text-black font-semibold"
+                        : "text-primary"
                       }`}
                   >
                     Night (Premium)

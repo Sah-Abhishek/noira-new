@@ -10,6 +10,8 @@ import LandingVideoSection from '../components/VideoHome.jsx'
 import WhyChooseNoira from '../components/WhyChooseNoira.jsx'
 import MembershipSection from '../components/MembershipSection.jsx'
 import AtHomeTreatment from '../components/AtHomeTreatment.jsx'
+import SubscriptionsSection from '../components/SubscriptionSection.jsx'
+import MonthlySubscription from '../components/MonthlySubscription.jsx'
 
 const LandingPage = () => {
   return (
@@ -20,7 +22,10 @@ const LandingPage = () => {
       <Services />
 
       <HowItWorks />
-      <MembershipSection />
+      {/* <MembershipSection /> */}
+      <SubscriptionsSection />
+      <MonthlySubscription />
+
 
       <LandingVideoSection />
       <Featuredtherapists />

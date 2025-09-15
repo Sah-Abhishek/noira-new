@@ -17,7 +17,7 @@ const TherapistProfileTherapist = () => {
   const therapistId = localStorage.getItem("therapistId");
   console.log("This is the therapistId: ", therapistId);
   const navigate = useNavigate();
-  const therapistjwt = localStorage('therapistjwt');
+  const therapistjwt = localStorage.getItem('therapistjwt');
 
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);

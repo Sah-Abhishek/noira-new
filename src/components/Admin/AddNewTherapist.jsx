@@ -9,6 +9,7 @@ export default function AddNewTherapist() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -39,7 +40,11 @@ export default function AddNewTherapist() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/services/list`);
+        const res = await axios.get(`${apiUrl}/services/list`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`
+          }
+        });
         console.log("These are the services: ", res.data);
         setServicesList(res.data);
       } catch (err) {
@@ -117,7 +122,10 @@ export default function AddNewTherapist() {
       }
 
       const res = await axios.post(`${apiUrl}/admin/createtherapist`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${adminjwt}`, // ✅ Add JWT here
+        },
       });
 
       console.log("Therapist saved:", res.data);

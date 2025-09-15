@@ -14,7 +14,7 @@ export default function UsersManagement() {
 
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const adminjwt = localStorage('adminjwt');
+  const adminjwt = localStorage.getItem('adminjwt');
 
   const apiUrl = import.meta.env.VITE_API_URL;
 

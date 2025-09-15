@@ -12,7 +12,7 @@ export default function ServiceManagement() {
   const [loading, setLoading] = useState(true);
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState(null);
-  const adminjwt = localStorage.getItem(adminjwt);
+  const adminjwt = localStorage.getItem('adminjwt');
 
   const navigate = useNavigate();
   const location = useLocation();

@@ -17,6 +17,7 @@ export default function ScheduleModal({
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
   const [newSlots, setNewSlots] = useState([]);
+  const therapistjwt = localStorage.getItem("therapistjwt");
 
   if (!isModalOpen) return null;
 
@@ -83,7 +84,11 @@ export default function ScheduleModal({
 
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${therapistjwt}`, // ✅ Add JWT here
+
+        },
         body: JSON.stringify(payload),
       });
 

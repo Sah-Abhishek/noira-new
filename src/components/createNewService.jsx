@@ -17,6 +17,8 @@ export default function CreateNewService() {
     { durationMinutes: 0, price: { amount: 0 }, label: "Standard session" },
   ]);
   const navigate = useNavigate();
+  const adminjwt = localStorage.getItem("adminjwt");
+
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -59,7 +61,10 @@ export default function CreateNewService() {
       }
 
       const res = await axios.post(`${apiUrl}/admin/addservices`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${adminjwt}`
+        },
       });
 
       if (res.status === 201) {

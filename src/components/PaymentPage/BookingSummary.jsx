@@ -33,19 +33,19 @@ const BookingSummary = () => {
     ? `${cart.durationMinutes} minutes`
     : "Not selected";
   const serviceFee = cart?.price || 0;
-  const processingFee = 2.5;
 
   // ✅ Elite Hours Logic
   let eliteHoursFee = 0;
   if (time) {
-    const [hourStr] = time.split(":"); // assumes time is "HH:mm"
+    const [hourStr] = time.split(":"); // "HH:mm"
     const hour = parseInt(hourStr, 10);
-    if (hour >= 21) {
+
+    // Elite hours = 23:00 → 23:59 OR 00:00 → 09:00
+    if (hour >= 23 || hour < 9) {
       eliteHoursFee = 15;
     }
   }
-
-  const total = serviceFee + processingFee + eliteHoursFee;
+  const total = serviceFee + eliteHoursFee;
 
   return (
     <div className="bg-[#0d0d0d] rounded-2xl p-6 border border-white/10 shadow-lg w-full space-y-6">
@@ -139,10 +139,10 @@ const BookingSummary = () => {
           <span className="text-gray-400">Service Fee:</span>
           <span className="text-white">₤{serviceFee.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-400">Processing Fee:</span>
-          <span className="text-white">₤{processingFee.toFixed(2)}</span>
-        </div>
+        {/* <div className="flex justify-between text-sm"> */}
+        {/*   <span className="text-gray-400">Processing Fee:</span> */}
+        {/*   <span className="text-white">₤{processingFee.toFixed(2)}</span> */}
+        {/* </div> */}
         {eliteHoursFee > 0 && (
           <div className="flex justify-between text-sm text-yellow-400">
             <span>Elite Hours Fee:</span>

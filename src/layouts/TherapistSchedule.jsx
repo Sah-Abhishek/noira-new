@@ -15,7 +15,7 @@ export default function TherapistSchedule() {
   const [loading, setLoading] = useState(true);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
-  const therapistjwt = localStorage.getIte('therapistjwt');
+  const therapistjwt = localStorage.getItem('therapistjwt');
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
   // console.log("This is the value of isModalOpen: ", isResetModalOpen);
