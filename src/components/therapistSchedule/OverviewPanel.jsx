@@ -19,6 +19,7 @@ export default function OverviewPanel({
   // 👇 for delete modal
   const [modalOpen, setModalOpen] = useState(false);
   const [slotToDelete, setSlotToDelete] = useState(null); // {dateKey, index}
+  const therapistjwt = localStorage.getItem('therapistjwt');
 
   const handleDeleteClick = (dateKey, index) => {
     setSlotToDelete({ dateKey, index });
@@ -45,6 +46,10 @@ export default function OverviewPanel({
             endTime: slot.end,
           },
         ],
+      }, {
+        headers: {
+          Authorization: `Bearer ${therapistjwt}`,
+        },
       });
 
       toast.success("Slot deleted successfully");

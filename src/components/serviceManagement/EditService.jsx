@@ -14,6 +14,7 @@ export default function EditService() {
   const [imagePreview, setImagePreview] = useState(null);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
@@ -23,7 +24,11 @@ export default function EditService() {
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/admin/services/${id}`);
+        const res = await axios.get(`${apiUrl}/admin/services/${id}`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+          },
+        });
         const data = res.data;
 
         setServiceName(data.name || "");

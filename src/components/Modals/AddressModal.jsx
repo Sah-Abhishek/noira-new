@@ -12,6 +12,7 @@ const AddressModal = ({ isOpen, onClose }) => {
     postTown: "",
     postalCode: "",
   });
+  const userjwt = localStorage.getItem("userjwt");
 
   const { setUserAddress } = useBookingStore();
 
@@ -34,7 +35,12 @@ const AddressModal = ({ isOpen, onClose }) => {
     }
 
     try {
-      const res = await axios.put(`${apiUrl}/user/${userId}/address`, formData);
+      const res = await axios.put(`${apiUrl}/user/${userId}/address`, formData, {
+        headers: {
+          Authorization: `Bearer ${userjwt}`,
+
+        }
+      });
 
       // Success toast
       toast.success("Address saved successfully");

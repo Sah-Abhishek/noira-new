@@ -28,6 +28,7 @@ export default function BrowseTherapists() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { setSelectedTherapist, } = useBookingStore();
+  const userjwt = localStorage.getItem("userjwt");
 
   const gridRef = useRef(null);
 
@@ -41,6 +42,9 @@ export default function BrowseTherapists() {
       setError(null);
       const res = await axios.get(`${apiUrl}/therapist/getalltherapists`, {
         params: { page: pageNum, limit: LIMIT },
+        headers: {
+          Authorization: `Bearer ${userjwt}`,
+        },
       });
       console.log("This is the therapist : ", res.data);
       setTherapists(res.data?.therapists ?? []);

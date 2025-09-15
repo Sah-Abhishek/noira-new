@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 const DeleteTherapistModal = ({ isOpen, onClose, therapist }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const handleDeleteTherapist = async () => {
     if (!therapist?.profile?._id) {
@@ -12,7 +13,11 @@ const DeleteTherapistModal = ({ isOpen, onClose, therapist }) => {
     }
 
     try {
-      const res = await axios.delete(`${apiUrl}/admin/therapist/${therapist.profile._id}`);
+      const res = await axios.delete(`${apiUrl}/admin/therapist/${therapist.profile._id}`, {
+        headers: {
+          Authorization: `Bearer ${adminjwt}`,
+        }
+      });
       if (res.status === 200) {
         toast.success("Therapist deleted successfully");
         onClose(true); // notify parent

@@ -16,13 +16,19 @@ const TherapistProfileModal = ({ isOpen, onClose, therapistId }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
+  const therapistjwt = localStorage.getItem('therapistjwt');
 
   useEffect(() => {
     if (!therapistId || !isOpen) return;
 
     const fetchTherapist = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/therapist/${therapistId}`);
+        const res = await axios.get(`${apiUrl}/therapist/${therapistId}`, {
+          headers: {
+            Authorization: `Bearer ${therapistjwt}`,
+
+          }
+        });
         setTherapist(res.data.therapist || res.data);
       } catch (error) {
         console.error("Failed to fetch therapist:", error);

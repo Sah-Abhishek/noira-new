@@ -17,6 +17,7 @@ const TherapistProfileTherapist = () => {
   const therapistId = localStorage.getItem("therapistId");
   console.log("This is the therapistId: ", therapistId);
   const navigate = useNavigate();
+  const therapistjwt = localStorage('therapistjwt');
 
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,12 @@ const TherapistProfileTherapist = () => {
         const resolvedId = therapistId || id; // localStorage takes priority, fallback to URL
         if (!resolvedId) return;
 
-        const res = await axios.get(`${apiUrl}/therapist/${resolvedId}`);
+        const res = await axios.get(`${apiUrl}/therapist/${resolvedId}`, {
+          headers: {
+            Authorization: `Bearer ${therapistjwt}`,
+
+          }
+        });
         setTherapist(res.data.therapist || res.data);
       } catch (error) {
         console.error("Failed to fetch therapist:", error);

@@ -46,7 +46,11 @@ export default function EditTherapistProfileAdmin() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/services/list`);
+        const res = await axios.get(`${apiUrl}/services/list`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+          },
+        });
         setServicesList(res.data);
       } catch (err) {
         console.error("Failed to fetch services:", err);
@@ -60,7 +64,11 @@ export default function EditTherapistProfileAdmin() {
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/therapist/${id}`);
+        const res = await axios.get(`${apiUrl}/therapist/${id}`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+          }
+        });
         const t = res.data.therapist;
 
         setForm({

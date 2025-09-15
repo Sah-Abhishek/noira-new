@@ -6,6 +6,7 @@ import axios from "axios";
 const ScheduleManagement = () => {
   const [availability, setAvailability] = useState([]);
   const therapistId = localStorage.getItem("therapistId");
+  const therapistjwt = localStorage.getItem("therapistjwt");
 
   const apiUrl = import.meta.env.VITE_API_URL; // ✅ get from env
 
@@ -15,6 +16,11 @@ const ScheduleManagement = () => {
       try {
         const res = await axios.post(`${apiUrl}/therapist/next7days`, {
           therapistId,
+        }, {
+          headers: {
+            Authorization: `Bearer ${therapistjwt}`,
+
+          }
         });
         setAvailability(res.data.availability || []);
       } catch (error) {

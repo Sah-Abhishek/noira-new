@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import photo1 from "/newimage1.jpeg";
 import photo3 from "/newimage2.jpeg";
 import photo2 from "/newimage3.jpeg";
-import photo4 from "/photol4.jpg";
-import photo5 from "/photol8.jpg";
+import photo4 from "/newimage67.jpeg";
+import photo5 from "/newimage68.jpeg";
 
 const Galleryhome = () => {
   const { isDarkMode } = useTheme();

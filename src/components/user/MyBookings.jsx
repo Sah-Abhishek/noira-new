@@ -99,13 +99,13 @@ export default function BookingsPage() {
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
         {/* Filters */}
         <div className="flex gap-2 flex-wrap">
-          {["all", "upcoming", "completed", "cancelled", "declined"].map((tab) => (
+          {["all", "upcoming", "completed", "declined"].map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
               className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
-                  ? "bg-primary text-black"
-                  : "bg-[#1a1a1a] text-gray-400 hover:text-white"
+                ? "bg-primary text-black"
+                : "bg-[#1a1a1a] text-gray-400 hover:text-white"
                 }`}
             >
               {tab}
@@ -158,18 +158,18 @@ export default function BookingsPage() {
                       <div className="flex flex-col items-end gap-1">
                         <span
                           className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-yellow-500/20 text-yellow-400"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-yellow-500/20 text-yellow-400"
                             }`}
                         >
                           {booking.paymentStatus}
                         </span>
                         <span
                           className={`px-3 py-1 text-xs rounded-full font-medium ${booking.status === "completed"
-                              ? "bg-green-500/20 text-green-400"
-                              : booking.status === "declined" || booking.status === "cancelled"
-                                ? "bg-red-500/20 text-red-400"
-                                : "bg-yellow-500/20 text-yellow-400"
+                            ? "bg-green-500/20 text-green-400"
+                            : booking.status === "declined" || booking.status === "cancelled"
+                              ? "bg-red-500/20 text-red-400"
+                              : "bg-yellow-500/20 text-yellow-400"
                             }`}
                         >
                           {booking.status}
@@ -277,8 +277,8 @@ export default function BookingsPage() {
                               key={star}
                               xmlns="http://www.w3.org/2000/svg"
                               className={`h-4 w-4 ${star <= booking.review.rating
-                                  ? "text-yellow-400"
-                                  : "text-gray-600"
+                                ? "text-yellow-400"
+                                : "text-gray-600"
                                 }`}
                               viewBox="0 0 20 20"
                               fill="currentColor"

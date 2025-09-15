@@ -12,6 +12,7 @@ export default function ServiceManagement() {
   const [loading, setLoading] = useState(true);
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState(null);
+  const adminjwt = localStorage.getItem(adminjwt);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +21,12 @@ export default function ServiceManagement() {
   // 🔹 Handle delete request
   const handleDelete = async (serviceId) => {
     try {
-      const res = await axios.delete(`${apiUrl}/admin/deleteservices/${serviceId}`);
+      const res = await axios.delete(`${apiUrl}/admin/deleteservices/${serviceId}`, {
+        headers: {
+          Authorization: `Bearer ${adminjwt}`,
+        },
+
+      });
       if (res.status === 200) {
         toast.success(res.data.message || "Service deleted successfully");
         // remove service from state
@@ -40,7 +46,12 @@ export default function ServiceManagement() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/services/list`);
+        const res = await axios.get(`${apiUrl}/services/list`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+
+          }
+        });
         setServices(res.data);
         setFilteredServices(res.data);
       } catch (error) {

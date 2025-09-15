@@ -25,6 +25,7 @@ export default function TherapistManagement() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const limit = 6;
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const api = `${apiUrl}/admin/therapist/list`;
 
@@ -54,6 +55,9 @@ export default function TherapistManagement() {
           limit,
           search: debouncedSearch,
           ...(statusParam !== undefined && { status: statusParam }),
+        },
+        headers: {
+          Authorization: `Bearer ${adminjwt}`,
         },
       });
 

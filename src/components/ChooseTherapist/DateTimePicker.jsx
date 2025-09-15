@@ -55,6 +55,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const [activeTab, setActiveTab] = useState("day");
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
+  const userjwt = localStorage.getItem("userjwt");
 
   useEffect(() => {
     setDate(null);
@@ -75,6 +76,10 @@ const DateTimePicker = ({ availableTimes = [] }) => {
         service: cart,
         date,
         time,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userjwt}`,
+        }
       });
       setTherapists(res.data.therapists);
       setHasSearched(true);

@@ -152,13 +152,13 @@ export default function TherapistBookingsPage() {
       {/* Filters */}
       <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
         <div className="flex gap-3">
-          {["all", "upcoming", "completed", "cancelled", "declined"].map((tab) => (
+          {["all", "upcoming", "completed", "declined"].map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
               className={`px-4 py-1 rounded-lg font-medium capitalize ${filter === tab
-                  ? "bg-primary text-black"
-                  : "bg-[#1a1a1a] text-gray-400 hover:text-white"
+                ? "bg-primary text-black"
+                : "bg-[#1a1a1a] text-gray-400 hover:text-white"
                 }`}
             >
               {tab}
@@ -239,10 +239,10 @@ export default function TherapistBookingsPage() {
                 <div className="flex justify-between items-center">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${b.status === "completed"
-                        ? "bg-green-500/20 text-green-400"
-                        : b.status === "declined" || b.status === "cancelled"
-                          ? "bg-red-500/20 text-red-400"
-                          : "bg-yellow-500/20 text-yellow-400"
+                      ? "bg-green-500/20 text-green-400"
+                      : b.status === "declined" || b.status === "cancelled"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-yellow-500/20 text-yellow-400"
                       }`}
                   >
                     {b.status}
@@ -303,8 +303,8 @@ export default function TherapistBookingsPage() {
                           key={star}
                           xmlns="http://www.w3.org/2000/svg"
                           className={`h-4 w-4 ${star <= b.review.rating
-                              ? "text-yellow-400"
-                              : "text-gray-600"
+                            ? "text-yellow-400"
+                            : "text-gray-600"
                             }`}
                           viewBox="0 0 20 20"
                           fill="currentColor"

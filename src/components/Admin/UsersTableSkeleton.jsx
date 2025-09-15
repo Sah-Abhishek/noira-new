@@ -8,13 +8,17 @@ export default function UsersManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const adminjwt = localStorage.getItem('adminjwt');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
         const res = await axios.get(`${apiUrl}/admin/users`, {
-          params: { page: 1, limit: 10 },
+          params: { page: 1, limit: 10 }, headers: {
+            Authorization: `Bearer ${adminjwt}`,
+          }
+
         });
         setUsers(res.data.users || []);
       } catch (error) {

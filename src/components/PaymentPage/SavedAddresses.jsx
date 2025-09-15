@@ -17,11 +17,17 @@ export default function SavedAddresses({ isAddressInputModalOpen }) {
   // For now hardcoding userId, later replace with auth store
   const userId = localStorage.getItem("userId");
   const apiUrl = import.meta.env.VITE_API_URL;
+  const userjwt = localStorage.getItem("userjwt");
 
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/user/${userId}/alladdress`);
+        const res = await axios.get(`${apiUrl}/user/${userId}/alladdress`, {
+          headers: {
+            Authorization: `Bearer ${userjwt}`,
+          },
+
+        });
         setAddresses(res.data.allAddresses || []);
 
         // ✅ If store already has userAddress, make sure it's pre-selected
@@ -44,6 +50,11 @@ export default function SavedAddresses({ isAddressInputModalOpen }) {
     try {
       const response = await axios.post(`${apiUrl}/user/${userId}/default`, {
         addressId: id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${userjwt}`,
+
+        }
       });
 
       if (response.status === 200) {

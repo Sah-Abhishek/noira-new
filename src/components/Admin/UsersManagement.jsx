@@ -14,6 +14,7 @@ export default function UsersManagement() {
 
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const adminjwt = localStorage('adminjwt');
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -36,6 +37,10 @@ export default function UsersManagement() {
         setLoading(true);
         const res = await axios.get(`${apiUrl}/admin/users`, {
           params: { page, limit, search },
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+          },
+
         });
 
         setUsers(res.data.users || []);

@@ -8,6 +8,7 @@ export default function AddNewTherapist() {
   const [profileImage, setProfileImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [postalCodeInput, setPostalCodeInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -68,8 +69,21 @@ export default function AddNewTherapist() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
+    if (!form.firstName.trim()) return toast.error("First Name is required");
+    if (!form.username.trim()) return toast.error("Username is required");
+    if (!form.phone.trim()) return toast.error("Phone number is required");
+    if (!form.email.trim()) return toast.error("Email is required");
+    if (!form.password.trim()) return toast.error("Password is required");
+    if (!form.experience) return toast.error("Experience is required");
+    if (form.services.length === 0) return toast.error("Select at least one service");
+    if (form.languages.length === 0) return toast.error("Add at least one language");
+    if (!form.gender) return toast.error("Gender is required");
+
+
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("firstName", form.firstName);
@@ -94,7 +108,7 @@ export default function AddNewTherapist() {
         formData.append("servicesInPostalCodes[]", pc)
       );
 
-      formData.append("acceptingNewClients", form.acceptingNewClients);
+      formData.append("active", form.acceptingNewClients);
       formData.append("gender", form.gender);
       formData.append("isVerified", form.isVerified);
 
@@ -113,6 +127,8 @@ export default function AddNewTherapist() {
     } catch (err) {
       console.error("Error saving therapist:", err);
       toast.error("Failed to add therapist .");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -542,9 +558,12 @@ export default function AddNewTherapist() {
           </button>
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-primary text-black font-semibold hover:opacity-90"
+            className={`px-4 py-2 rounded-lg font-semibold transition-opacity duration-200
+    ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-primary text-black hover:opacity-90'}
+  `}
+            disabled={loading}
           >
-            Create Therapist
+            {loading ? 'Creating...' : 'Create Therapist'}
           </button>
         </div>
       </form>

@@ -13,6 +13,7 @@ export default function BookingsManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const adminjwt = localStorage.getItem("adminjwt");
   const limit = 10;
 
   useEffect(() => {
@@ -23,7 +24,11 @@ export default function BookingsManagement() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${apiUrl}/admin/bookings?page=${pageNum}&limit=${limit}`
+        `${apiUrl}/admin/bookings?page=${pageNum}&limit=${limit}`, {
+        headers: {
+          Authorization: `Bearer ${adminjwt}`,
+        },
+      }
       );
       setBookings(res.data.bookings || []);
       setTotalPages(res.data.totalPages || 1);

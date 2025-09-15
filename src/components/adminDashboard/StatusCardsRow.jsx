@@ -8,7 +8,7 @@ export default function StatusCardRow() {
   const [stats, setStats] = useState(null);
   const [filter, setFilter] = useState("month");
   const [loading, setLoading] = useState(false); // 👈 track loading
-  const token = localStorage.getItem("adminjwt");
+  const adminjwt = localStorage.getItem("adminjwt");
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -18,7 +18,7 @@ export default function StatusCardRow() {
       const res = await axios.get(`${apiUrl}/admin/dashboard?filter=${filter}`, {
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${adminjwt}`,
           "X-Requested-With": "XMLHttpRequest",
         },
       });

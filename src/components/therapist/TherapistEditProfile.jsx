@@ -6,8 +6,8 @@ import axios from "axios";
 import { Star, MapPin } from "lucide-react";
 
 const FeaturedTherapists = () => {
-  const { isDarkMode } = useTheme();
   const navigate = useNavigate();
+  const therapistjwt = localStorage.getItem("therapistjwt");
 
   const [therapists, setTherapists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,11 @@ const FeaturedTherapists = () => {
     const fetchTherapists = async () => {
       try {
         const res = await axios.get(
-          `${apiUrl}/therapist/getalltherapists?page=1&limit=4`
+          `${apiUrl}/therapist/getalltherapists?page=1&limit=4`, {
+          headers: {
+            Authorization: `Bearer ${therapistjwt}`,
+          },
+        }
         );
         if (res.data?.therapists) {
           setTherapists(res.data.therapists);

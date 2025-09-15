@@ -7,11 +7,17 @@ export default function RevenueDashboard() {
   const [data, setData] = useState(null);
   const [expanded, setExpanded] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const adminjwt = localStorage.getItem('adminjwt');
 
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/admin/revenue`);
+        const res = await axios.get(`${apiUrl}/admin/revenue`, {
+          headers: {
+            Authorization: `Bearer ${adminjwt}`,
+
+          }
+        });
         setData(res.data);
       } catch (error) {
         console.error("Error fetching revenue data:", error);

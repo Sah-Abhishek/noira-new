@@ -37,6 +37,7 @@ const FindTherapistByAvailability = () => {
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimes, setAvailableTimes] = useState({});
   const [isAbled, setIsAbled] = useState(false);
+  const userjwt = localStorage.getItem('userjwt');
 
   const therapistId = selectedTherapist?.profile?._id;
 
@@ -63,7 +64,11 @@ const FindTherapistByAvailability = () => {
         const apiUrl = import.meta.env.VITE_API_URL;
         const res = await axios.get(
           `${apiUrl}/therapist/availability/${therapistId}`
-        );
+          , {
+            headers: {
+              Authorization: `Bearer ${userjwt}`,
+            },
+          });
         const availabilityArray = res.data.availability || [];
 
         const generateSlots = (startTime, endTime) => {
