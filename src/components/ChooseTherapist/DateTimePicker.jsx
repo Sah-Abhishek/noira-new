@@ -4,7 +4,7 @@ import axios from "axios";
 import useBookingStore from "../../store/bookingStore";
 import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion"; // 🔥 added
+import { motion, AnimatePresence } from "framer-motion";
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -16,13 +16,10 @@ const formatDate = (date) => {
 
 const isPastTime = (timeString, selectedDate) => {
   if (!selectedDate) return false;
-
   const [hours, minutes] = timeString.split(":").map(Number);
   const slotDate = new Date(selectedDate);
   slotDate.setHours(hours, minutes, 0, 0);
-
-  const now = new Date();
-  return slotDate <= now; // disable if time is past or exactly now
+  return slotDate <= new Date();
 };
 
 const generateMonthDays = (year, month) => {
@@ -48,7 +45,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     setTime,
     setHasSearched,
     setTherapists,
-    findingTherapist,
     setFindingTherapist,
   } = useBookingStore();
 
@@ -72,15 +68,16 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const handleConfirm = async () => {
     if (!cart || !date || !time) return;
     const apiUrl = import.meta.env.VITE_API_URL;
-    const payload = { service: cart, date, time };
-
     try {
       setFindingTherapist(true);
       setLoading(true);
-      const res = await axios.post(`${apiUrl}/therapist/filter`, payload);
+      const res = await axios.post(`${apiUrl}/therapist/filter`, {
+        service: cart,
+        date,
+        time,
+      });
       setTherapists(res.data.therapists);
       setHasSearched(true);
-
       if (res.data.therapists.length > 0) {
         setTimeout(() => {
           therapistSelectionRef.current?.scrollIntoView({
@@ -97,7 +94,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
     }
   };
 
-  // 🔥 Auto-trigger API when both date + time are set
   useEffect(() => {
     if (date && time && !loading) {
       handleConfirm();
@@ -123,30 +119,21 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   };
 
   const daySections = {
-    morning: [
-      "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-      "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    ],
-    afternoon: [
-      "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-      "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-    ],
+    morning: ["06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00"],
+    afternoon: ["12:00", "12:30", "13:00", "13:30", "14:00", "14:30"],
     evening: ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30"],
   };
 
   const nightSections = {
-    lateNight: ["21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
-    earlyMorning: [
-      "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-      "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-    ],
+    lateNight: ["21:00", "21:30", "22:00", "22:30"],
+    earlyMorning: ["00:00", "00:30", "01:00", "01:30", "02:00"],
   };
 
   const renderSections = (sections, isPremium = false) => (
     <>
       {Object.entries(sections).map(([label, times]) => (
-        <div key={label} className="mb-6">
-          <h3 className="text-sm uppercase text-primary mb-2">
+        <div key={label} className="mb-4">
+          <h3 className="text-xs sm:text-sm uppercase text-primary mb-2">
             {label === "morning" && "☀️ Morning"}
             {label === "afternoon" && "🌞 Afternoon"}
             {label === "evening" && "🌙 Evening"}
@@ -159,15 +146,15 @@ const DateTimePicker = ({ availableTimes = [] }) => {
                 key={t}
                 onClick={() => setTime(t)}
                 disabled={isPastTime(t, date)}
-                className={`py-2 text-sm rounded-full transition flex items-center justify-center
-    ${isPastTime(t, date)
+                className={`py-1.5 sm:py-2 text-xs sm:text-sm rounded-full transition flex items-center justify-center
+                  ${isPastTime(t, date)
                     ? "bg-gray-800 text-gray-600 cursor-not-allowed"
                     : time === t
-                      ? "bg-primary text-black font-semibold shadow-[0_0_10px_var(--tw-color-primary)]"
+                      ? "bg-primary text-black font-semibold shadow-[0_0_8px_var(--tw-color-primary)]"
                       : "text-primary border border-primary hover:bg-primary hover:text-black"
                   }`}
               >
-                {t} {isPremium && <span className="ml-1"><FaCrown /></span>}
+                {t} {isPremium && <FaCrown className="ml-1 text-[10px]" />}
               </button>
             ))}
           </div>
@@ -177,44 +164,32 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans p-6 md:p-10">
+    <div className=" bg-black  text-white font-sans p-4 sm:p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
         {/* HEADER */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-between">
-            {/* Back Button */}
+        <div className="text-center mb-6 sm:mb-10">
+          <div className="flex items-center flex-col">
             <button
-              onClick={() => navigate("/allservicespage")}
-              className="px-6 py-3 rounded-full text-lg font-semibold transition-all
-      inline-flex items-center gap-x-3 text-white border border-white border-full hover:bg-white hover:text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]"
+              onClick={() => navigate(-1)}
+              className="px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all
+              inline-flex items-center gap-x-2 mb-4 sm:mb-6 text-white border border-white hover:bg-white hover:text-black hover:scale-105"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-              </svg>
-              Back
+              <ArrowLeft size={16} /> Back
             </button>
-
-            {/* Title */}
-            <div className="flex-1 text-center">
-              <h1 className="text-4xl font-bold text-primary mb-2">
-                Select Your Date & Time
-              </h1>
-              <p className="text-gray-400">
-                Choose your preferred appointment slot
-              </p>
-            </div>
-
-            {/* Placeholder to balance spacing (so title stays centered) */}
-            <div className="w-[110px]"></div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-1">
+              Select Your Date & Time
+            </h1>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Choose your preferred appointment slot
+            </p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           {/* CALENDAR */}
-          <div className="bg-[#111] p-6 rounded-2xl border border-primary/30">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-primary font-semibold">
+          <div className="bg-[#111] p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-primary/30">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-2xl text-primary font-semibold">
                 {new Date(currentYear, currentMonth).toLocaleString("en-US", {
                   month: "long",
                   year: "numeric",
@@ -223,45 +198,42 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               <div className="flex space-x-2">
                 <button
                   onClick={handlePrevMonth}
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-primary border border-primary hover:bg-primary hover:text-black transition"
+                  className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-primary border border-primary hover:bg-primary hover:text-black transition"
                 >
-                  <ArrowLeft size={18} />
+                  <ArrowLeft size={14} />
                 </button>
                 <button
                   onClick={handleNextMonth}
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-primary border border-primary hover:bg-primary hover:text-black transition"
+                  className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-primary border border-primary hover:bg-primary hover:text-black transition"
                 >
-                  <ArrowRight size={18} />
+                  <ArrowRight size={14} />
                 </button>
               </div>
             </div>
-            <div className="border border-primary/20 p-5 rounded-2xl">
-              <div className="grid grid-cols-7 gap-2 text-center text-sm text-primary mb-2">
+            <div className="border border-primary/20 p-3 sm:p-5 rounded-xl sm:rounded-2xl">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[10px] sm:text-sm text-primary mb-2">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
                   <div key={d}>{d}</div>
                 ))}
               </div>
-
-              <div className="grid grid-cols-7 gap-2 text-center">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center">
                 {days.map((d, idx) => {
                   const fullDate = formatDate(d.fullDate);
                   const isSelected = date === fullDate;
                   const isPast =
                     d.fullDate < new Date(new Date().setHours(0, 0, 0, 0));
-
                   return (
                     <button
                       key={idx}
                       disabled={isPast}
                       onClick={() => !isPast && setDate(fullDate)}
-                      className={`
-                        flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition
+                      className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg text-[11px] sm:text-sm transition
                         ${isPast
                           ? "text-gray-600 cursor-not-allowed"
                           : isSelected
-                            ? "bg-primary text-black font-semibold shadow-[0_0_15px_var(--tw-color-primary)]"
-                            : "text-primary hover:bg-primary hover:text-black"}
-                      `}
+                            ? "bg-primary text-black font-semibold shadow-[0_0_8px_var(--tw-color-primary)]"
+                            : "text-primary hover:bg-primary hover:text-black"
+                        }`}
                     >
                       {d.date}
                     </button>
@@ -272,19 +244,18 @@ const DateTimePicker = ({ availableTimes = [] }) => {
           </div>
 
           {/* TIME SLOTS */}
-          <div className="bg-[#111] p-6 rounded-2xl border border-primary/30">
-            <h2 className="text-2xl text-primary mb-4 font-semibold">
+          <div className="bg-[#111] p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-primary/30">
+            <h2 className="text-lg sm:text-2xl text-primary mb-3 sm:mb-4 font-semibold">
               Available Time Slots
             </h2>
-            <p className="text-gray-400 mb-4 text-lg">
+            <p className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-lg">
               {date ? `Selected Date: ${date}` : "Please select a date"}
             </p>
-
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4 sm:mb-6">
               <div className="bg-black/40 p-1 rounded-full border border-primary/30 flex">
                 <button
                   onClick={() => setActiveTab("day")}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeTab === "day"
+                  className={`px-4 py-1.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${activeTab === "day"
                     ? "bg-primary text-black font-semibold"
                     : "text-primary"
                     }`}
@@ -293,7 +264,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
                 </button>
                 <button
                   onClick={() => setActiveTab("night")}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeTab === "night"
+                  className={`px-4 py-1.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${activeTab === "night"
                     ? "bg-primary text-black font-semibold"
                     : "text-primary"
                     }`}
@@ -302,8 +273,6 @@ const DateTimePicker = ({ availableTimes = [] }) => {
                 </button>
               </div>
             </div>
-
-            {/* 🔥 Animate between Day/Night tabs */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -319,33 +288,9 @@ const DateTimePicker = ({ availableTimes = [] }) => {
           </div>
         </div>
 
-        {/* ACTIONS */}
-        <div className="text-center mt-10 space-x-10">
-          {/* <button */}
-          {/*   onClick={() => navigate("/allservicespage")} */}
-          {/*   className="px-10 py-4 rounded-full text-lg font-semibold transition-all */}
-          {/*     inline-flex items-center gap-x-4 text-white hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]" */}
-          {/* > */}
-          {/*   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" */}
-          {/*     strokeWidth={1.5} stroke="currentColor" className="size-6"> */}
-          {/*     <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /> */}
-          {/*   </svg> */}
-          {/*   Back */}
-          {/* </button> */}
-
-          {/* <button */}
-          {/*   onClick={handleConfirm} */}
-          {/*   disabled={loading || !date || !time} */}
-          {/*   className={`px-10 py-4 rounded-full text-lg font-semibold transition-all */}
-          {/*     ${loading || !date || !time */}
-          {/*       ? "bg-gray-700 text-gray-400 cursor-not-allowed" */}
-          {/*       : "bg-primary text-black hover:scale-105 shadow-[0_0_15px_var(--tw-color-primary)]" */}
-          {/*     }`} */}
-          {/* > */}
-          {/*   {loading ? "Saving..." : "Find Therapists"} */}
-          {/* </button> */}
-          {/**/}
-          <p className="text-gray-500 text-sm mt-2">
+        {/* FOOTER NOTE */}
+        <div className="text-center mt-8 sm:mt-10">
+          <p className="text-gray-500 text-xs sm:text-sm">
             Continue to select your preferred wellness professional
           </p>
         </div>

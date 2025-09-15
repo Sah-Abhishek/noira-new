@@ -55,8 +55,8 @@ const PaymentPage = () => {
 
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
-      <div className="max-w-6xl mx-auto">
-        <BookingStepper currentStep={3} />
+      <div className="max-w-6xl pt-5 mx-auto">
+        <BookingStepper className="mt-10" currentStep={3} />
 
         {/* Header */}
         <div className="text-center mb-12">

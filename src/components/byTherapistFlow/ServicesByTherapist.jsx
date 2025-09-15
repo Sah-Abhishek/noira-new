@@ -102,9 +102,11 @@ export default function ServiceByTherapist() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-16 mt-20 relative">
+          {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 top-0 flex border border-transparent hover:border-white rounded-full px-3 py-2 items-center gap-2 text-noira-gold hover:text-noira-gold-light transition"
+            className="flex items-center gap-2 border-primary  border md:border-transparent hover:border-white rounded-full px-3 py-2 text-noira-gold hover:text-noira-gold-light transition
+               md:absolute md:left-0 md:top-0 md:translate-y-0 mb-6 md:mb-0"
           >
             <FaArrowLeft /> Back
           </button>
@@ -117,7 +119,6 @@ export default function ServiceByTherapist() {
             Choose from our premium wellness treatments
           </p>
         </div>
-
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading
