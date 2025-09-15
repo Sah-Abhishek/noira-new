@@ -16,7 +16,7 @@ export default function SubscriptionsSection() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-yellow-200 to-yellow-100 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl text-[#D59940] font-braven font-bold">
             Subscriptions{" "}
             <span className="text-gray-400 text-3xl">(Valid 3 Months)</span>
           </h1>
