@@ -16,9 +16,9 @@ export default function SubscriptionsSection() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl sm:text-4xl text-[#D59940] font-braven font-bold">
-            Subscriptions{" "}
-            <span className="text-gray-400 text-3xl">(Valid 3 Months)</span>
+          <h1 className="text-3xl sm:text-4xl text-[#D59940] font-braven mt-15 font-bold">
+            Subscriptions{" "}<br />
+            <span className="text-gray-400 text-2xl">(Valid 3 Months)</span>
           </h1>
           <p className="text-gray-300 text-xl font-light mb-8">
             Choose your duration: 60 / 90 / 120 minutes
@@ -147,9 +147,9 @@ function SubscriptionCard({
     >
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-black font-bold text-2xl">{pack}</span>
-        </div>
+        {/* <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-4"> */}
+        {/*   <span className="text-black font-bold text-2xl">{pack}</span> */}
+        {/* </div> */}
         <h3 className="font-serif text-3xl font-bold mb-2 text-yellow-200">
           {title}
         </h3>
