@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Lock } from "lucide-react";
+import { ArrowLeft, Lock, Loader2 } from "lucide-react";
 import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 
@@ -13,7 +13,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const PaymentPage = () => {
-  const { userAddress, cart, date, time, selectedTherapist, } = useBookingStore();
+  const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
 
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -24,48 +24,35 @@ const PaymentPage = () => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
-  const userId = localStorage.getItem('userId');
-
-  console.log("This is the selected TherapistId: ", cart.id);
-
 
   const handlePayment = async () => {
-    if (userAddress) {
-      // ✅ User has an address → open payment modal
-      // setIsModalOpen(true);
-      // confetti({
-      //   particleCount: 120,
-      //   spread: 70,
-      //   origin: { y: 0.9 },
-      // });
-      // TODO: Replace with real payment API
-      const res = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
-        email: userEmail,
-        therapistId: selectedTherapist._id,
-        serviceId: cart.serviceId,
-        optionIndex: cart.optionIndex,
-        date,  // format: YYYY-MM-DD
-        time,       // format: HH:mm
-      });
-      // console.log("These are the fiels that are send: ", "email", userEmail,
-      //   "therapistId", selectedTherapist._id,
-      //   "serviceId", cart.serviceId,
-      //   "optionIndex", cart.optionIndex,
-      //   date,  // format: YYYY-MM-DD
-      //   time,       // format: HH:mm
-      //
-      //
-      // )
+    if (loading) return; // guard: avoid double clicks
+    setLoading(true);
 
-      if (res.data.url) {
-        window.location.href = res.data.url;
+    try {
+      if (userAddress) {
+        const res = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
+          email: userEmail,
+          therapistId: selectedTherapist._id,
+          serviceId: cart.serviceId,
+          optionIndex: cart.optionIndex,
+          date,
+          time,
+        });
+
+        if (res.data.url) {
+          window.location.href = res.data.url;
+        }
+      } else {
+        setIsAddressModalOpen(true);
       }
-
-    } else {
-      // ❌ No address → ask user to add one
-      setIsAddressModalOpen(true);
+    } catch (err) {
+      console.error("Payment error:", err);
+      toast.error("Something went wrong. Please try again.");
+      setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
       <div className="max-w-6xl mx-auto">
@@ -85,23 +72,20 @@ const PaymentPage = () => {
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          {/* Left: Booking Summary */}
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
             <BookingSummary />
           </div>
-
-          {/* Right: Saved Addresses */}
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
             <SavedAddresses isAddressInputModalOpen={isAddressModalOpen} />
           </div>
         </div>
 
         {/* Payment Buttons */}
-        <div className="mt-12 max-w-lg mx-auto text-center">
+        <div className="mt-12 max-w-lg mx-auto text-center space-y-5">
           <button
             onClick={() => navigate(from)}
             disabled={loading}
-            className="cursor-pointer mb-5 w-full bg-black border border-primary text-primary hover:text-black font-semibold py-3 px-6 rounded-full hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-black border border-primary text-primary hover:text-black font-semibold py-3 px-6 rounded-full hover:bg-primary transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to therapist
@@ -110,10 +94,19 @@ const PaymentPage = () => {
           <button
             onClick={handlePayment}
             disabled={loading}
-            className="cursor-pointer w-full bg-primary text-black font-semibold py-3 px-6 rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Lock className="w-4 h-4" />
-            {loading ? "Redirecting..." : "Confirm and Pay"}
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Redirecting...
+              </>
+            ) : (
+              <>
+                <Lock className="w-4 h-4" />
+                Confirm and Pay
+              </>
+            )}
           </button>
         </div>
       </div>

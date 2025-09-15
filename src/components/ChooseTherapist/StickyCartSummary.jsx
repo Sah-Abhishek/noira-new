@@ -7,30 +7,16 @@ export default function StickyCartSummary({ isAbled, setIsAbled }) {
   const { cart, selectedTherapist } = useBookingStore();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("this is the value of isabled: ", isAbled);
-  // console.log("serviceName: ", cart.serviceName);
-  // console.log("price: ", cart.price);
 
-  // If cart is empty, don't show sticky summary
   if (!cart || !cart.serviceId) return null;
-  const pageName =
-    location.pathname === "/paymentpage"
-      ? "paymentpage"
-      : location.pathname === "/findtherapistbyavailibility"
-        ? "findtherapistbyavailibility"
-        : "";
-
 
   const handleContinue = () => {
     if (location.pathname === "/allservicespage") {
-      navigate("/choosetherapist",);
-    } else if (location.pathname === '/choosetherapist') {
-      // fallback in case you reuse this component elsewhere
+      navigate("/choosetherapist");
+    } else if (location.pathname === "/choosetherapist") {
       navigate("/paymentpage", { state: { from: "/choosetherapist" } });
     } else if (location.pathname === "/servicesbytherapist") {
-      navigate("/findtherapistbyavailability",)
-
-      console.log("Continue action triggered");
+      navigate("/findtherapistbyavailability");
     } else if (location.pathname === "/findtherapistbyavailability") {
       navigate("/paymentpage", { state: { from: "/findtherapistbyavailability" } });
     }
@@ -38,44 +24,38 @@ export default function StickyCartSummary({ isAbled, setIsAbled }) {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 px-60 py-10 flex items-center justify-between z-50
-        transform transition-all duration-500 ease-in-out`}
+      className="fixed bottom-0 left-0 w-full bg-black border-t border-primary/30 
+                 px-4 py-4 sm:px-8 sm:py-6 md:px-20 lg:px-40 flex flex-col md:flex-row 
+                 items-center justify-between gap-4 z-50
+                 transform transition-all duration-500 ease-in-out"
     >
       {/* Cart Info */}
-      <div>
-        <div className="text-sm text-noira-light pr-25">
-          <span className="mr-2 text-xl text-primary font-bold">Selected:</span>
+      <div className="w-full md:w-auto text-center md:text-left">
+        <div className="text-sm text-noira-light">
+          <span className="mr-2 text-lg sm:text-xl text-primary font-bold">Selected:</span>
           <span className="font-semibold text-white">{cart.serviceName}</span>
-          <span className="mx-2 text-noira-gold">•</span>
-          <span className="font-semibold text-white">£{cart?.price ?? 0}</span>
-          <span className="mx-2 text-noira-gold">•</span>
-          <span className="text-gray-400 text-sm">
+          <span className="mx-2 text-noira-gold hidden sm:inline">•</span>
+          <span className="font-semibold text-white block sm:inline">£{cart?.price ?? 0}</span>
+          <span className="mx-2 text-noira-gold hidden sm:inline">•</span>
+          <span className="text-gray-400 text-sm block sm:inline">
             {cart.durationMinutes} min
           </span>
         </div>
-        <div>
 
-
-          {selectedTherapist && (
-            <>
-              <span className="mr-2 text-xl text-primary font-bold">Therapist Name: </span>
-              <span className="font-semibold text-white">{selectedTherapist.profile?.title || selectedTherapist?.title}</span>
-            </>
-
-          )}
-          {/* <span className="mx-2 text-noira-gold">•</span> */}
-          {/* <span className="font-semibold text-white">£{cart?.price ?? 0}</span> */}
-          {/* <span className="mx-2 text-noira-gold">•</span> */}
-          {/* <span className="text-gray-400 text-sm"> */}
-          {/*   {cart.durationMinutes} min */}
-          {/* </span> */}
-        </div>
+        {selectedTherapist && (
+          <div className="mt-2 sm:mt-1">
+            <span className="mr-2 text-lg sm:text-xl text-primary font-bold">Therapist:</span>
+            <span className="font-semibold text-white">
+              {selectedTherapist.profile?.title || selectedTherapist?.title}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Continue Button */}
       <button
-        className={`px-6 py-2 rounded-full shadow-lg font-semibold transition 
-    ${isAbled
+        className={`w-full md:w-auto px-6 py-3 rounded-full shadow-lg font-semibold transition text-center
+          ${isAbled
             ? "bg-primary text-black hover:bg-primary/90 cursor-pointer"
             : "bg-gray-600 text-gray-300 cursor-not-allowed opacity-50"
           }`}
