@@ -13,6 +13,7 @@ export default function EditTherapistProfileAdmin() {
   const [loading, setLoading] = useState(true);
   const adminjwt = localStorage.getItem("adminjwt");
 
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -31,7 +32,7 @@ export default function EditTherapistProfileAdmin() {
     services: [],
     languages: [],
     servicesInPostalCodes: [],
-    acceptingNewClients: false,
+    active: false,
     gender: "",
     isVerified: false,
     bio: "",
@@ -81,7 +82,7 @@ export default function EditTherapistProfileAdmin() {
           services: t.specializations?.map((s) => s._id) || [],
           languages: t.languages || [],
           servicesInPostalCodes: t.servicePostcodes || [],
-          acceptingNewClients: t.active || false,
+          active: t.active || false,
           gender: t.userId?.gender || "",
           isVerified: t.isVerified || false,
           bio: t.bio || "",
@@ -130,11 +131,12 @@ export default function EditTherapistProfileAdmin() {
             formData.append(`address[${k}]`, v)
           );
         } else if (key === "services") {
-          // Explicit array handling (services IDs)
           value.forEach((v) => formData.append("services[]", v));
         } else if (key === "username") {
-          // 🚀 send title instead of username
           formData.append("title", value);
+        } else if (key === "acceptingNewClients") {
+          // 🔥 rename it to active for backend
+          formData.append("active", value);
         } else if (Array.isArray(value)) {
           value.forEach((v) => formData.append(`${key}[]`, v));
         } else {
@@ -432,17 +434,15 @@ export default function EditTherapistProfileAdmin() {
             <div className="flex gap-2">
               {["Yes", "No"].map((option) => {
                 const isActive =
-                  (option === "Yes" && form.acceptingNewClients) ||
-                  (option === "No" && !form.acceptingNewClients);
+                  (option === "Yes" && form.active) ||
+                  (option === "No" && !form.active);
                 return (
                   <button
                     key={option}
                     type="button"
-                    onClick={() =>
-                      handleChange("acceptingNewClients", option === "Yes")
-                    }
+                    onClick={() => handleChange("active", option === "Yes")}
                     className={`px-3 py-1.5 rounded-lg text-sm border transition-all
-                      ${isActive
+            ${isActive
                         ? "bg-primary text-black border-primary"
                         : "bg-black border-white/10 text-white hover:border-primary/50"
                       }`}

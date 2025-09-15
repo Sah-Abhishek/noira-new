@@ -19,7 +19,7 @@ function AtHomeTreatment() {
         <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            src="/massagevideo3.mp4"
+            src="/massagevideo8.mp4"
             autoPlay
             muted
             loop
@@ -35,7 +35,7 @@ function AtHomeTreatment() {
         <div className="relative w-full max-w-[720px] aspect-video rounded-lg shadow-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            src="/massagevideo4.mp4"
+            src="/massagevideo9.mp4"
             autoPlay
             muted
             loop

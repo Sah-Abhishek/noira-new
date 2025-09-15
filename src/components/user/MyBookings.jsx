@@ -18,7 +18,7 @@ export default function BookingsPage() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"; // adjust if needed
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
   const userId = localStorage.getItem("userId");
   const userjwt = localStorage.getItem("userjwt");
   const navigate = useNavigate();
@@ -46,25 +46,20 @@ export default function BookingsPage() {
     }
   }, [apiUrl, userId, userjwt]);
 
-  // Filter bookings based on selected filter and search
   const filteredBookings = bookings.filter((b) => {
     const now = new Date();
     const bookingTime = new Date(b.slotStart);
 
-    // Filter logic
     if (filter === "upcoming") {
-      // Show pending/confirmed bookings that are scheduled for the future
       return (b.status === "pending" || b.status === "confirmed") && bookingTime > now;
     } else if (filter !== "all" && b.status !== filter) {
       return false;
     }
 
-    // Search filter - search by service name or therapist name
     if (search) {
       const searchLower = search.toLowerCase();
       const serviceName = b.serviceId?.name?.toLowerCase() || "";
       const therapistName = b.therapistId?.title?.toLowerCase() || "";
-
       if (!serviceName.includes(searchLower) && !therapistName.includes(searchLower)) {
         return false;
       }
@@ -73,8 +68,7 @@ export default function BookingsPage() {
     return true;
   });
 
-  // Example handler for review button click
-  const handleReview = (bookingId, therapistName) => {
+  const handleReview = (bookingId) => {
     navigate(`/user/reviewbooking/${bookingId}`);
   };
 
@@ -101,9 +95,10 @@ export default function BookingsPage() {
         <h1 className="text-xl font-bold text-primary">My Bookings</h1>
       </header>
 
-      {/* Filters */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
-        <div className="flex gap-3 flex-wrap">
+      {/* Filters + Search */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 py-3 bg-[#0f0f0f] border-b border-primary/20">
+        {/* Filters */}
+        <div className="flex gap-2 flex-wrap">
           {["all", "upcoming", "completed", "cancelled", "declined"].map((tab) => (
             <button
               key={tab}
@@ -119,13 +114,13 @@ export default function BookingsPage() {
         </div>
 
         {/* Search Input */}
-        <div className="ml-4">
+        <div className="w-full md:w-64">
           <input
             type="text"
             placeholder="Search services or therapists..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-[#1a1a1a] border border-gray-600 rounded-lg px-3 py-1 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-primary/60 w-64"
+            className="w-full bg-[#1a1a1a] border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-primary/60"
           />
         </div>
       </div>
@@ -133,16 +128,15 @@ export default function BookingsPage() {
       {/* Bookings Content */}
       <main className="flex-1 p-6">
         {filteredBookings.length === 0 ? (
-          <div className="flex justify-center items-center min-h-[400px] text-gray-400">
+          <div className="flex justify-center items-center min-h-[400px] text-gray-400 text-center">
             {filter === "upcoming"
               ? "No upcoming bookings found."
               : search
                 ? `No bookings found matching "${search}".`
-                : "No bookings found."
-            }
+                : "No bookings found."}
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredBookings.map((booking) => {
               const therapist = booking.therapistId;
               const service = booking.serviceId;
@@ -157,7 +151,7 @@ export default function BookingsPage() {
                 >
                   <div className="p-6 flex flex-col h-full justify-between">
                     {/* Header */}
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-start mb-4">
                       <h2 className="text-lg font-semibold text-primary tracking-wide">
                         {service ? service.name : "Custom Session"}
                       </h2>
@@ -183,7 +177,7 @@ export default function BookingsPage() {
                       </div>
                     </div>
 
-                    {/* Info Grid */}
+                    {/* Info */}
                     <div className="space-y-3 text-sm text-gray-300">
                       {therapist ? (
                         <p className="flex items-center gap-2">
@@ -222,7 +216,6 @@ export default function BookingsPage() {
                         })}
                       </p>
 
-                      {/* Booked At */}
                       <p className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-primary" />
                         <span className="font-semibold text-primary">Booked At:</span>
@@ -264,9 +257,7 @@ export default function BookingsPage() {
                       therapist &&
                       booking.status === "completed" && (
                         <button
-                          onClick={() =>
-                            handleReview(booking._id, therapist.title)
-                          }
+                          onClick={() => handleReview(booking._id)}
                           className="mt-4 w-full flex items-center justify-center gap-2 bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition rounded-lg px-3 py-2 text-sm font-medium"
                         >
                           <Star className="w-4 h-4" />
