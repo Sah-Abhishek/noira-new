@@ -204,6 +204,11 @@ export default function BookingsPage() {
 
                       <p className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-primary" />
+                        <span className="font-semibold text-primary">Payment Mode</span>{" "}
+                        {booking?.paymentMode}
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-primary" />
                         <span className="font-semibold text-primary">Service Time:</span>{" "}
                         {booking.slotStart?.slice(11, 16)} - {booking.slotEnd?.slice(11, 16)}
                       </p>
