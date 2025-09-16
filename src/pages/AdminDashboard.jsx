@@ -10,7 +10,7 @@ const AdminDashoboard = () => {
 
       <AdminHeaderComponent />
       <StatusCardRow />
-      <RevenueDashboard />
+      {/* <RevenueDashboard /> */}
     </div>
 
   )

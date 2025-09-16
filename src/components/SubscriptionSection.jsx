@@ -115,9 +115,9 @@ export default function SubscriptionsSection() {
             All subscriptions include premium therapist selection and flexible
             scheduling
           </p>
-          <button className="bg-gradient-to-r from-primary to-yellow-300 text-black px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl transition-all duration-300">
-            Continue to Checkout
-          </button>
+          {/* <button className="bg-gradient-to-r from-primary to-yellow-300 text-black px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl transition-all duration-300"> */}
+          {/*   Continue to Checkout */}
+          {/* </button> */}
         </div>
       </div>
     </div>
