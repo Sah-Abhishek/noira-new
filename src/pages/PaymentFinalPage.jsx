@@ -79,6 +79,50 @@ const PaymentPage = () => {
       setLoading(false);
     }
   };
+  const handlePayByCash = async () => {
+    if (loading) return; // guard: avoid double clicks
+    setLoading(true);
+
+    if (!user.phoneVerified) {
+      toast.error("Verify Phone in the profile section");
+      setIsVerifyMobileModalOpen(true);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      if (lengthOfReturnedAddresses === 0) {
+        setIsAddressModalOpen(true);
+        setLoading(false);
+        return;
+      }
+      if (userAddress) {
+        const res = await axios.post(`${apiUrl}/payment/cashBooking`, {
+          email: userEmail,
+          therapistId: selectedTherapist._id,
+          serviceId: cart.serviceId,
+          optionIndex: cart.optionIndex,
+          date,
+          time,
+        });
+        if (res.status === 200) {
+          navigate('/user/mybookings')
+        }
+
+      } else {
+        toast.error("Select an address for the booking");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      toast.error("Something went wrong. Please try again.");
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+
+
+  }
 
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
@@ -138,7 +182,7 @@ const PaymentPage = () => {
 
           {/* ✅ Pay by Cash button */}
           <button
-            onClick={() => toast.success("Cash payment selected! Pay at the appointment.")}
+            onClick={handlePayByCash}
             disabled={loading}
             className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full  transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -148,10 +192,10 @@ const PaymentPage = () => {
       </div>
 
       {/* Modals */}
-      <ComingSoonModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {/* <ComingSoonModal */}
+      {/*   isOpen={isModalOpen} */}
+      {/*   onClose={() => setIsModalOpen(false)} */}
+      {/* /> */}
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => {
