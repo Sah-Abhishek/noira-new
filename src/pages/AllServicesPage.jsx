@@ -13,6 +13,7 @@ import useBookingStore from "../store/bookingStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import StickyCartSummary from "../components/ChooseTherapist/StickyCartSummary";
 import PostalCodeModal from "../components/PostalCodeModal";
+import useUserStore from "../store/UserStore";
 
 export default function AllServicesPage() {
   const [services, setServices] = useState([]);
@@ -23,6 +24,7 @@ export default function AllServicesPage() {
   const location = useLocation();
   const isPostalCodeSaved = sessionStorage.getItem("postalCode") ? true : false;
   const [isPostalCodeModalOpen, setIsPostalCodeModalOpen] = useState(!isPostalCodeSaved);
+  const { user } = useUserStore();
 
   useEffect(() => {
     setSelectedTherapist();
@@ -222,7 +224,9 @@ export default function AllServicesPage() {
           <StickyCartSummary isAbled={true} />
         )}
       </div>
-      <PostalCodeModal isOpen={isPostalCodeModalOpen} onClose={() => setIsPostalCodeModalOpen(false)} />
+      {!user.address &&
+        <PostalCodeModal isOpen={isPostalCodeModalOpen} onClose={() => setIsPostalCodeModalOpen(false)} />
+      }
     </div>
   );
 }

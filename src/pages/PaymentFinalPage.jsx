@@ -35,11 +35,11 @@ const PaymentPage = () => {
     if (loading) return; // guard: avoid double clicks
     setLoading(true);
 
-    if (!isMobileNumberSaved) {
-      toast.error("Add Phone Number in the profile Section");
-      setLoading(false);
-      return;
-    }
+    // if (!isMobileNumberSaved) {
+    //   toast.error("Add Phone Number in the profile Section");
+    //   setLoading(false);
+    //   return;
+    // }
     if (!user.phoneVerified) {
       toast.error("Verify Phone in the profile section");
       setLoading(false);
