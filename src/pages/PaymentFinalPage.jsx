@@ -12,12 +12,15 @@ import SavedAddresses from "../components/PaymentPage/SavedAddresses.jsx";
 import axios from "axios";
 import toast from "react-hot-toast";
 import useUserStore from "../store/UserStore.jsx";
+import VerifyMobileModal from "../components/user/VerifyMobileModal.jsx";
 
 const PaymentPage = () => {
   const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
   const { user } = useUserStore();
   const isMobileNumberSaved = Boolean(user.phone);
   const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState();
+  const [isVerifyMobileModalOpen, setIsVerifyMobileModalOpen] = useState(false);
+  const isPhoneVerified = user.isPhoneVerified ? true : false;
 
 
   const [loading, setLoading] = useState(false);
@@ -40,11 +43,12 @@ const PaymentPage = () => {
     //   setLoading(false);
     //   return;
     // }
-    // if (!user.phoneVerified) {
-    //   toast.error("Verify Phone in the profile section");
-    //   setLoading(false);
-    //   return;
-    // }
+    if (!user.phoneVerified) {
+      toast.error("Verify Phone in the profile section");
+      setIsVerifyMobileModalOpen(true);
+      setLoading(false);
+      return;
+    }
 
     try {
       if (lengthOfReturnedAddresses === 0) {
@@ -152,6 +156,7 @@ const PaymentPage = () => {
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
       />
+      <VerifyMobileModal isOpen={isVerifyMobileModalOpen} onClose={() => setIsVerifyMobileModalOpen(false)} />
     </div>
   );
 };
