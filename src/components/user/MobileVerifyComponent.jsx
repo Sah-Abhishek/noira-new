@@ -7,8 +7,10 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const phoneNumber = user?.phone;
+
+
 
   const handleSendOtp = async () => {
     if (!phoneNumber) {
@@ -19,8 +21,8 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
     setMessage("");
     try {
       await axios.post(
-        `${apiUrl}/user/send-phone-otp`,
-        { phone: phoneNumber },
+        `${apiUrl}/otp/send-otp`,
+        { mobileNumber: `91${phoneNumber}` },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       setOtpSent(true);
@@ -40,11 +42,15 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
     setLoading(true);
     setMessage("");
     try {
-      await axios.post(
-        `${apiUrl}/user/verify-phone`,
-        { otp },
+      const response = await axios.post(
+        `${apiUrl}/otp/verify-otp`,
+        { otp, "mobileNumber": `91${phoneNumber}`, userId: user._id },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
+      if (response?.data?.type === "success") {
+        setUser(response.data.user);
+      }
+
       setProfile((prev) => ({ ...prev, phoneVerified: true }));
       setMessage("Phone number verified successfully!");
       setOtp("");

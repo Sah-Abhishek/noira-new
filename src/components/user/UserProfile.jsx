@@ -16,8 +16,10 @@ export default function CustomerDashboard() {
   const [error, setError] = useState(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [deleteAddressId, setDeleteAddressId] = useState(null);
+  const { user } = useUserStore();
   const navigate = useNavigate();
   // console.log("this is the phone number: ", phoneNumber);
+  const isPhoneVerified = user.isPhoneVerified;
 
   const userjwt = localStorage.getItem("userjwt");
 
