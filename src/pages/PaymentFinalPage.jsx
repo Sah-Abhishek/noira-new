@@ -103,7 +103,7 @@ const PaymentPage = () => {
             <BookingSummary />
           </div>
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
+            <SavedAddresses refreshKey={isAddressModalOpen} isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
           </div>
         </div>
 
@@ -154,7 +154,10 @@ const PaymentPage = () => {
       />
       <AddressModal
         isOpen={isAddressModalOpen}
-        onClose={() => setIsAddressModalOpen(false)}
+        onClose={() => {
+          setIsAddressModalOpen(false);
+          refreshKey();
+        }}
       />
       <VerifyMobileModal isOpen={isVerifyMobileModalOpen} onClose={() => setIsVerifyMobileModalOpen(false)} />
     </div>

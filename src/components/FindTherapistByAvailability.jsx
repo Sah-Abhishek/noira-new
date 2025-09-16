@@ -39,7 +39,7 @@ const FindTherapistByAvailability = () => {
   const [isAbled, setIsAbled] = useState(false);
   const userjwt = localStorage.getItem("userjwt");
 
-  const therapistId = selectedTherapist?.profile?._id;
+  const therapistId = selectedTherapist?._id;
 
   useEffect(() => {
     setDate(null);

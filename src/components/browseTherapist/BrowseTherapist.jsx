@@ -218,7 +218,7 @@ function TherapistCard({ t }) {
   const { setSelectedTherapist } = useBookingStore();
 
   const handleSelectTherapist = () => {
-    setSelectedTherapist(t);
+    setSelectedTherapist(t?.profile);
     navigate("/servicesbytherapist");
   };
 
