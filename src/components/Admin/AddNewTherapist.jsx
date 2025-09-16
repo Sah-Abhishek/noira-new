@@ -210,7 +210,7 @@ export default function AddNewTherapist() {
         {/* First Name + Last Name + Username */}
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">First Name</label>
+            <label className="block text-sm text-gray-400 mb-1">First Name *</label>
             <input
               type="text"
               value={form.firstName}
@@ -230,7 +230,7 @@ export default function AddNewTherapist() {
           </div>
           <div>
             <label className="block text-sm text-gray-400 mb-1">
-              Username / Display Name
+              Username / Display Name *
             </label>
             <input
               type="text"
@@ -245,7 +245,7 @@ export default function AddNewTherapist() {
         {/* Phone + Email + Password */}
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Phone Number</label>
+            <label className="block text-sm text-gray-400 mb-1">Phone Number *</label>
             <input
               type="text"
               value={form.phone}
@@ -255,7 +255,7 @@ export default function AddNewTherapist() {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Email</label>
+            <label className="block text-sm text-gray-400 mb-1">Email *</label>
             <input
               type="email"
               value={form.email}
@@ -265,7 +265,7 @@ export default function AddNewTherapist() {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Password</label>
+            <label className="block text-sm text-gray-400 mb-1">Password *</label>
             <input
               type="text"
               value={form.password}
@@ -278,7 +278,7 @@ export default function AddNewTherapist() {
 
         {/* Experience */}
 
-        <label className="block text-sm text-gray-400 mb-1">Experience</label>
+        <label className="block text-sm text-gray-400 mb-1">Experience *</label>
         <input
           type="number"
           value={form.experience}
@@ -310,7 +310,7 @@ export default function AddNewTherapist() {
         {/* Services Offered */}
         {/* Services Offered */}
         <div className="mb-4">
-          <label className="block text-sm text-gray-400 mb-2">Services Offered</label>
+          <label className="block text-sm text-gray-400 mb-2">Services Offered *</label>
           <div className="grid grid-cols-2 gap-2">
             {servicesList.map((service) => {
               const serviceId = service._id;
@@ -366,7 +366,7 @@ export default function AddNewTherapist() {
         {/* Services Provided In PostalCodes */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1">
-            Services Available in Postal Codes
+            Services Available in Postal Codes *
           </label>
 
           {/* Input + Add button */}
@@ -503,7 +503,7 @@ export default function AddNewTherapist() {
 
         {/* Languages */}
         <div className="mb-4">
-          <label className="block text-sm text-gray-400 mb-2">Languages</label>
+          <label className="block text-sm text-gray-400 mb-2">Languages *</label>
           <input
             type="text"
             placeholder="Comma separated (e.g., English, Spanish)"

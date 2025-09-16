@@ -92,6 +92,10 @@ export default function TherapistManagement() {
       await axios.post(`${apiUrl}/admin/therapist/bulkaction`, {
         therapistIds,
         action,
+      }, {
+        headers: {
+          Authorization: `Bearer ${adminjwt}`
+        }
       });
 
       setSelectedTherapists([]);

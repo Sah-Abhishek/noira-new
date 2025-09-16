@@ -16,7 +16,7 @@ const TherapistProfileModal = ({ isOpen, onClose, therapistId }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
-  const therapistjwt = localStorage.getItem('therapistjwt');
+  const adminjwt = localStorage.getItem("adminjwt");
 
   useEffect(() => {
     if (!therapistId || !isOpen) return;
@@ -25,7 +25,7 @@ const TherapistProfileModal = ({ isOpen, onClose, therapistId }) => {
       try {
         const res = await axios.get(`${apiUrl}/therapist/${therapistId}`, {
           headers: {
-            Authorization: `Bearer ${therapistjwt}`,
+            Authorization: `Bearer ${adminjwt}`,
 
           }
         });

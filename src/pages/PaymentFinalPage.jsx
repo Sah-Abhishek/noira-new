@@ -11,9 +11,14 @@ import AddressModal from "../components/Modals/AddressModal.jsx";
 import SavedAddresses from "../components/PaymentPage/SavedAddresses.jsx";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { faHouseUser } from "@fortawesome/free-solid-svg-icons";
+import useUserStore from "../store/UserStore.jsx";
 
 const PaymentPage = () => {
   const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
+  const { user } = useUserStore();
+  const isMobileNumberSaved = Boolean(user.phone);
+
 
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -28,6 +33,12 @@ const PaymentPage = () => {
   const handlePayment = async () => {
     if (loading) return; // guard: avoid double clicks
     setLoading(true);
+
+    if (!isMobileNumberSaved) {
+      toast.error("Add Phone Number in the profile Section");
+      setLoading(false);
+      return;
+    }
 
     try {
       if (userAddress) {

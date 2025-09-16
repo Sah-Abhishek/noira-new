@@ -34,7 +34,7 @@ const schema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string(),
   email: Yup.string().email("Invalid email format").required("Email is required"),
-  phone: Yup.string(),
+  phone: Yup.string().required("Phone is required").matches(/^\+44\d{6,10}$/, 'Phone number must be in the format +44 followed by 6 to 10 digits'),
   password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
   // postalCode: Yup.string()
   //   .required("Postal code is required")

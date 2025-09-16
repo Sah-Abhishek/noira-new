@@ -121,7 +121,7 @@ export default function CustomerDashboard() {
                 <Edit size={16} /> Edit Profile
               </button>
               <button
-                onClick={() => navigate("/user/allservicespage")}
+                onClick={() => navigate("/allservicespage")}
                 className="flex items-center justify-center gap-2 w-full bg-[#111] hover:bg-primary/20 py-2 rounded-lg text-sm transition"
               >
                 <Plus size={16} /> Add Booking

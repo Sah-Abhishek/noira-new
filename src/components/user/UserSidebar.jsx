@@ -14,7 +14,7 @@ const UserSidebar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/user/dashboard" },
+    { name: "Dashboard", icon: <Home className="w-5 h-5" />, path: "/" },
     { name: "Book Sessions", icon: <Home className="w-5 h-5" />, path: "/allservicespage" },
     { name: "Browse Therapists", icon: <Home className="w-5 h-5" />, path: "/browsetherapists" },
     { name: "My Bookings", icon: <BookOpen className="w-5 h-5" />, path: "/user/mybookings" },
@@ -22,7 +22,7 @@ const UserSidebar = () => {
 
   const extraItems = [
     { name: "Profile", icon: <User className="w-5 h-5" />, path: "/user/userprofile" },
-    { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/user/settings" },
+    // { name: "Settings", icon: <Settings className="w-5 h-5" />, path: "/user/settings" },
   ];
 
   const handleLogOut = () => {
@@ -51,8 +51,8 @@ const UserSidebar = () => {
                   key={idx}
                   onClick={() => navigate(item.path)}
                   className={`flex items-center gap-3 px-6 py-3 text-sm font-medium transition ${isActive
-                      ? "bg-[#1a1a1a] text-white"
-                      : "text-gray-400 hover:bg-[#1a1a1a] hover:text-white"
+                    ? "bg-[#1a1a1a] text-white"
+                    : "text-gray-400 hover:bg-[#1a1a1a] hover:text-white"
                     }`}
                 >
                   {item.icon}
