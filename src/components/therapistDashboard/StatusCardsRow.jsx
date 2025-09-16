@@ -129,7 +129,7 @@ const StatusCardsRow = () => {
         {/*   icon={clockIcon} */}
         {/* /> */}
         <StatusCard
-          title="This Week"
+          title="Sessions"
           value={dashboardData.weekSessions ?? 0}
           color="text-green-400"
           icon={chartIcon}

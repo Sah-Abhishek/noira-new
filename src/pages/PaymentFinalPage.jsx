@@ -107,6 +107,7 @@ const PaymentPage = () => {
         });
         if (res.status === 200) {
           navigate('/user/mybookings')
+          setLoading(false);
         }
 
       } else {

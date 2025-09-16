@@ -158,7 +158,7 @@ const TherapistProfileModal = ({ isOpen, onClose, therapistId }) => {
                 <Users size={16} /> {therapist.experience || 0} years experience
               </p>
               <p className="flex items-center gap-2 text-gray-300">
-                {therapist.acceptingNewClients ? (
+                {therapist.active ? (
                   <span className="text-green-500 flex items-center gap-1">
                     <CheckCircle size={16} /> Accepting New Clients
                   </span>
