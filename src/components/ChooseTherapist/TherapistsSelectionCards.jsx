@@ -103,7 +103,7 @@ const TherapistSelectionCard = ({ therapist }) => {
             : "bg-primary text-black hover:bg-yellow-400"
           }`}
       >
-        {isSelected ? "Selected" : "Select Therapist"}
+        {isSelected ? "Selected" : "Select"}
       </button>
     </div>
   );

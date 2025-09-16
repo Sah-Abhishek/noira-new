@@ -1,13 +1,19 @@
 import React from "react";
 
 export default function CalendarDay({ day, dateKey, slots, isToday, isPast, openModal }) {
-  // Calculate total hours from slots
+  // Calculate total hours safely using Date objects
   const totalHours = slots.reduce((sum, s) => {
-    const [sh, sm] = s.start.split(":").map(Number);
-    const [eh, em] = s.end.split(":").map(Number);
-    const diff = (eh + em / 60) - (sh + sm / 60); // handles minutes too
+    const start = new Date(s.start);
+    const end = new Date(s.end);
+    const diff = (end - start) / (1000 * 60 * 60); // convert ms → hours
     return sum + diff;
   }, 0);
+
+  // Helper: format slot time into HH:mm
+  const formatTime = (timeStr) => {
+    const d = new Date(timeStr);
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   return (
     <div
@@ -15,7 +21,7 @@ export default function CalendarDay({ day, dateKey, slots, isToday, isPast, open
       className={`calendar-cell relative p-1 sm:p-2 rounded-lg sm:rounded-xl border 
         min-h-[60px] sm:min-h-[100px] transition-all
         ${isPast
-          ? "cursor-not-allowed opacity-60 bg-gray-50/10 border-gray-700" // ✅ Past day style (no hover, gray bg)
+          ? "cursor-not-allowed opacity-60 bg-gray-50/10 border-gray-700"
           : `cursor-pointer hover:border-primary hover:bg-primary/20
                 ${isToday
             ? "border-white/30 bg-white/80 hover:text-primary text-black ring-1 ring-gold/30"
@@ -23,7 +29,8 @@ export default function CalendarDay({ day, dateKey, slots, isToday, isPast, open
               ? "border-gray-700 bg-red-500/20"
               : totalHours < 9
                 ? "border-white/60 border-opacity-50 bg-[#4F709C]"
-                : "border-white/60 border-opacity-50 bg-[#144D36]"}
+                : "border-white/60 border-opacity-50 bg-[#144D36]"
+          }
               hover:border-gold hover:bg-gold hover:bg-opacity-10`
         }`}
     >
@@ -42,7 +49,9 @@ export default function CalendarDay({ day, dateKey, slots, isToday, isPast, open
             {/* Desktop */}
             <div className="text-[8px] sm:text-xs text-gold opacity-80 hidden sm:flex flex-col items-center text-center leading-tight">
               {slots.slice(0, 2).map((s, i) => (
-                <span key={i}>{s.start}-{s.end}</span>
+                <span key={i}>
+                  {formatTime(s.start)} - {formatTime(s.end)}
+                </span>
               ))}
               {slots.length > 2 && <span>+{slots.length - 2} more</span>}
             </div>

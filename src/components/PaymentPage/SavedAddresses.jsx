@@ -4,7 +4,7 @@ import { Home, Plus } from "lucide-react";
 import useBookingStore from "../../store/bookingStore.jsx";
 import AddressModal from "../Modals/AddressModal.jsx";
 
-export default function SavedAddresses({ isAddressInputModalOpen }) {
+export default function SavedAddresses({ isAddressInputModalOpen, setLengthOfReturnedAddresses }) {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,6 +29,9 @@ export default function SavedAddresses({ isAddressInputModalOpen }) {
 
         });
         setAddresses(res.data.allAddresses || []);
+        setLengthOfReturnedAddresses(res.data.allAddresses.length || 0);
+        console.log("This is the lenght of somehting: ", res.data.allAddresses.length || 0);
+
 
         // ✅ If store already has userAddress, make sure it's pre-selected
         if (userAddress?._id) {

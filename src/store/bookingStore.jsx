@@ -41,7 +41,7 @@ const useBookingStore = create(
     {
       name: "booking-storage", // key in localStorage
       partialize: (state) => {
-        const { hasSearched, userAddress, ...rest } = state;
+        const { hasSearched, ...rest } = state;
         return rest;
       }
     }

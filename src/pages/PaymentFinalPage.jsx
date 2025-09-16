@@ -11,13 +11,13 @@ import AddressModal from "../components/Modals/AddressModal.jsx";
 import SavedAddresses from "../components/PaymentPage/SavedAddresses.jsx";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { faHouseUser } from "@fortawesome/free-solid-svg-icons";
 import useUserStore from "../store/UserStore.jsx";
 
 const PaymentPage = () => {
   const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
   const { user } = useUserStore();
   const isMobileNumberSaved = Boolean(user.phone);
+  const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState();
 
 
   const [loading, setLoading] = useState(false);
@@ -41,6 +41,11 @@ const PaymentPage = () => {
     }
 
     try {
+      if (lengthOfReturnedAddresses === 0) {
+        setIsAddressModalOpen(true);
+        setLoading(false);
+        return;
+      }
       if (userAddress) {
         const res = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
           email: userEmail,
@@ -88,7 +93,7 @@ const PaymentPage = () => {
             <BookingSummary />
           </div>
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses isAddressInputModalOpen={isAddressModalOpen} />
+            <SavedAddresses isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
           </div>
         </div>
 

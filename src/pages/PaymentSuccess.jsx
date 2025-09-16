@@ -20,7 +20,7 @@ const PaymentSuccess = () => {
           href="/user/mybookings"
           className="inline-block bg-primary text-black font-semibold py-3 px-6 rounded-full hover:opacity-90 transition"
         >
-          Go to Dashboard
+          Go to Bookings
         </a>
       </div>
     </div>
