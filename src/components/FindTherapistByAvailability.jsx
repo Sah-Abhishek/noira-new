@@ -39,7 +39,7 @@ const FindTherapistByAvailability = () => {
   const [isAbled, setIsAbled] = useState(false);
   const userjwt = localStorage.getItem("userjwt");
 
-  const therapistId = selectedTherapist?.profile?._id;
+  const therapistId = selectedTherapist?._id;
 
   useEffect(() => {
     setDate(null);
@@ -70,6 +70,7 @@ const FindTherapistByAvailability = () => {
             },
           }
         );
+        console.log("This is the response of the availibility: ", res.data);
         const availabilityArray = res.data.availability || [];
 
         const generateSlots = (startTime, endTime) => {
@@ -132,12 +133,6 @@ const FindTherapistByAvailability = () => {
 
   const daySections = {
     morning: [
-      "06:00",
-      "06:30",
-      "07:00",
-      "07:30",
-      "08:00",
-      "08:30",
       "09:00",
       "09:30",
       "10:00",
@@ -345,8 +340,8 @@ const FindTherapistByAvailability = () => {
                   <button
                     onClick={() => setActiveTab("day")}
                     className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === "day"
-                        ? "bg-primary text-black font-semibold"
-                        : "text-primary"
+                      ? "bg-primary text-black font-semibold"
+                      : "text-primary"
                       }`}
                   >
                     Day
@@ -354,8 +349,8 @@ const FindTherapistByAvailability = () => {
                   <button
                     onClick={() => setActiveTab("night")}
                     className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === "night"
-                        ? "bg-primary text-black font-semibold"
-                        : "text-primary"
+                      ? "bg-primary text-black font-semibold"
+                      : "text-primary"
                       }`}
                   >
                     Night (Premium)

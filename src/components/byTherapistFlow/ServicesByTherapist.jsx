@@ -24,7 +24,7 @@ export default function ServiceByTherapist() {
   const [isAbled, setIsabled] = useState(false);
   const authToken = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
-  const therapistId = selectedTherapist.profile._id;
+  const therapistId = selectedTherapist._id;
   const fetchServices = async () => {
     try {
       const response = await axios.get(

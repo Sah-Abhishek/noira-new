@@ -1,19 +1,25 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
-import { ChevronLeft, ChevronRight, MapPin, Star, CheckCircle2, Globe2, Briefcase } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Star,
+  Globe2,
+  Briefcase,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useBookingStore from "../../store/bookingStore";
 import FancyDropdown from "./FancyDropdown";
 
-/** Small helpers */
-const fullName = (t) => `${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`.trim();
-const currency = (p) => (p?.currency ? p.currency : "USD");
-const price = (p) => (typeof p?.baseRate === "number" ? `${p.baseRate}` : null);
+/** Helpers */
+const fullName = (t) =>
+  `${t?.userId?.name?.first ?? ""} ${t?.userId?.name?.last ?? ""}`.trim();
 
 const FILTERS_DEFAULT = {
   service: "All Services",
   language: "All Languages",
-  gender: "No Preference", // placeholder
+  gender: "No Preference",
 };
 
 const LIMIT = 6;
@@ -27,14 +33,10 @@ export default function BrowseTherapists() {
   const [error, setError] = useState(null);
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-  const { setSelectedTherapist, } = useBookingStore();
+  const { setSelectedTherapist } = useBookingStore();
   const userjwt = localStorage.getItem("userjwt");
 
   const gridRef = useRef(null);
-
-  const handleSelectTherapist = () => {
-    setSelectedTherapist();
-  }
 
   const fetchTherapists = async (pageNum) => {
     try {
@@ -46,7 +48,6 @@ export default function BrowseTherapists() {
           Authorization: `Bearer ${userjwt}`,
         },
       });
-      console.log("This is the therapist : ", res.data);
       setTherapists(res.data?.therapists ?? []);
       setTotalPages(res.data?.totalPages ?? 1);
 
@@ -54,7 +55,9 @@ export default function BrowseTherapists() {
         gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     } catch (e) {
-      setError(e?.response?.data?.message || e.message || "Failed to load therapists");
+      setError(
+        e?.response?.data?.message || e.message || "Failed to load therapists"
+      );
     } finally {
       setLoading(false);
     }
@@ -65,34 +68,36 @@ export default function BrowseTherapists() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  /** Build filter dropdown options */
+  /** Filter options */
   const serviceOptions = useMemo(() => {
     const set = new Set();
-    therapists.forEach((t) => (t?.profile?.specializations ?? []).forEach((s) => set.add(s)));
+    therapists.forEach((t) =>
+      (t?.specializations ?? []).forEach((s) => set.add(s.name))
+    );
     return ["All Services", ...Array.from(set)];
   }, [therapists]);
 
   const languageOptions = useMemo(() => {
     const set = new Set();
-    therapists.forEach((t) => (t?.profile?.languages ?? []).forEach((l) => set.add(l)));
+    therapists.forEach((t) => (t?.languages ?? []).forEach((l) => set.add(l)));
     return ["All Languages", ...Array.from(set)];
   }, [therapists]);
 
-  /** Client-side filtering */
   /** Client-side filtering */
   const filtered = useMemo(() => {
     return therapists.filter((t) => {
       const okService =
         filters.service === "All Services" ||
-        (t?.profile?.specializations ?? []).includes(filters.service);
+        (t?.specializations ?? []).some((s) => s.name === filters.service);
 
       const okLanguage =
         filters.language === "All Languages" ||
-        (t?.profile?.languages ?? []).includes(filters.language);
+        (t?.languages ?? []).includes(filters.language);
 
       const okGender =
         filters.gender === "No Preference" ||
-        (t.gender?.toLowerCase() === filters.gender.toLowerCase());
+        (t?.userId?.gender ?? "").toLowerCase() ===
+        filters.gender.toLowerCase();
 
       return okService && okLanguage && okGender;
     });
@@ -107,14 +112,20 @@ export default function BrowseTherapists() {
         <h1 className="text-4xl md:text-5xl font-extrabold mt-10 tracking-tight">
           Choose Your <span className="text-primary">Therapist</span>
         </h1>
-        <p className="text-gray-300 mt-2">Select from our certified wellness professionals</p>
-        <p className="text-primary mt-1 text-sm">Selected Service: Massage Therapy</p>
+        <p className="text-gray-300 mt-2">
+          Select from our certified wellness professionals
+        </p>
+        <p className="text-primary mt-1 text-sm">
+          Selected Service: Massage Therapy
+        </p>
       </div>
 
       {/* Filters */}
       <div className="max-w-6xl mx-auto px-4">
         <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-4 md:p-6 shadow-lg">
-          <h3 className="text-lg font-semibold text-center text-gray-200 mb-4">Filter Therapists</h3>
+          <h3 className="text-lg font-semibold text-center text-gray-200 mb-4">
+            Filter Therapists
+          </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Services */}
@@ -132,14 +143,6 @@ export default function BrowseTherapists() {
               value={filters.language}
               onChange={(val) => setFilters((f) => ({ ...f, language: val }))}
             />
-
-            {/* Gender */}
-            {/* <FancyDropdown */}
-            {/*   label="Gender Preference" */}
-            {/*   options={["No Preference", "Female", "Male"]} */}
-            {/*   value={filters.gender} */}
-            {/*   onChange={(val) => setFilters((f) => ({ ...f, gender: val }))} */}
-            {/* /> */}
           </div>
 
           <div className="flex justify-center mt-4">
@@ -191,34 +194,32 @@ export default function BrowseTherapists() {
 
       {/* Pagination */}
       <div className="max-w-6xl mx-auto px-4 mt-10 pb-16">
-        <Pagination page={page} totalPages={totalPages} onChange={(p) => setPage(p)} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onChange={(p) => setPage(p)}
+        />
       </div>
     </div>
   );
 }
 
-/** Therapist Card (unchanged) */
 /** Therapist Card */
 function TherapistCard({ t }) {
-  const verified = t?.profile?.isVerified;
-  const rating = t?.profile?.rating ?? null;
-  const ratingCount = t?.profile?.ratingCount ?? 0;
-  const tags = (t?.profile?.specializations ?? []).slice(0, 4);
-  const languages = t?.profile?.languages ?? [];
-  const exp = t?.profile?.experience;
-  const town = t?.address?.PostTown;
-  const postcode = t?.address?.Postcode;
-  // const pricing = t?.profile?.pricing;
+  const verified = t?.isVerified;
+  const rating = t?.rating ?? null;
+  const ratingCount = t?.ratingCount ?? 0;
+  const tags = (t?.specializations ?? []).map((s) => s.name).slice(0, 4);
+  const languages = t?.languages ?? [];
+  const exp = t?.experience;
+  const town = t?.userId?.address?.PostTown;
+  const postcode = t?.userId?.address?.PostalCode;
   const navigate = useNavigate();
-
-
-  // ✅ get setter from store
   const { setSelectedTherapist } = useBookingStore();
 
   const handleSelectTherapist = () => {
-    console.log("This is the selected therapist: ", t);
-    setSelectedTherapist(t);   // ✅ store selected therapist in zustand
-    navigate("/servicesbytherapist"); // optional: redirect after selecting
+    setSelectedTherapist(t);
+    navigate("/servicesbytherapist");
   };
 
   return (
@@ -232,15 +233,17 @@ function TherapistCard({ t }) {
 
       <div className="flex items-center gap-4">
         <img
-          src={t?.avatar_url}
+          src={t?.userId?.avatar_url}
           alt={fullName(t)}
           className="h-20 w-20 rounded-full object-cover ring-2 ring-primary/50"
         />
         <div>
           <h3 className="text-lg font-semibold">{fullName(t)}</h3>
-          <p className="text-amber-300 text-sm">{t?.profile?.title ?? "Massage Therapist"}</p>
+          <p className="text-amber-300 text-sm">
+            {t?.title ?? "Massage Therapist"}
+          </p>
 
-          {rating && (
+          {rating !== null && (
             <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
               <Star className="h-4 w-4 fill-primary text-primary" />
               <span className="font-semibold">{rating.toFixed(1)}</span>
@@ -282,17 +285,8 @@ function TherapistCard({ t }) {
             <span>{exp}+ years experience</span>
           </div>
         )}
-        {/* {pricing && price(pricing) && ( */}
-        {/*   <div className="flex items-center gap-2"> */}
-        {/*     <CheckCircle2 className="h-4 w-4 text-gray-400" /> */}
-        {/*     <span className="text-amber-300 font-medium"> */}
-        {/*       {price(pricing)} {currency(pricing)}/session */}
-        {/*     </span> */}
-        {/*   </div> */}
-        {/* )} */}
       </div>
 
-      {/* ✅ Store selected therapist */}
       <button
         onClick={handleSelectTherapist}
         className="mt-6 w-full rounded-full bg-primary hover:bg-amber-500 text-black font-semibold py-2.5 transition"
@@ -302,7 +296,8 @@ function TherapistCard({ t }) {
     </div>
   );
 }
-/** Pagination (unchanged) */
+
+/** Pagination */
 function Pagination({ page, totalPages, onChange }) {
   if (!totalPages || totalPages <= 1) return null;
 
@@ -357,7 +352,6 @@ function Pagination({ page, totalPages, onChange }) {
   );
 }
 
-/** Page window helper */
 function getPageWindow(current, total) {
   const windowSize = 3;
   const pages = new Set([1, total, current]);
@@ -365,7 +359,9 @@ function getPageWindow(current, total) {
     pages.add(current - i);
     pages.add(current + i);
   }
-  const nums = [...pages].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+  const nums = [...pages]
+    .filter((n) => n >= 1 && n <= total)
+    .sort((a, b) => a - b);
 
   const withDots = [];
   for (let i = 0; i < nums.length; i++) {

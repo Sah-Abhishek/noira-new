@@ -55,7 +55,8 @@ const PaymentPage = () => {
           window.location.href = res.data.url;
         }
       } else {
-        setIsAddressModalOpen(true);
+        toast.error("Select an address for the booking");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Payment error:", err);
