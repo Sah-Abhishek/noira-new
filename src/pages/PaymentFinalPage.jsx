@@ -40,11 +40,11 @@ const PaymentPage = () => {
     //   setLoading(false);
     //   return;
     // }
-    if (!user.phoneVerified) {
-      toast.error("Verify Phone in the profile section");
-      setLoading(false);
-      return;
-    }
+    // if (!user.phoneVerified) {
+    //   toast.error("Verify Phone in the profile section");
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       if (lengthOfReturnedAddresses === 0) {
