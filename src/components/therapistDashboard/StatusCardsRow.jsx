@@ -13,29 +13,42 @@ const StatusCardsRow = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [filter, setFilter] = useState("today"); // default filter
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
-
+  const [loading, setLoading] = useState(false);
   const therapistId = localStorage.getItem("therapistId");
   const apiUrl = import.meta.env.VITE_API_URL;
   const therapistjwt = localStorage.getItem("therapistjwt");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      setLoading(true);
+
       try {
-        let url = `${apiUrl}/therapist/dashboard/${therapistId}?filter=${filter}`;
+        let body = { filter };
+        console.log("These are the filters: ", body);
+
         if (filter === "custom" && customRange.start && customRange.end) {
-          url += `&start=${customRange.start}&end=${customRange.end}`;
+          body.startDate = customRange.start;
+          body.endDate = customRange.end;
         }
 
-        const res = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${therapistjwt}`,
-          },
-        });
+        const res = await axios.post(
+          `${apiUrl}/therapist/dashboard/${therapistId}`,
+          body,
+          {
+            headers: {
+              Authorization: `Bearer ${therapistjwt}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         console.log("This is the response for status card: ", res.data);
         setDashboardData(res.data);
+
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -44,7 +57,7 @@ const StatusCardsRow = () => {
     }
   }, [therapistId, filter, customRange]);
 
-  if (!dashboardData) {
+  if (!dashboardData || loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 gap-6 w-full">
         <StatusCardsRowSkeleton />
@@ -65,8 +78,8 @@ const StatusCardsRow = () => {
             onClick={() => setFilter(type)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm
         ${filter === type
-                ? "bg-primary"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
           >
             {type === "today" && "Today"}
@@ -77,41 +90,44 @@ const StatusCardsRow = () => {
         ))}
 
         {filter === "custom" && (
-          <div className="flex gap-2 items-center bg-gray-50 p-2 rounded-lg shadow-inner">
+          <div className="flex gap-2 items-center bg-gray-50 p-2 rounded-lg shadow-inner dark:bg-gray-800 dark:shadow-none">
             <input
               type="date"
               value={customRange.start}
               onChange={(e) =>
                 setCustomRange((prev) => ({ ...prev, start: e.target.value }))
               }
-              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                   dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             />
-            <span className="text-gray-500">to</span>
+            <span className="text-gray-500 dark:text-gray-400">to</span>
             <input
               type="date"
               value={customRange.end}
               onChange={(e) =>
                 setCustomRange((prev) => ({ ...prev, end: e.target.value }))
               }
-              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                   dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
             />
           </div>
         )}
       </div>
+
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 gap-6 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 gap-6 w-full">
         <StatusCard
-          title="Today's Sessions"
-          value={dashboardData.todaysSessions ?? 0}
+          title="Average Rating"
+          value={dashboardData.AverageRating ?? 0}
           color="text-yellow-400"
           icon={sessionIcon}
         />
-        <StatusCard
-          title="Pending Requests"
-          value={dashboardData.pendingRequests ?? 0}
-          color="text-yellow-500"
-          icon={clockIcon}
-        />
+        {/* <StatusCard */}
+        {/*   title="Pending Requests" */}
+        {/*   value={dashboardData.pendingRequests ?? 0} */}
+        {/*   color="text-yellow-500" */}
+        {/*   icon={clockIcon} */}
+        {/* /> */}
         <StatusCard
           title="This Week"
           value={dashboardData.weekSessions ?? 0}

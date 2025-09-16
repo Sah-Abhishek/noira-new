@@ -200,16 +200,16 @@ export default function TherapistBookingsPage() {
                   </p>
                   <p>
                     <span className="text-primary font-medium">Service Date:</span>{" "}
-                    {new Date(b.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}{" "}
-                    {new Date(b.slotStart).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
+                    {b.date.split("T")[0]}
+                    {/* {new Date(b.slotStart).toLocaleTimeString([], { */}
+                    {/*   hour: "2-digit", */}
+                    {/*   minute: "2-digit", */}
+                    {/*   hour12: true, */}
+                    {/* })} */}
+                  </p>
+                  <p>
+                    <span className="text-primary font-medium">Service Time:</span>{" "}
+                    {b.slotStart.slice(11, 16)}
                   </p>
                   <p>
                     <span className="text-primary font-medium">Duration:</span>{" "}

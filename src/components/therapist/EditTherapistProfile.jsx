@@ -246,8 +246,9 @@ export default function EditTherapistProfile() {
                 type={field === "email" ? "email" : "text"}
                 value={form[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
-                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 required
+                disabled={field === "email"}
               />
             </div>
           ))}

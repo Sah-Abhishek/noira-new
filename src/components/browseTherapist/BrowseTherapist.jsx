@@ -72,14 +72,14 @@ export default function BrowseTherapists() {
   const serviceOptions = useMemo(() => {
     const set = new Set();
     therapists.forEach((t) =>
-      (t?.specializations ?? []).forEach((s) => set.add(s.name))
+      (t?.profile?.specializations ?? []).forEach((s) => set.add(s))
     );
     return ["All Services", ...Array.from(set)];
   }, [therapists]);
 
   const languageOptions = useMemo(() => {
     const set = new Set();
-    therapists.forEach((t) => (t?.languages ?? []).forEach((l) => set.add(l)));
+    therapists.forEach((t) => (t?.profile?.languages ?? []).forEach((l) => set.add(l)));
     return ["All Languages", ...Array.from(set)];
   }, [therapists]);
 
@@ -206,14 +206,14 @@ export default function BrowseTherapists() {
 
 /** Therapist Card */
 function TherapistCard({ t }) {
-  const verified = t?.isVerified;
-  const rating = t?.rating ?? null;
-  const ratingCount = t?.ratingCount ?? 0;
-  const tags = (t?.specializations ?? []).map((s) => s.name).slice(0, 4);
-  const languages = t?.languages ?? [];
-  const exp = t?.experience;
-  const town = t?.userId?.address?.PostTown;
-  const postcode = t?.userId?.address?.PostalCode;
+  const verified = t?.profile?.isVerified;
+  const rating = t?.profile?.rating ?? null;
+  const ratingCount = t?.profile?.ratingCount ?? 0;
+  const tags = (t?.profile?.specializations ?? []).slice(0, 4);
+  const languages = t?.profile?.languages ?? [];
+  const exp = t?.profile?.experience;
+  const town = t?.address?.PostTown;
+  const postcode = t?.address?.PostalCode;
   const navigate = useNavigate();
   const { setSelectedTherapist } = useBookingStore();
 
@@ -233,14 +233,16 @@ function TherapistCard({ t }) {
 
       <div className="flex items-center gap-4">
         <img
-          src={t?.userId?.avatar_url}
-          alt={fullName(t)}
+          src={t?.avatar_url}
+          alt={`${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`}
           className="h-20 w-20 rounded-full object-cover ring-2 ring-primary/50"
         />
         <div>
-          <h3 className="text-lg font-semibold">{fullName(t)}</h3>
+          <h3 className="text-lg font-semibold">
+            {`${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`}
+          </h3>
           <p className="text-amber-300 text-sm">
-            {t?.title ?? "Massage Therapist"}
+            {t?.profile?.title ?? "Massage Therapist"}
           </p>
 
           {rating !== null && (
@@ -296,7 +298,6 @@ function TherapistCard({ t }) {
     </div>
   );
 }
-
 /** Pagination */
 function Pagination({ page, totalPages, onChange }) {
   if (!totalPages || totalPages <= 1) return null;

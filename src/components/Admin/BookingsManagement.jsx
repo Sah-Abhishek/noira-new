@@ -40,16 +40,13 @@ export default function BookingsManagement() {
     }
   };
 
-  const formatDateTime = (start, end) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return `${startDate.toLocaleDateString()} ${startDate.toLocaleTimeString(
-      [],
-      { hour: "2-digit", minute: "2-digit" }
-    )} - ${endDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`;
+  const formatRawDateTime = (start, end) => {
+    // Extract date and time from ISO string
+    const startDate = start.slice(0, 10); // YYYY-MM-DD
+    const startTime = start.slice(11, 16); // HH:MM
+    const endTime = end.slice(11, 16);     // HH:MM
+
+    return `${startDate} ${startTime} - ${endTime}`;
   };
 
   const filteredBookings = bookings.filter((b) => {
@@ -162,7 +159,7 @@ export default function BookingsManagement() {
 
                     {/* Date/Time */}
                     <td className="py-3 px-4">
-                      {formatDateTime(b.slotStart, b.slotEnd)}
+                      {formatRawDateTime(b.slotStart, b.slotEnd)}
                     </td>
 
                     {/* Duration */}

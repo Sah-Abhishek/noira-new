@@ -29,6 +29,7 @@ const PaymentPage = () => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
+  // console.log("This is the phone verified: ", user.phoneVerified);
 
   const handlePayment = async () => {
     if (loading) return; // guard: avoid double clicks
@@ -36,6 +37,11 @@ const PaymentPage = () => {
 
     if (!isMobileNumberSaved) {
       toast.error("Add Phone Number in the profile Section");
+      setLoading(false);
+      return;
+    }
+    if (!user.phoneVerified) {
+      toast.error("Verify Phone in the profile section");
       setLoading(false);
       return;
     }
@@ -124,6 +130,15 @@ const PaymentPage = () => {
                 Confirm and Pay
               </>
             )}
+          </button>
+
+          {/* ✅ Pay by Cash button */}
+          <button
+            onClick={() => toast.success("Cash payment selected! Pay at the appointment.")}
+            disabled={loading}
+            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full  transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Pay by Cash
           </button>
         </div>
       </div>

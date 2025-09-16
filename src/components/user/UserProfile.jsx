@@ -4,6 +4,8 @@ import { Edit, Plus, MapPin, User, Trash2 } from "lucide-react";
 import AddressModal from "../Modals/AddressModal";
 import ConfirmDeleteAddressModal from "./ConfirmDeleteAddressModal";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/UserStore";
+import MobileVerifyComponent from "./MobileVerifyComponent";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -15,6 +17,7 @@ export default function CustomerDashboard() {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [deleteAddressId, setDeleteAddressId] = useState(null);
   const navigate = useNavigate();
+  // console.log("this is the phone number: ", phoneNumber);
 
   const userjwt = localStorage.getItem("userjwt");
 
@@ -111,6 +114,7 @@ export default function CustomerDashboard() {
                 <span className="font-medium text-gray-300">Phone:</span> {profile?.phone || "Not provided"}
               </p>
             </div>
+            <MobileVerifyComponent profile={profile} userjwt={userjwt} apiUrl={apiUrl} setProfile={setProfile} />
 
             {/* Quick Actions */}
             <div className="mt-6 w-full space-y-3">

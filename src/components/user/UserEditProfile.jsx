@@ -275,7 +275,10 @@ export default function UserEditProfile() {
               type="email"
               value={form.email}
               onChange={(e) => handleChange("email", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled // 👈 disable only email
+
+
             />
           </div>
           <div>
@@ -284,7 +287,8 @@ export default function UserEditProfile() {
               type="text"
               value={form.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white disabled:cursor-not-allowed disabled:opacity-50 focus:border-primary"
+              disabled
             />
           </div>
         </div>
@@ -368,13 +372,13 @@ export default function UserEditProfile() {
                     <p>{addr.PostalCode}</p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleSetCurrentAddress(addr)}
-                    className="mt-2 px-3 py-1.5 rounded-lg bg-primary text-black text-xs hover:opacity-90"
-                  >
-                    Set as Current
-                  </button>
+                  {/* <button */}
+                  {/*   type="button" */}
+                  {/*   onClick={() => handleSetCurrentAddress(addr)} */}
+                  {/*   className="mt-2 px-3 py-1.5 rounded-lg bg-primary text-black text-xs hover:opacity-90" */}
+                  {/* > */}
+                  {/*   Set as Current */}
+                  {/* </button> */}
                 </div>
               ))}
             </div>
@@ -382,17 +386,17 @@ export default function UserEditProfile() {
         </div>
 
         {/* Current Address Preview */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-primary mb-2">Current Address</h3>
-          {form.address.Building_No ? (
-            <div className="bg-[#111] p-4 rounded-lg border border-white/10 text-sm text-gray-300">
-              {form.address.Building_No}, {form.address.Street}, {form.address.Locality},{" "}
-              {form.address.PostTown}, {form.address.PostalCode}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500">No current address selected.</p>
-          )}
-        </div>
+        {/* <div className="mb-6"> */}
+        {/*   <h3 className="text-lg font-semibold text-primary mb-2">Current Address</h3> */}
+        {/*   {form.address.Building_No ? ( */}
+        {/*     <div className="bg-[#111] p-4 rounded-lg border border-white/10 text-sm text-gray-300"> */}
+        {/*       {form.address.Building_No}, {form.address.Street}, {form.address.Locality},{" "} */}
+        {/*       {form.address.PostTown}, {form.address.PostalCode} */}
+        {/*     </div> */}
+        {/*   ) : ( */}
+        {/*     <p className="text-sm text-gray-500">No current address selected.</p> */}
+        {/*   )} */}
+        {/* </div> */}
         {/* Actions */}
         <div className="flex justify-end gap-3">
           <button
