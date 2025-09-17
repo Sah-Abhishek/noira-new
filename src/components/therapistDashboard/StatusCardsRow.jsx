@@ -115,19 +115,19 @@ const StatusCardsRow = () => {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 gap-6 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 gap-6 w-full">
         <StatusCard
           title="Average Rating"
-          value={dashboardData.AverageRating ?? 0}
+          value={dashboardData.averageRating ?? 0}
           color="text-yellow-400"
           icon={sessionIcon}
         />
-        {/* <StatusCard */}
-        {/*   title="Pending Requests" */}
-        {/*   value={dashboardData.pendingRequests ?? 0} */}
-        {/*   color="text-yellow-500" */}
-        {/*   icon={clockIcon} */}
-        {/* /> */}
+        <StatusCard
+          title="Total Reviews"
+          value={dashboardData.totalReviews ?? 0}
+          color="text-yellow-500"
+          icon={clockIcon}
+        />
         <StatusCard
           title="Sessions"
           value={dashboardData.weekSessions ?? 0}
