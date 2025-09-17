@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import useBookingStore from "../../store/bookingStore";
 import FancyDropdown from "./FancyDropdown";
+import { User } from 'lucide-react';
 
 /** Helpers */
 const fullName = (t) =>
