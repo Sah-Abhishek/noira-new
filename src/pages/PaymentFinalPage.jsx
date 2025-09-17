@@ -21,6 +21,7 @@ const PaymentPage = () => {
   const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState();
   const [isVerifyMobileModalOpen, setIsVerifyMobileModalOpen] = useState(false);
   const isPhoneVerified = user.isPhoneVerified ? true : false;
+  const [refreshKey, setRefreshKey] = useState(0);
 
 
   const [loading, setLoading] = useState(false);
@@ -154,7 +155,7 @@ const PaymentPage = () => {
             <BookingSummary />
           </div>
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses refreshKey={isAddressModalOpen} isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
+            <SavedAddresses refreshKey={refreshKey} isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
           </div>
         </div>
 
@@ -207,7 +208,7 @@ const PaymentPage = () => {
         isOpen={isAddressModalOpen}
         onClose={() => {
           setIsAddressModalOpen(false);
-          refreshKey();
+          setRefreshKey((prev) => prev + 1);
         }}
       />
       <VerifyMobileModal isOpen={isVerifyMobileModalOpen} onClose={() => setIsVerifyMobileModalOpen(false)} />

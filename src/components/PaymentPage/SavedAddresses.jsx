@@ -46,7 +46,7 @@ export default function SavedAddresses({ refreshKey, isAddressInputModalOpen, se
     };
 
     fetchAddresses();
-  }, [userAddress?._id, isAddressInputModalOpen, refreshKey]);
+  }, [userAddress?._id, refreshKey]);
 
   const handleSelectAddress = async (id) => {
     setSelectedId(id);

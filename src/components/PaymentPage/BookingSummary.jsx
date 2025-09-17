@@ -18,7 +18,7 @@ const BookingSummary = () => {
 
   // ✅ Safe destructuring with fallbacks
   const avatar =
-    selectedTherapist?.avatar_url || selectedTherapist?.userId?.avatar_url;
+    selectedTherapist?.avatar_url || selectedTherapist?.userId?.avatar_url || "https://www.citypng.com/public/uploads/preview/white-user-member-guest-icon-png-image-701751695037005zdurfaim0y.png?v=2025073005";
   const email =
     selectedTherapist.email || selectedTherapist?.userId?.email || "N/A";
   const {

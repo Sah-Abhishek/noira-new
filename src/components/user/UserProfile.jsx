@@ -119,9 +119,7 @@ export default function CustomerDashboard() {
               </p>
             </div>
             {
-              !user.phone && (
-                <MobileVerifyComponent profile={profile} userjwt={userjwt} apiUrl={apiUrl} setProfile={setProfile} />
-              )
+              <MobileVerifyComponent profile={profile} userjwt={userjwt} apiUrl={apiUrl} setProfile={setProfile} />
 
             }
 
