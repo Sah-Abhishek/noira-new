@@ -60,6 +60,7 @@ export default function UserSignup() {
           token: credentialResponse.access_token,
         });
 
+
         toast.success("Signin successful");
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
@@ -262,12 +263,12 @@ export default function UserSignup() {
 
           {/* Social Buttons */}
           <div className="flex gap-4">
-            <button
-              onClick={() => login()}
-              className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
-            >
-              <FaGoogle /> Google
-            </button>
+            {/* <button */}
+            {/*   onClick={() => login()} */}
+            {/*   className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white" */}
+            {/* > */}
+            {/*   <FaGoogle /> Google */}
+            {/* </button> */}
             {/* <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600"> */}
             {/*   <FaApple /> Apple */}
             {/* </button> */}

@@ -288,7 +288,7 @@ export default function UserEditProfile() {
               value={form.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
               className="w-full bg-black border border-white/10 rounded-lg p-2 text-white disabled:cursor-not-allowed disabled:opacity-50 focus:border-primary"
-              disabled
+              disabled={!!form.phone}
             />
           </div>
         </div>

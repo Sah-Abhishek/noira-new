@@ -247,31 +247,31 @@ export default function UserLogin() {
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-2 text-gray-400 text-sm mt-4">
-          <hr className="flex-1 border-gray-600" />
-          Or continue with
-          <hr className="flex-1 border-gray-600" />
-        </div>
+        {/* <div className="flex items-center gap-2 text-gray-400 text-sm mt-4"> */}
+        {/*   <hr className="flex-1 border-gray-600" /> */}
+        {/*   Or continue with */}
+        {/*   <hr className="flex-1 border-gray-600" /> */}
+        {/* </div> */}
 
         {/* Social Buttons */}
-        <div className="flex gap-4">
-          <button
-            onClick={() => googleLogin()}
-            disabled={isLoading}
-            className={`w-full py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white transition ${isLoading
-              ? "bg-gray-700 cursor-not-allowed"
-              : "bg-[#2b2b2b] hover:bg-[#3b3b3b]"
-              }`}
-          >
-            {isLoading ? (
-              <span className="text-sm">Logging in...</span>
-            ) : (
-              <>
-                <FaGoogle /> Google
-              </>
-            )}
-          </button>
-        </div>
+        {/* <div className="flex gap-4"> */}
+        {/*   <button */}
+        {/*     onClick={() => googleLogin()} */}
+        {/*     disabled={isLoading} */}
+        {/*     className={`w-full py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white transition ${isLoading */}
+        {/*       ? "bg-gray-700 cursor-not-allowed" */}
+        {/*       : "bg-[#2b2b2b] hover:bg-[#3b3b3b]" */}
+        {/*       }`} */}
+        {/*   > */}
+        {/*     {isLoading ? ( */}
+        {/*       <span className="text-sm">Logging in...</span> */}
+        {/*     ) : ( */}
+        {/*       <> */}
+        {/*         <FaGoogle /> Google */}
+        {/*       </> */}
+        {/*     )} */}
+        {/*   </button> */}
+        {/* </div> */}
 
         {/* Sign up */}
         <div className="text-center text-sm text-gray-400 mt-4">

@@ -18,8 +18,10 @@ export default function CustomerDashboard() {
   const [deleteAddressId, setDeleteAddressId] = useState(null);
   const { user } = useUserStore();
   const navigate = useNavigate();
+  console.log("This is the phone: ", user.phone, user.name);
   // console.log("this is the phone number: ", phoneNumber);
   const isPhoneVerified = user.isPhoneVerified;
+  const isTherePhoneNumber = user.phone ? true : false
 
   const userjwt = localStorage.getItem("userjwt");
 
@@ -116,7 +118,12 @@ export default function CustomerDashboard() {
                 <span className="font-medium text-gray-300">Phone:</span> {profile?.phone || "Not provided"}
               </p>
             </div>
-            <MobileVerifyComponent profile={profile} userjwt={userjwt} apiUrl={apiUrl} setProfile={setProfile} />
+            {
+              !user.phone && (
+                <MobileVerifyComponent profile={profile} userjwt={userjwt} apiUrl={apiUrl} setProfile={setProfile} />
+              )
+
+            }
 
             {/* Quick Actions */}
             <div className="mt-6 w-full space-y-3">
