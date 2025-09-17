@@ -483,7 +483,7 @@ export default function EditTherapistProfile() {
         <div className="flex flex-col sm:flex-row justify-end gap-3">
           <button
             type="button"
-            onClick={() => navigate("/admin/therapists")}
+            onClick={() => navigate("/therapist/therapistdashboard")}
             className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
           >
             Cancel
