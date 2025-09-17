@@ -123,8 +123,8 @@ function VerifyMobileModal({ isOpen, onClose, userjwt }) {
               onClick={handleSendOtp}
               disabled={resendTimer > 0 || loading}
               className={`w-full mt-2 ${resendTimer > 0
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-primary hover:bg-amber-500"
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-primary hover:bg-amber-500"
                 } text-black text-sm font-semibold py-2 rounded-lg transition`}
             >
               {resendTimer > 0
