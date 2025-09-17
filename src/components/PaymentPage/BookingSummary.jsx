@@ -18,7 +18,7 @@ const BookingSummary = () => {
 
   // ✅ Safe destructuring with fallbacks
   const avatar =
-    selectedTherapist.avatar_url || selectedTherapist?.userId?.avatar_url;
+    selectedTherapist?.avatar_url || selectedTherapist?.userId?.avatar_url;
   const email =
     selectedTherapist.email || selectedTherapist?.userId?.email || "N/A";
   const {

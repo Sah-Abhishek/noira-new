@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import useUserStore from "../../store/UserStore";
 import { X } from "lucide-react";
 
-function VerifyMobileModal({ isOpen, onClose, userjwt, }) {
+function VerifyMobileModal({ isOpen, onClose, userjwt }) {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0); // ⏳ countdown state
 
   const { user, setUser } = useUserStore();
   const phoneNumber = user?.phone;
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  // countdown effect
+  useEffect(() => {
+    let timer;
+    if (resendTimer > 0) {
+      timer = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendTimer]);
 
   const handleSendOtp = async () => {
     if (!phoneNumber) {
@@ -27,6 +39,8 @@ function VerifyMobileModal({ isOpen, onClose, userjwt, }) {
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       setOtpSent(true);
+      setOtp(""); // clear any old OTP
+      setResendTimer(120); // start 2-minute countdown
       setMessage("OTP sent to your mobile number.");
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
@@ -53,11 +67,11 @@ function VerifyMobileModal({ isOpen, onClose, userjwt, }) {
         setMessage("Phone number verified successfully!");
         setOtp("");
         setOtpSent(false);
+        onClose();
       }
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to verify OTP");
     } finally {
-      onClose();
       setLoading(false);
     }
   };
@@ -102,6 +116,24 @@ function VerifyMobileModal({ isOpen, onClose, userjwt, }) {
               className="w-full bg-primary text-black text-sm font-semibold py-2 rounded-lg hover:bg-amber-500 transition"
             >
               {loading ? "Validating..." : "Validate"}
+            </button>
+
+            {/* Resend OTP */}
+            <button
+              onClick={handleSendOtp}
+              disabled={resendTimer > 0 || loading}
+              className={`w-full mt-2 ${resendTimer > 0
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-primary hover:bg-amber-500"
+                } text-black text-sm font-semibold py-2 rounded-lg transition`}
+            >
+              {resendTimer > 0
+                ? `Resend OTP in ${Math.floor(resendTimer / 60)}:${(
+                  resendTimer % 60
+                )
+                  .toString()
+                  .padStart(2, "0")}`
+                : "Resend OTP"}
             </button>
           </>
         )}
