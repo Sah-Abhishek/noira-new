@@ -27,6 +27,8 @@ const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
+  const userjwt = localStorage.getItem("userjwt");
+  // console.log("this is the userjwt:", userjwt);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -64,6 +66,8 @@ const PaymentPage = () => {
           optionIndex: cart.optionIndex,
           date,
           time,
+        }, {
+          headers: { Authorization: `Bearer ${userjwt}` }
         });
 
         if (res.data.url) {
@@ -104,6 +108,8 @@ const PaymentPage = () => {
           optionIndex: cart.optionIndex,
           date,
           time,
+        }, {
+          headers: { Authorization: `Bearer ${userjwt}` }
         });
         if (res.status === 200) {
           navigate('/user/mybookings')
