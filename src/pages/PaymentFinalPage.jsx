@@ -22,6 +22,8 @@ const PaymentPage = () => {
   const [isVerifyMobileModalOpen, setIsVerifyMobileModalOpen] = useState(false);
   const isPhoneVerified = user.isPhoneVerified ? true : false;
   const [refreshKey, setRefreshKey] = useState(0);
+  const [couponCode, setCouponCode] = useState(null);
+
 
 
   const [loading, setLoading] = useState(false);
@@ -38,14 +40,9 @@ const PaymentPage = () => {
   // console.log("This is the phone verified: ", user.phoneVerified);
 
   const handlePayment = async () => {
-    if (loading) return; // guard: avoid double clicks
+    if (loading) return;
     setLoading(true);
 
-    // if (!isMobileNumberSaved) {
-    //   toast.error("Add Phone Number in the profile Section");
-    //   setLoading(false);
-    //   return;
-    // }
     if (!user.phoneVerified) {
       toast.error("Verify Phone in the profile section");
       setIsVerifyMobileModalOpen(true);
@@ -60,16 +57,21 @@ const PaymentPage = () => {
         return;
       }
       if (userAddress) {
-        const res = await axios.post(`${apiUrl}/payment/create-checkout-session`, {
-          email: userEmail,
-          therapistId: selectedTherapist._id,
-          serviceId: cart.serviceId,
-          optionIndex: cart.optionIndex,
-          date,
-          time,
-        }, {
-          headers: { Authorization: `Bearer ${userjwt}` }
-        });
+        const res = await axios.post(
+          `${apiUrl}/payment/create-checkout-session`,
+          {
+            email: userEmail,
+            therapistId: selectedTherapist._id,
+            serviceId: cart.serviceId,
+            optionIndex: cart.optionIndex,
+            date,
+            time,
+            couponCode, // ✅ send coupon code
+          },
+          {
+            headers: { Authorization: `Bearer ${userjwt}` },
+          }
+        );
 
         if (res.data.url) {
           window.location.href = res.data.url;
@@ -84,8 +86,10 @@ const PaymentPage = () => {
       setLoading(false);
     }
   };
+
+
   const handlePayByCash = async () => {
-    if (loading) return; // guard: avoid double clicks
+    if (loading) return;
     setLoading(true);
 
     if (!user.phoneVerified) {
@@ -102,21 +106,26 @@ const PaymentPage = () => {
         return;
       }
       if (userAddress) {
-        const res = await axios.post(`${apiUrl}/payment/cashBooking`, {
-          email: userEmail,
-          therapistId: selectedTherapist._id,
-          serviceId: cart.serviceId,
-          optionIndex: cart.optionIndex,
-          date,
-          time,
-        }, {
-          headers: { Authorization: `Bearer ${userjwt}` }
-        });
+        const res = await axios.post(
+          `${apiUrl}/payment/cashBooking`,
+          {
+            email: userEmail,
+            therapistId: selectedTherapist._id,
+            serviceId: cart.serviceId,
+            optionIndex: cart.optionIndex,
+            date,
+            time,
+            couponCode, // ✅ send coupon code
+          },
+          {
+            headers: { Authorization: `Bearer ${userjwt}` },
+          }
+        );
+
         if (res.status === 200) {
-          navigate('/user/mybookings')
+          navigate("/user/mybookings");
           setLoading(false);
         }
-
       } else {
         toast.error("Select an address for the booking");
         setLoading(false);
@@ -128,10 +137,7 @@ const PaymentPage = () => {
     } finally {
       setLoading(false);
     }
-
-
-  }
-
+  };
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
       <div className="max-w-6xl pt-5 mx-auto">
@@ -152,7 +158,7 @@ const PaymentPage = () => {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <BookingSummary />
+            <BookingSummary setCouponCode={setCouponCode} />
           </div>
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
             <SavedAddresses refreshKey={refreshKey} isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
