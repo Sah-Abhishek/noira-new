@@ -18,7 +18,7 @@ export default function CustomerDashboard() {
   const [deleteAddressId, setDeleteAddressId] = useState(null);
   const { user } = useUserStore();
   const navigate = useNavigate();
-  console.log("This is the phone: ", user.phone, user.name);
+  // console.log("This is the phone: ", user.phone, user.name);
   // console.log("this is the phone number: ", phoneNumber);
   const isPhoneVerified = user.isPhoneVerified;
   const isTherePhoneNumber = user.phone ? true : false
