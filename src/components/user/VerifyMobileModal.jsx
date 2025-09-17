@@ -35,7 +35,7 @@ function VerifyMobileModal({ isOpen, onClose, userjwt }) {
     try {
       await axios.post(
         `${apiUrl}/otp/send-otp`,
-        { mobileNumber: `91${phoneNumber}` },
+        { mobileNumber: `${phoneNumber}` },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       setOtpSent(true);

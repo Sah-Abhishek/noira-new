@@ -32,7 +32,7 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
     try {
       await axios.post(
         `${apiUrl}/otp/send-otp`,
-        { mobileNumber: `91${phoneNumber}` },
+        { mobileNumber: `${phoneNumber}` },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       setOtpSent(true);

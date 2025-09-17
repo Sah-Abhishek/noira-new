@@ -188,6 +188,7 @@ export default function UserSignup() {
             <input
               type="tel"
               placeholder="Enter your phone number"
+              defaultValue="44"
               {...register("phone")}
               className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.phone ? "ring-red-500" : "focus:ring-primary"
                 }`}
