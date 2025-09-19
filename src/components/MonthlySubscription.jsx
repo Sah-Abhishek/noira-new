@@ -103,7 +103,7 @@ export default function MonthlySubscription() {
             <div className="text-center">
               <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
                 <FontAwesomeIcon icon={faCalendarPlus} className="mr-2" />
-                Book Now
+                Contact on WhatsApp
               </button>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function MonthlySubscription() {
             <div className="text-center">
               <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
                 <FontAwesomeIcon icon={faStar} className="mr-2" />
-                Start Ritual
+                Contact on WhatsApp
               </button>
             </div>
           </div>
