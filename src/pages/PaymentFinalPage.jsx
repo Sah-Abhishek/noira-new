@@ -5,8 +5,6 @@ import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
 
 import useBookingStore from "../store/bookingStore.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import confetti from "canvas-confetti";
-import ComingSoonModal from "../components/PaymentPage/ComingSoonModal.jsx";
 import AddressModal from "../components/Modals/AddressModal.jsx";
 import SavedAddresses from "../components/PaymentPage/SavedAddresses.jsx";
 import axios from "axios";
@@ -17,27 +15,20 @@ import VerifyMobileModal from "../components/user/VerifyMobileModal.jsx";
 const PaymentPage = () => {
   const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
   const { user } = useUserStore();
-  const isMobileNumberSaved = Boolean(user.phone);
-  const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState();
+
+  const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState(0);
   const [isVerifyMobileModalOpen, setIsVerifyMobileModalOpen] = useState(false);
-  const isPhoneVerified = user.isPhoneVerified ? true : false;
   const [refreshKey, setRefreshKey] = useState(0);
   const [couponCode, setCouponCode] = useState(null);
-
-
-
   const [loading, setLoading] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || "/";
   const userjwt = localStorage.getItem("userjwt");
-  // console.log("this is the userjwt:", userjwt);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
-  // console.log("This is the phone verified: ", user.phoneVerified);
 
   const handlePayment = async () => {
     if (loading) return;
@@ -66,11 +57,9 @@ const PaymentPage = () => {
             optionIndex: cart.optionIndex,
             date,
             time,
-            couponCode, // ✅ send coupon code
+            couponCode,
           },
-          {
-            headers: { Authorization: `Bearer ${userjwt}` },
-          }
+          { headers: { Authorization: `Bearer ${userjwt}` } }
         );
 
         if (res.data.url) {
@@ -86,7 +75,6 @@ const PaymentPage = () => {
       setLoading(false);
     }
   };
-
 
   const handlePayByCash = async () => {
     if (loading) return;
@@ -115,11 +103,9 @@ const PaymentPage = () => {
             optionIndex: cart.optionIndex,
             date,
             time,
-            couponCode, // ✅ send coupon code
+            couponCode,
           },
-          {
-            headers: { Authorization: `Bearer ${userjwt}` },
-          }
+          { headers: { Authorization: `Bearer ${userjwt}` } }
         );
 
         if (res.status === 200) {
@@ -138,6 +124,7 @@ const PaymentPage = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-black pb-20 pt-10 px-4">
       <div className="max-w-6xl pt-5 mx-auto">
@@ -161,7 +148,10 @@ const PaymentPage = () => {
             <BookingSummary setCouponCode={setCouponCode} />
           </div>
           <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses refreshKey={refreshKey} isAddressInputModalOpen={isAddressModalOpen} setLengthOfReturnedAddresses={setLengthOfReturnedAddresses} />
+            <SavedAddresses
+              refreshKey={refreshKey}
+              setLengthOfReturnedAddresses={setLengthOfReturnedAddresses}
+            />
           </div>
         </div>
 
@@ -194,11 +184,10 @@ const PaymentPage = () => {
             )}
           </button>
 
-          {/* ✅ Pay by Cash button */}
           <button
             onClick={handlePayByCash}
             disabled={loading}
-            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full  transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Pay by Cash
           </button>
@@ -206,18 +195,17 @@ const PaymentPage = () => {
       </div>
 
       {/* Modals */}
-      {/* <ComingSoonModal */}
-      {/*   isOpen={isModalOpen} */}
-      {/*   onClose={() => setIsModalOpen(false)} */}
-      {/* /> */}
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => {
           setIsAddressModalOpen(false);
-          setRefreshKey((prev) => prev + 1);
+          setRefreshKey((prev) => prev + 1); // ✅ force re-fetch in SavedAddresses
         }}
       />
-      <VerifyMobileModal isOpen={isVerifyMobileModalOpen} onClose={() => setIsVerifyMobileModalOpen(false)} />
+      <VerifyMobileModal
+        isOpen={isVerifyMobileModalOpen}
+        onClose={() => setIsVerifyMobileModalOpen(false)}
+      />
     </div>
   );
 };

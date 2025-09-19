@@ -4,7 +4,7 @@ import { Home, Plus } from "lucide-react";
 import useBookingStore from "../../store/bookingStore.jsx";
 import AddressModal from "../Modals/AddressModal.jsx";
 
-export default function SavedAddresses({ refreshKey, isAddressInputModalOpen, setLengthOfReturnedAddresses }) {
+export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresses }) {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,59 +14,55 @@ export default function SavedAddresses({ refreshKey, isAddressInputModalOpen, se
   const { userAddress, setUserAddress } = useBookingStore();
   const [selectedId, setSelectedId] = useState(userAddress?._id || null);
 
-  // For now hardcoding userId, later replace with auth store
   const userId = localStorage.getItem("userId");
   const apiUrl = import.meta.env.VITE_API_URL;
   const userjwt = localStorage.getItem("userjwt");
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/user/${userId}/alladdress`, {
-          headers: {
-            Authorization: `Bearer ${userjwt}`,
-          },
+  const fetchAddresses = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${apiUrl}/user/${userId}/alladdress`, {
+        headers: { Authorization: `Bearer ${userjwt}` },
+      });
 
-        });
-        setAddresses(res.data.allAddresses || []);
-        setLengthOfReturnedAddresses(res.data.allAddresses.length || 0);
-        console.log("This is the lenght of somehting: ", res.data.allAddresses.length || 0);
-
-
-        // ✅ If store already has userAddress, make sure it's pre-selected
-        if (userAddress?._id) {
-          setSelectedId(userAddress._id);
-        }
-      } catch (err) {
-        console.error("Failed to fetch addresses", err);
-        setError("Could not load addresses");
-      } finally {
-        setLoading(false);
+      const all = res.data.allAddresses || [];
+      setAddresses(all);
+      setLengthOfReturnedAddresses(all.length);
+      if (userAddress?._id) {
+        setSelectedId(userAddress._id);
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch addresses", err);
+      setError("Could not load addresses");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchAddresses();
-  }, [userAddress?._id, refreshKey]);
+  }, [refreshKey, userAddress?._id]);
 
   const handleSelectAddress = async (id) => {
     setSelectedId(id);
     try {
-      const response = await axios.post(`${apiUrl}/user/${userId}/default`, {
-        addressId: id,
-      }, {
-        headers: {
-          Authorization: `Bearer ${userjwt}`,
-
-        }
-      });
+      const response = await axios.post(
+        `${apiUrl}/user/${userId}/default`,
+        { addressId: id },
+        { headers: { Authorization: `Bearer ${userjwt}` } }
+      );
 
       if (response.status === 200) {
         setUserAddress(response.data.address); // ✅ Update store
       }
-      console.log("Default address set:", id);
     } catch (err) {
       console.error("Failed to set default address", err);
     }
+  };
+
+  const handleAddressAdded = async () => {
+    setIsAddressModalOpen(false);
+    await fetchAddresses(); // ✅ refresh after adding
   };
 
   if (loading) return <p className="text-gray-400">Loading addresses...</p>;
@@ -87,8 +83,8 @@ export default function SavedAddresses({ refreshKey, isAddressInputModalOpen, se
               key={addr._id}
               onClick={() => handleSelectAddress(addr._id)}
               className={`bg-[#111] p-4 rounded-xl border transition-colors cursor-pointer ${selectedId === addr._id
-                ? "border-primary ring-2 ring-primary"
-                : "border-primary/20 hover:border-primary"
+                  ? "border-primary ring-2 ring-primary"
+                  : "border-primary/20 hover:border-primary"
                 }`}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -117,7 +113,11 @@ export default function SavedAddresses({ refreshKey, isAddressInputModalOpen, se
         <Plus className="w-5 h-5" />
         Add New Address
       </button>
-      <AddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} />
+
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={handleAddressAdded} // ✅ Refresh after modal closes
+      />
     </div>
   );
 }
