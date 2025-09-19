@@ -60,7 +60,7 @@ export default function SubscriptionsSection() {
               "120": { total: "£360", per: "£120", duration: "120 minutes each" },
             }}
             duration={duration}
-            buttonText="Select 3-Pack"
+            buttonText="Contact on WhatsApp"
           />
 
           {/* 6-Pack */}
@@ -80,7 +80,7 @@ export default function SubscriptionsSection() {
               "120": { total: "£660", per: "£110", duration: "120 minutes each" },
             }}
             duration={duration}
-            buttonText="Select 6-Pack"
+            buttonText="Contact on WhastsApp"
           />
 
           {/* 9-Pack Best Value */}
@@ -104,7 +104,7 @@ export default function SubscriptionsSection() {
               "120": { total: "£900", per: "£100", duration: "120 minutes each" },
             }}
             duration={duration}
-            buttonText="Select Best Value"
+            buttonText="Contact on WhastsApp"
           />
         </div>
 
@@ -137,6 +137,15 @@ function SubscriptionCard({
   duration,
   buttonText,
 }) {
+
+  const phoneNumber = "+447350700055"
+  const message = "Hello, I would like to book a session.";
+  const handleWhatsAppClick = () => {
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(url, "_blank"); // ✅ opens WhatsApp in new tab/app
+  };
+
   return (
     <div
       className={`subscription-card glass-card rounded-3xl p-8 cursor-pointer shadow-xl relative transition-all 
@@ -200,6 +209,7 @@ function SubscriptionCard({
 
       {/* Button */}
       <button
+        onClick={handleWhatsAppClick}
         className={`w-full py-4 rounded-full font-semibold text-lg transition-all duration-300
         ${best
             ? "bg-gradient-to-r from-primary to-yellow-200 text-black hover:shadow-xl"

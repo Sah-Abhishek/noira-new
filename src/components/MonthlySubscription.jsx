@@ -9,6 +9,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function MonthlySubscription() {
+  const phoneNumber = "+447350700055"
+  const message = "Hello, I would like to book a session.";
+
+
+  const handleWhatsAppClick = () => {
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(url, "_blank"); // ✅ opens WhatsApp in new tab/app
+  };
+
   return (
     <div
       id="wellness-services-section"
@@ -91,7 +101,7 @@ export default function MonthlySubscription() {
             </div>
 
             <div className="text-center">
-              <button className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
+              <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
                 <FontAwesomeIcon icon={faCalendarPlus} className="mr-2" />
                 Book Now
               </button>
@@ -176,7 +186,7 @@ export default function MonthlySubscription() {
             </div>
 
             <div className="text-center">
-              <button className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
+              <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
                 <FontAwesomeIcon icon={faStar} className="mr-2" />
                 Start Ritual
               </button>
