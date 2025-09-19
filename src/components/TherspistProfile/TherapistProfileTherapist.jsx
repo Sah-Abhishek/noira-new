@@ -11,6 +11,7 @@ import {
   Users,
   Calendar,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const TherapistProfileTherapist = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -21,6 +22,22 @@ const TherapistProfileTherapist = () => {
 
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
+  const userEmail = localStorage.getItem("userEmail");
+
+  const handleResetPassword = async () => {
+    try {
+      const response = await axios.post(`${apiUrl}/auth/forgot-password`, { email: userEmail })
+      if (response.status === 200) {
+        toast.success(response.data.message || "Password reset link sent to your email!");
+      }
+
+
+    } catch (error) {
+      console.log("There was an error: ", error);
+      toast.error("Failed to send reset link")
+
+    }
+  }
 
   useEffect(() => {
     const fetchTherapist = async () => {
@@ -213,13 +230,22 @@ const TherapistProfileTherapist = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => navigate("/therapist/edittherapistprofile")}
-          className="w-full sm:w-auto bg-primary text-black px-5 mt-6 py-2 rounded-lg font-semibold shadow-md 
+        <div className="">
+          <button
+            onClick={() => navigate("/therapist/edittherapistprofile")}
+            className="w-full m-5 sm:w-auto bg-primary text-black px-5 mt-6 py-2 rounded-lg font-semibold shadow-md 
              hover:bg-primary/90 active:scale-95 transition-all duration-200"
-        >
-          Edit Profile
-        </button>
+          >
+            Edit Profile
+          </button>
+          <button
+            onClick={handleResetPassword}
+            className="w-full sm:w-auto bg-primary text-black px-5 mt-6 py-2 rounded-lg font-semibold shadow-md 
+             hover:bg-primary/90 active:scale-95 transition-all duration-200"
+          >
+            Reset Password
+          </button>
+        </div>
       </div>
     </div>
   );

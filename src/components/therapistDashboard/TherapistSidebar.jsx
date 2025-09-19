@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "/noira.png";
 import {
@@ -9,6 +9,7 @@ import {
   User,
 } from "lucide-react";
 import useUserStore from "../../store/UserStore.jsx"; // adjust path if needed
+import ConfirmLogoutModal from "../adminDashboard/ConfirmLogOutModal.jsx";
 
 const TherapistSidebar = () => {
   const navigate = useNavigate();
@@ -17,11 +18,13 @@ const TherapistSidebar = () => {
   // Access Zustand user store
   const { user, clearUser } = useUserStore();
 
-  const logOut = () => {
+  const handleLogOut = () => {
     localStorage.clear();
     clearUser(); // clear from Zustand as well
     navigate("/");
   };
+  const [isConfirmLogOutModalOpen, setIsConfirmLogOutModalOpen] = useState(false);
+
 
   const menuItems = [
     {
@@ -114,7 +117,7 @@ const TherapistSidebar = () => {
               {fullName}
             </span>
             <button
-              onClick={logOut}
+              onClick={() => setIsConfirmLogOutModalOpen(true)}
               className="text-xs text-red-500 mt-1 hover:underline"
             >
               Logout
@@ -142,7 +145,7 @@ const TherapistSidebar = () => {
 
         {/* Logout Button with Avatar */}
         <button
-          onClick={logOut}
+          onClick={() => setIsConfirmLogOutModalOpen(true)}
           className="flex flex-col items-center text-red-500 hover:text-red-400 transition"
         >
           {/* Avatar */}
@@ -164,7 +167,11 @@ const TherapistSidebar = () => {
           {/* Logout Text */}
           <span className="text-[10px] mt-1">Logout</span>
         </button>
+
       </div>
+      <ConfirmLogoutModal isOpen={isConfirmLogOutModalOpen} onConfirm={handleLogOut} onClose={() => setIsConfirmLogOutModalOpen(false)} />
+
+
     </>
   );
 };

@@ -17,7 +17,6 @@ export default function ForgotPassword() {
     try {
       setIsLoading(true);
       const res = await axios.post(`${apiUrl}/auth/forgot-password`, { email }, {
-
       });
       toast.success(res.data.message || "Password reset link sent to your email!");
       navigate("/userlogin"); // after request, redirect to login

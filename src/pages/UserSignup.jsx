@@ -22,6 +22,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import useUserStore from "../store/UserStore";
 
 // ✅ List of London & Greater London postal code prefixes
 // const LONDON_POSTCODES = [
@@ -36,7 +37,7 @@ const schema = Yup.object().shape({
   email: Yup.string().email("Invalid email format").required("Email is required"),
   phone: Yup.string()
     .required("Phone is required")
-    .matches(/^44\d{6,10}$/, "Phone number must start with 44 followed by 6 to 10 digits"),
+    .matches(/^\d{6,10}$/, "Enter 6 to 10 digits (after +44)"),
   password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
   // postalCode: Yup.string()
   //   .required("Postal code is required")
@@ -52,20 +53,24 @@ export default function UserSignup() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useUserStore();
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const login = useGoogleLogin({
+  const googleSignup = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
         const res = await axios.post(`${apiUrl}/auth/google`, {
           token: credentialResponse.access_token,
         });
+        console.log("This is the response from the google: ", res);
 
+        setUser(res.data.user);
 
         toast.success("Signin successful");
         localStorage.setItem("userjwt", res.data.token);
         localStorage.setItem("userEmail", res.data.user.email);
+        localStorage.setItem("userId", res.data.user._id);
         navigate("/allservicespage");
       } catch (error) {
         console.error("Google login error:", error);
@@ -182,22 +187,26 @@ export default function UserSignup() {
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
-          {/* Phone */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
               <FaPhone className="text-primary" /> Phone Number
             </label>
-            <input
-              type="tel"
-              placeholder="Enter your phone number"
-              defaultValue="44"
-              {...register("phone")}
-              className={`w-full px-4 py-3 rounded-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.phone ? "ring-red-500" : "focus:ring-primary"
-                }`}
-            />
-            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+            <div className="flex items-center">
+              <span className="px-3 py-3 bg-[#2b2b2b] border-r border-gray-600 rounded-l-md text-gray-400">
+                +44
+              </span>
+              <input
+                type="tel"
+                placeholder="Enter your phone number"
+                {...register("phone")}
+                className={`w-full px-4 py-3 rounded-r-md bg-[#2b2b2b] text-white placeholder-gray-500 outline-none focus:ring-2 ${errors.phone ? "ring-red-500" : "focus:ring-primary"
+                  }`}
+              />
+            </div>
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+            )}
           </div>
-
           {/* Password */}
           <div className="space-y-1">
             <label className="text-sm text-gray-300 flex items-center gap-2">
@@ -266,12 +275,11 @@ export default function UserSignup() {
 
           {/* Social Buttons */}
           <div className="flex gap-4">
-            {/* <button */}
-            {/*   onClick={() => login()} */}
-            {/*   className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white" */}
-            {/* > */}
-            {/*   <FaGoogle /> Google */}
-            {/* </button> */}
+            <button onClick={() => googleSignup()}
+              className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600 text-white"
+            >
+              <FaGoogle /> Google
+            </button>
             {/* <button className="w-full bg-[#2b2b2b] hover:bg-[#3b3b3b] py-2 rounded-md flex items-center justify-center gap-2 border border-gray-600"> */}
             {/*   <FaApple /> Apple */}
             {/* </button> */}

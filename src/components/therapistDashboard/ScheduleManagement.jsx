@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ConfirmLogoutModal from "../adminDashboard/ConfirmLogOutModal";
 
 const ScheduleManagement = () => {
   const [availability, setAvailability] = useState([]);

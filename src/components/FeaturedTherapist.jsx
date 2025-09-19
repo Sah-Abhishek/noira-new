@@ -96,8 +96,7 @@ const FeaturedTherapists = () => {
                   <div>
                     <h3 className="text-xl font-bold text-white">{fullName}</h3>
                     <p className="text-primary/80 text-sm">
-                      @{username} • ID: {therapistId}
-                    </p>
+                      @{username}                     </p>
                   </div>
 
                   {/* Rating + Sessions */}

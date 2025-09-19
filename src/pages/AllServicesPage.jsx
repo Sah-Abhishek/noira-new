@@ -224,7 +224,7 @@ export default function AllServicesPage() {
           <StickyCartSummary isAbled={true} />
         )}
       </div>
-      {!user.address &&
+      {!user?.address &&
         <PostalCodeModal isOpen={isPostalCodeModalOpen} onClose={() => setIsPostalCodeModalOpen(false)} />
       }
     </div>
