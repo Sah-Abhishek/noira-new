@@ -83,10 +83,10 @@ const TherapistSelectionCard = ({ therapist }) => {
       </div>
 
       {/* Location + Experience */}
-      <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">
-        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-        {/* <span>Manhattan • {therapist?.experience || "5"} yrs exp</span> */}
-      </div>
+      {/* <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm"> */}
+      {/* <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-primary" /> */}
+      {/* <span>Manhattan • {therapist?.experience || "5"} yrs exp</span> */}
+      {/* </div> */}
 
       {/* Languages */}
       <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">

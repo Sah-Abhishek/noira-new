@@ -343,65 +343,65 @@ export default function EditTherapistProfile() {
         </div>
 
         {/* Postal Codes */}
-        <div className="mb-4">
-          <label className="block text-sm text-gray-400 mb-1">
-            Services Available in Postal Codes
-          </label>
-          <div className="flex flex-col sm:flex-row gap-2 mb-2">
-            <input
-              type="text"
-              value={postalCodeInput}
-              onChange={(e) => setPostalCodeInput(e.target.value)}
-              placeholder="Enter postal code"
-              className="flex-1 bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                if (
-                  postalCodeInput.trim() &&
-                  !form.servicesInPostalCodes.includes(postalCodeInput.trim())
-                ) {
-                  setForm((prev) => ({
-                    ...prev,
-                    servicesInPostalCodes: [
-                      ...prev.servicesInPostalCodes,
-                      postalCodeInput.trim(),
-                    ],
-                  }));
-                  setPostalCodeInput("");
-                }
-              }}
-              className="px-3 py-2 rounded-lg bg-primary text-black text-sm hover:bg-primary/80"
-            >
-              Add
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {form.servicesInPostalCodes.map((pc, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 rounded-full border border-white/10 text-sm flex items-center gap-2"
-              >
-                {pc}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm((prev) => ({
-                      ...prev,
-                      servicesInPostalCodes: prev.servicesInPostalCodes.filter(
-                        (_, idx) => idx !== i
-                      ),
-                    }))
-                  }
-                  className="text-gray-400 hover:text-red-500"
-                >
-                  ✕
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* <div className="mb-4"> */}
+        {/*   <label className="block text-sm text-gray-400 mb-1"> */}
+        {/*     Services Available in Postal Codes */}
+        {/*   </label> */}
+        {/*   <div className="flex flex-col sm:flex-row gap-2 mb-2"> */}
+        {/*     <input */}
+        {/*       type="text" */}
+        {/*       value={postalCodeInput} */}
+        {/*       onChange={(e) => setPostalCodeInput(e.target.value)} */}
+        {/*       placeholder="Enter postal code" */}
+        {/*       className="flex-1 bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary" */}
+        {/*     /> */}
+        {/*     <button */}
+        {/*       type="button" */}
+        {/*       onClick={() => { */}
+        {/*         if ( */}
+        {/*           postalCodeInput.trim() && */}
+        {/*           !form.servicesInPostalCodes.includes(postalCodeInput.trim()) */}
+        {/*         ) { */}
+        {/*           setForm((prev) => ({ */}
+        {/*             ...prev, */}
+        {/*             servicesInPostalCodes: [ */}
+        {/*               ...prev.servicesInPostalCodes, */}
+        {/*               postalCodeInput.trim(), */}
+        {/*             ], */}
+        {/*           })); */}
+        {/*           setPostalCodeInput(""); */}
+        {/*         } */}
+        {/*       }} */}
+        {/*       className="px-3 py-2 rounded-lg bg-primary text-black text-sm hover:bg-primary/80" */}
+        {/*     > */}
+        {/*       Add */}
+        {/*     </button> */}
+        {/*   </div> */}
+        {/*   <div className="flex flex-wrap gap-2"> */}
+        {/*     {form.servicesInPostalCodes.map((pc, i) => ( */}
+        {/*       <span */}
+        {/*         key={i} */}
+        {/*         className="px-3 py-1 rounded-full border border-white/10 text-sm flex items-center gap-2" */}
+        {/*       > */}
+        {/*         {pc} */}
+        {/*         <button */}
+        {/*           type="button" */}
+        {/*           onClick={() => */}
+        {/*             setForm((prev) => ({ */}
+        {/*               ...prev, */}
+        {/*               servicesInPostalCodes: prev.servicesInPostalCodes.filter( */}
+        {/*                 (_, idx) => idx !== i */}
+        {/*               ), */}
+        {/*             })) */}
+        {/*           } */}
+        {/*           className="text-gray-400 hover:text-red-500" */}
+        {/*         > */}
+        {/*           ✕ */}
+        {/*         </button> */}
+        {/*       </span> */}
+        {/*     ))} */}
+        {/*   </div> */}
+        {/* </div> */}
 
         {/* Accepting & Gender */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
