@@ -167,6 +167,13 @@ export default function EditTherapistProfileAdmin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate that at least one area is selected
+    if (form.servicesInPostalCodes.length === 0) {
+      toast.error("Please select at least one area in which you provide your services.");
+      return;
+    }
+
     try {
       const formData = new FormData();
 
@@ -205,7 +212,6 @@ export default function EditTherapistProfileAdmin() {
       toast.error("Failed to update therapist.");
     }
   };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black text-white">
