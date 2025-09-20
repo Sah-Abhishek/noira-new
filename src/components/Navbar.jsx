@@ -253,7 +253,7 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div>
+              <div className="m-2">
                 <button
                   onClick={() => handleLinkClick("/userlogin", { state: { from: location } })}
                   className="w-full px-4 py-3 rounded-xl bg-primary text-black font-medium hover:bg-opacity-80 transition"
