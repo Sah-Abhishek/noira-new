@@ -81,12 +81,20 @@ const Navbar = () => {
         </button>
 
         {!isLoggedIn ? (
-          <button
-            onClick={() => handleLinkClick("/userlogin", { state: { from: location } })}
-            className="px-4 py-2 rounded-full bg-primary text-black font-medium hover:bg-opacity-80 transition"
-          >
-            Login
-          </button>
+          <div className="">
+            <button
+              onClick={() => handleLinkClick("/userlogin", { state: { from: location } })}
+              className="px-4 m-2 py-2 rounded-full bg-primary text-black font-medium hover:bg-opacity-80 transition"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => handleLinkClick("/adminlogin", { state: { from: location } })}
+              className="px-4 py-2 rounded-full bg-primary text-black font-medium hover:bg-opacity-80 transition"
+            >
+              Admin Login
+            </button>
+          </div>
         ) : (
           <div className="relative">
             <div className="group inline-block">
