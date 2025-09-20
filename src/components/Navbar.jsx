@@ -261,7 +261,7 @@ const Navbar = () => {
                   Login
                 </button>
                 <button
-                  onClick={() => handleLinkClick("/admilogin", { state: { from: location } })}
+                  onClick={() => handleLinkClick("/adminlogin", { state: { from: location } })}
                   className="w-full px-4 py-3 rounded-xl bg-primary text-black font-medium hover:bg-opacity-80 transition"
                 >
                   Admin
