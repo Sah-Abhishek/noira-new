@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Eye, Upload, User } from "lucide-react";
+import { Eye, Upload, User, ChevronDown } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -7,9 +7,17 @@ export default function AddNewTherapist() {
   const [servicesList, setServicesList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
   const adminjwt = localStorage.getItem("adminjwt");
+
+  const londonAreas = [
+    "Central London",
+    "East London",
+    "West London",
+    "North London",
+    "South London"
+  ];
 
   const [form, setForm] = useState({
     firstName: "",
@@ -54,6 +62,20 @@ export default function AddNewTherapist() {
     fetchServices();
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isAreaDropdownOpen && !event.target.closest('.area-dropdown')) {
+        setIsAreaDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isAreaDropdownOpen]);
+
   const handleChange = (field, value, nested = false) => {
     if (nested) {
       setForm((prev) => ({
@@ -73,8 +95,26 @@ export default function AddNewTherapist() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleAreaSelect = (area) => {
+    if (!form.servicesInPostalCodes.includes(area)) {
+      setForm((prev) => ({
+        ...prev,
+        servicesInPostalCodes: [...prev.servicesInPostalCodes, area],
+      }));
+    }
+    setIsAreaDropdownOpen(false);
+  };
 
+  const removeArea = (indexToRemove) => {
+    setForm((prev) => ({
+      ...prev,
+      servicesInPostalCodes: prev.servicesInPostalCodes.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.firstName.trim()) return toast.error("First Name is required");
@@ -86,7 +126,6 @@ export default function AddNewTherapist() {
     if (form.services.length === 0) return toast.error("Select at least one service");
     if (form.languages.length === 0) return toast.error("Add at least one language");
     if (!form.gender) return toast.error("Gender is required");
-
 
     setLoading(true);
     try {
@@ -124,7 +163,7 @@ export default function AddNewTherapist() {
       const res = await axios.post(`${apiUrl}/admin/createtherapist`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${adminjwt}`, // ✅ Add JWT here
+          Authorization: `Bearer ${adminjwt}`,
         },
       });
 
@@ -134,7 +173,7 @@ export default function AddNewTherapist() {
       resetForm();
     } catch (err) {
       console.error("Error saving therapist:", err);
-      toast.error("Failed to add therapist .");
+      toast.error("Failed to add therapist.");
     } finally {
       setLoading(false);
     }
@@ -166,7 +205,6 @@ export default function AddNewTherapist() {
     });
     setProfileImage(null);
     setPreviewUrl("");
-    setPostalCodeInput("");
   };
 
   return (
@@ -277,16 +315,17 @@ export default function AddNewTherapist() {
         </div>
 
         {/* Experience */}
-
-        <label className="block text-sm text-gray-400 mb-1">Experience *</label>
-        <input
-          type="number"
-          value={form.experience}
-          onChange={(e) => handleChange("experience", e.target.value)}
-          className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
-    focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
-          placeholder="Years of experience"
-        />
+        <div className="mb-4">
+          <label className="block text-sm text-gray-400 mb-1">Experience *</label>
+          <input
+            type="number"
+            value={form.experience}
+            onChange={(e) => handleChange("experience", e.target.value)}
+            className="w-full bg-black border border-white/10 rounded-lg p-2 text-white 
+      focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+            placeholder="Years of experience"
+          />
+        </div>
 
         {/* Address */}
         <div className="mb-4">
@@ -307,7 +346,6 @@ export default function AddNewTherapist() {
           </div>
         </div>
 
-        {/* Services Offered */}
         {/* Services Offered */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">Services Offered *</label>
@@ -363,60 +401,62 @@ export default function AddNewTherapist() {
           </div>
         </div>
 
-        {/* Services Provided In PostalCodes */}
+        {/* Services Available in London Areas */}
         <div className="mb-4">
-          <label className="block text-sm text-gray-400 mb-1">
-            Services Available in Postal Codes *
+          <label className="block text-sm text-gray-400 mb-2">
+            Services Available in Areas *
           </label>
 
-          {/* Input + Add button */}
-          <div className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={postalCodeInput}
-              onChange={(e) => setPostalCodeInput(e.target.value)}
-              placeholder="Enter postal code"
-              className="flex-1 bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
-            />
+          {/* Dropdown */}
+          <div className="relative mb-3 area-dropdown">
             <button
               type="button"
-              onClick={() => {
-                if (postalCodeInput.trim() !== "" && !form.servicesInPostalCodes.includes(postalCodeInput.trim())) {
-                  setForm((prev) => ({
-                    ...prev,
-                    servicesInPostalCodes: [
-                      ...prev.servicesInPostalCodes,
-                      postalCodeInput.trim(),
-                    ],
-                  }));
-                  setPostalCodeInput("");
-                }
-              }}
-              className="px-3 py-2 rounded-lg bg-primary text-black text-sm hover:bg-primary/80"
+              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary flex items-center justify-between"
             >
-              Add
+              <span className="text-gray-400">Select London Areas</span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${isAreaDropdownOpen ? 'rotate-180' : ''}`}
+              />
             </button>
+
+            {isAreaDropdownOpen && (
+              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg">
+                {londonAreas.map((area) => (
+                  <button
+                    key={area}
+                    type="button"
+                    onClick={() => handleAreaSelect(area)}
+                    disabled={form.servicesInPostalCodes.includes(area)}
+                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg transition-colors
+                      ${form.servicesInPostalCodes.includes(area)
+                        ? 'text-gray-500 cursor-not-allowed'
+                        : 'text-white hover:text-primary'
+                      }`}
+                  >
+                    {area}
+                    {form.servicesInPostalCodes.includes(area) && (
+                      <span className="ml-2 text-xs">(Selected)</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Display chips */}
+          {/* Selected Areas */}
           <div className="flex flex-wrap gap-2">
-            {form.servicesInPostalCodes.map((pc, i) => (
+            {form.servicesInPostalCodes.map((area, index) => (
               <span
-                key={i}
-                className="px-3 py-1 rounded-full border border-white/10 text-sm flex items-center gap-2"
+                key={index}
+                className="px-3 py-1 rounded-full border border-white/10 bg-primary/10 text-sm flex items-center gap-2"
               >
-                {pc}
+                {area}
                 <button
                   type="button"
-                  onClick={() =>
-                    setForm((prev) => ({
-                      ...prev,
-                      servicesInPostalCodes: prev.servicesInPostalCodes.filter(
-                        (_, idx) => idx !== i
-                      ),
-                    }))
-                  }
-                  className="text-gray-400 hover:text-red-500"
+                  onClick={() => removeArea(index)}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
                 >
                   ✕
                 </button>
@@ -530,36 +570,12 @@ export default function AddNewTherapist() {
             className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
           />
         </div>
+
         {/* Actions */}
         <div className="flex justify-end gap-3">
           <button
             type="button"
-            onClick={() => {
-              setForm({
-                fullName: "",
-                username: "",
-                experience: "",
-                phone: "",
-                email: "",
-                password: "",
-                address: {
-                  Building_No: "",
-                  Street: "",
-                  Locality: "",
-                  PostTown: "",
-                  PostalCode: "",
-                },
-                services: [],
-                languages: [],
-                servicesInPostcode: "",
-                acceptingNewClients: false,
-                gender: "",
-                isVerified: false,
-                bio: "",
-              });
-              setProfileImage(null);
-              setPreviewUrl("");
-            }}
+            onClick={resetForm}
             className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700"
           >
             Cancel
@@ -567,8 +583,8 @@ export default function AddNewTherapist() {
           <button
             type="submit"
             className={`px-4 py-2 rounded-lg font-semibold transition-opacity duration-200
-    ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-primary text-black hover:opacity-90'}
-  `}
+      ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-primary text-black hover:opacity-90'}
+    `}
             disabled={loading}
           >
             {loading ? 'Creating...' : 'Create Therapist'}
