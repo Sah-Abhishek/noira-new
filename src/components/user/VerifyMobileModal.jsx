@@ -144,7 +144,7 @@ function VerifyMobileModal({ isOpen, onClose, }) {
             </label>
             <div className="flex items-center mb-2">
               <span className="text-sm text-gray-400 bg-gray-700 px-3 py-2 rounded-l-lg border-r border-gray-600">
-                +91
+                +44
               </span>
               <input
                 type="tel"
@@ -166,7 +166,7 @@ function VerifyMobileModal({ isOpen, onClose, }) {
             {user?.phone && !isEditingPhone && otpSent && (
               <div className="flex justify-between items-center mb-2">
                 <span className="text-xs text-gray-400">
-                  OTP sent to: +91 {user.phone}
+                  OTP sent to: +44 {user.phone}
                 </span>
                 <button
                   onClick={handleChangePhone}
