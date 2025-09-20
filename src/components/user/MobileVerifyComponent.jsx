@@ -52,7 +52,7 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
     try {
       await axios.post(
         `${apiUrl}/otp/send-otp`,
-        { mobileNumber: `91${phoneNumber}` },
+        { mobileNumber: `44${phoneNumber}` },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       setOtpSent(true);
@@ -76,7 +76,7 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
     try {
       const response = await axios.post(
         `${apiUrl}/otp/verify-otp`,
-        { otp, mobileNumber: `91${phoneNumber}`, userId: user._id },
+        { otp, mobileNumber: `44${phoneNumber}`, userId: user._id },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       if (response?.data?.type === "success") {
@@ -137,7 +137,7 @@ function MobileVerifyComponent({ profile, userjwt, apiUrl, setProfile }) {
               {user?.phone && !isEditingPhone && otpSent && (
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-xs text-gray-400">
-                    OTP sent to: +91 {user.phone}
+                    OTP sent to: +44 {user.phone}
                   </span>
                   <button
                     onClick={handleChangePhone}
