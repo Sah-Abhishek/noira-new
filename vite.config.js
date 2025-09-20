@@ -15,7 +15,8 @@ export default defineConfig({
       theme_color: "#111111",
       background_color: "#111111",
       display: "standalone",
-      start_url: "/",
+      start_url: ".",
+      scope: "/",
       icons: [
         {
           src: "/noira.png",
