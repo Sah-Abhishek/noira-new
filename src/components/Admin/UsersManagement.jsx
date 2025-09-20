@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaUser, FaTrash, FaEdit, FaSearch } from "react-icons/fa";
+import { FaUser, FaTrash, FaEdit, FaSearch, FaCalendarAlt } from "react-icons/fa";
 import FancyDropdown from "../browseTherapist/FancyDropdown";
 
 export default function UsersManagement() {
@@ -12,13 +12,17 @@ export default function UsersManagement() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
+  // Date filters
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const adminjwt = localStorage.getItem('adminjwt');
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // 🔹 Debounce effect for search
+  // Debounce effect for search
   useEffect(() => {
     const handler = setTimeout(() => {
       setSearch(searchInput);
@@ -30,17 +34,30 @@ export default function UsersManagement() {
     };
   }, [searchInput]);
 
-  // 🔹 Fetch users
+  // Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
+        const params = {
+          page,
+          limit,
+          search
+        };
+
+        // Add date filters if they exist
+        if (startDate) {
+          params.startDate = startDate;
+        }
+        if (endDate) {
+          params.endDate = endDate;
+        }
+
         const res = await axios.get(`${apiUrl}/admin/users`, {
-          params: { page, limit, search },
+          params,
           headers: {
             Authorization: `Bearer ${adminjwt}`,
           },
-
         });
 
         setUsers(res.data.users || []);
@@ -53,7 +70,23 @@ export default function UsersManagement() {
     };
 
     fetchUsers();
-  }, [page, limit, search, apiUrl]);
+  }, [page, limit, search, startDate, endDate, apiUrl]);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  // Clear date filters
+  const clearDateFilters = () => {
+    setStartDate("");
+    setEndDate("");
+    setPage(1);
+  };
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white p-6">
@@ -91,6 +124,72 @@ export default function UsersManagement() {
           </div>
         </div>
 
+        {/* Date Filters */}
+        <div className="bg-[#111] rounded-2xl p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex items-center gap-2">
+              <FaCalendarAlt className="text-primary" />
+              <span className="text-sm font-medium">Registration Date:</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-400">From:</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setPage(1);
+                  }}
+                  className="px-3 py-2 rounded-lg bg-[#0d0d0d] border border-[#222] text-white text-sm focus:border-primary outline-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-400">To:</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setPage(1);
+                  }}
+                  className="px-3 py-2 rounded-lg bg-[#0d0d0d] border border-[#222] text-white text-sm focus:border-primary outline-none"
+                />
+              </div>
+
+              {(startDate || endDate) && (
+                <button
+                  onClick={clearDateFilters}
+                  className="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Active Filters Display */}
+          {(startDate || endDate) && (
+            <div className="mt-3 pt-3 border-t border-[#222]">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-400">Active filters:</span>
+                {startDate && (
+                  <span className="px-2 py-1 rounded bg-primary/20 text-primary">
+                    From: {formatDate(startDate)}
+                  </span>
+                )}
+                {endDate && (
+                  <span className="px-2 py-1 rounded bg-primary/20 text-primary">
+                    To: {formatDate(endDate)}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Table */}
         <div className="bg-[#111] rounded-2xl shadow-lg overflow-hidden">
           <table className="w-full text-left">
@@ -100,8 +199,8 @@ export default function UsersManagement() {
                 <th className="px-6 py-4">Email</th>
                 <th className="px-6 py-4">Role</th>
                 <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">Registration Date</th>
                 <th className="px-6 py-4">Bookings</th>
-                {/* <th className="px-6 py-4">Actions</th> */}
               </tr>
             </thead>
             <tbody>
@@ -123,9 +222,12 @@ export default function UsersManagement() {
                     {/* User Avatar + Name */}
                     <td className="px-6 py-4 flex items-center gap-3">
                       <img
-                        src={user.avatar_url}
+                        src={user.avatar_url || "https://randomuser.me/api/portraits/men/1.jpg"}
                         alt={user.name.first}
                         className="w-10 h-10 rounded-full object-cover border border-primary"
+                        onError={(e) => {
+                          e.target.src = "https://randomuser.me/api/portraits/men/1.jpg";
+                        }}
                       />
                       <div>
                         <p className="font-semibold text-white">
@@ -138,7 +240,11 @@ export default function UsersManagement() {
                     </td>
 
                     {/* Email */}
-                    <td className="px-6 py-4">{user.email}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <div className="max-w-[200px] truncate" title={user.email}>
+                        {user.email}
+                      </div>
+                    </td>
 
                     {/* Role */}
                     <td className="px-6 py-4 capitalize">
@@ -150,35 +256,45 @@ export default function UsersManagement() {
                     {/* Status */}
                     <td className="px-6 py-4">
                       {user.emailVerified ? (
-                        <span className="text-green-400 font-medium">
+                        <span className="text-green-400 font-medium text-sm">
                           Verified
                         </span>
                       ) : (
-                        <span className="text-red-400 font-medium">
+                        <span className="text-red-400 font-medium text-sm">
                           Unverified
                         </span>
                       )}
                     </td>
 
-                    {/* Booking Stats */}
+                    {/* Registration Date */}
                     <td className="px-6 py-4">
-                      <span className="text-primary font-bold">
-                        {user.bookingStats?.total || 0}
-                      </span>{" "}
-                      bookings
+                      <div className="text-sm">
+                        <div className="text-white">
+                          {formatDate(user.createdAt)}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {new Date(user.createdAt).toLocaleTimeString('en-GB', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </div>
                     </td>
 
-                    {/* <td className="px-6 py-4 flex gap-3 text-lg"> */}
-                    {/*   <button className="text-primary hover:scale-110 transition"> */}
-                    {/*     <FaUser /> */}
-                    {/*   </button> */}
-                    {/*   <button className="text-blue-400 hover:scale-110 transition"> */}
-                    {/*     <FaEdit /> */}
-                    {/*   </button> */}
-                    {/*   <button className="text-red-500 hover:scale-110 transition"> */}
-                    {/*     <FaTrash /> */}
-                    {/*   </button> */}
-                    {/* </td> */}
+                    {/* Booking Stats */}
+                    <td className="px-6 py-4">
+                      <div className="text-sm">
+                        <span className="text-primary font-bold">
+                          {user.bookingStats?.total || 0}
+                        </span>{" "}
+                        bookings
+                        {user.bookingStats?.completed > 0 && (
+                          <div className="text-xs text-gray-400">
+                            {user.bookingStats.completed} completed
+                          </div>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (
