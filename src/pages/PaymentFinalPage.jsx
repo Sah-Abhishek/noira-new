@@ -35,7 +35,7 @@ const PaymentPage = () => {
     setLoading(true);
 
     if (!user.phoneVerified) {
-      toast.error("Verify Phone in the profile section");
+      // toast.error("Verify Phone in the profile section");
       setIsVerifyMobileModalOpen(true);
       setLoading(false);
       return;
@@ -81,7 +81,7 @@ const PaymentPage = () => {
     setLoading(true);
 
     if (!user.phoneVerified) {
-      toast.error("Verify Phone in the profile section");
+      // toast.error("Verify Phone in the profile section");
       setIsVerifyMobileModalOpen(true);
       setLoading(false);
       return;

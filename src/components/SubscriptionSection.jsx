@@ -12,15 +12,16 @@ export default function SubscriptionsSection() {
   ];
 
   return (
-    <div className="bg-black text-white font-sans min-h-screen p-6">
+    <div className="bg-black text-white  min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl sm:text-4xl text-[#D59940] font-braven mt-15 font-bold">
+          <h1 className="text-3xl sm:text-4xl text-[#D59940] font-braven font-bold  mt-15 ">
             Subscriptions{" "}<br />
-            <span className="text-gray-400 text-2xl">(Valid 3 Months)</span>
           </h1>
-          <p className="text-gray-300 text-xl font-light mb-8">
+
+          <span className="text-gray-400 font text-2xl">(Valid 3 Months)</span>
+          <p className="text-gray-300 text-gray-300 text-xl mt-5 mb-8">
             Choose your duration: 60 / 90 / 120 minutes
           </p>
 
@@ -33,7 +34,7 @@ export default function SubscriptionsSection() {
                 className={`duration-selector px-6 py-3 rounded-full border font-medium flex items-center
                   ${duration === btn.value
                     ? "bg-gradient-to-r from-primary to-yellow-100 text-black scale-105"
-                    : "border-primary text-primary hover:border-yellow-300 hover:text-yellow-300"
+                    : "border-primary text-primary hover:border-yellow-300 hover:text-black hover:bg-primary"
                   } transition-all`}
               >
                 <FaClock className="mr-2" /> {btn.label}
@@ -159,7 +160,7 @@ function SubscriptionCard({
         {/* <div className="w-20 h-20 bg-gradient-to-br from-primary to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-4"> */}
         {/*   <span className="text-black font-bold text-2xl">{pack}</span> */}
         {/* </div> */}
-        <h3 className="font-serif text-3xl font-bold mb-2 text-yellow-200">
+        <h3 className=" text-3xl font-bold mb-2 text-yellow-200">
           {title}
         </h3>
         <p className="text-gray-400 text-sm">{desc}</p>

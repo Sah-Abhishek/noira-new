@@ -29,7 +29,7 @@ export default function MonthlySubscription() {
           {/* Card 1: Office Wellness Bundles */}
           <div className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col">
             <div className="text-center mb-5 sm:mb-6">
-              <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-2">
+              <h2 className=" text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-2">
                 OFFICE WELLNESS
                 <br className="hidden sm:block" />
                 BUNDLES
@@ -41,7 +41,7 @@ export default function MonthlySubscription() {
                 </span>
               </div>
 
-              <p className="font-sans text-sm sm:text-base lg:text-lg text-gray-300 font-light">
+              <p className=" text-sm sm:text-base lg:text-lg text-gray-300 font-light">
                 Bring wellness directly to your workplace
               </p>
             </div>
@@ -111,10 +111,10 @@ export default function MonthlySubscription() {
           {/* Card 2: Weekly Ritual */}
           <div className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col">
             <div className="text-center mb-5 sm:mb-6">
-              <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-1">
+              <h2 className=" text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-1">
                 WEEKLY RITUAL
               </h2>
-              <p className="font-serif text-sm sm:text-base lg:text-lg text-gray-300 font-light uppercase tracking-wider">
+              <p className=" text-sm sm:text-base lg:text-lg text-gray-300 font-light uppercase tracking-wider">
                 (Monthly Subscription)
               </p>
 

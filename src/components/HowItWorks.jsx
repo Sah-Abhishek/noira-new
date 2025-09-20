@@ -105,7 +105,7 @@ const HowItWorks = () => {
         {/* Bottom CTA */}
         <div className="text-center mt-16">
           <button onClick={() => navigate('/allservicespage')}
-            className="group relative px-8 py-4 font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300
+            className="group relative px-8 py-4 font-semibold rounded-full shadow-lg transform hover:scale-105 transition-all duration-300
             bg-[#D59940] text-black shadow-[#C49E5B]/25 hover:shadow-[#C49E5B]/40"
           >
             <span className="relative z-10">Book Your Experience</span>

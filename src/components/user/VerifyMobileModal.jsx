@@ -47,8 +47,7 @@ function VerifyMobileModal({ isOpen, onClose, }) {
 
   // Validation for phone number (basic 10-digit validation)
   const isValidPhoneNumber = (phone) => {
-    const phoneRegex = /^[6-9]\d{9}$/; // Indian mobile number pattern
-    return phoneRegex.test(phone);
+    return /^\d{10}$/.test(phone);
   };
 
   const handleSendOtp = async () => {
@@ -92,7 +91,7 @@ function VerifyMobileModal({ isOpen, onClose, }) {
     try {
       const response = await axios.post(
         `${apiUrl}/otp/verify-otp`,
-        { otp, mobileNumber: `91${phoneNumber}`, userId: user._id },
+        { otp, mobileNumber: `44${phoneNumber}`, userId: user._id },
         { headers: { Authorization: `Bearer ${userjwt}` } }
       );
       if (response?.data?.type === "success") {

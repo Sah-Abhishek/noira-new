@@ -269,27 +269,27 @@ function TherapistCard({ t }) {
         </div>
       )}
 
-      <div className="mt-4 space-y-2 text-sm text-gray-300">
-        {(town || postcode) && (
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-gray-400" />
-            <span>{[town, postcode].filter(Boolean).join(" • ")}</span>
-          </div>
-        )}
-        {!!languages.length && (
-          <div className="flex items-center gap-2">
-            <Globe2 className="h-4 w-4 text-gray-400" />
-            <span>{languages.join(", ")}</span>
-          </div>
-        )}
-        {typeof exp === "number" && (
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-gray-400" />
-            <span>{exp}+ years experience</span>
-          </div>
-        )}
-      </div>
-
+      {/* <div className="mt-4 space-y-2 text-sm text-gray-300"> */}
+      {/*   {(town || postcode) && ( */}
+      {/*     <div className="flex items-center gap-2"> */}
+      {/*       <MapPin className="h-4 w-4 text-gray-400" /> */}
+      {/*       <span>{[town, postcode].filter(Boolean).join(" • ")}</span> */}
+      {/*     </div> */}
+      {/*   )} */}
+      {/*   {!!languages.length && ( */}
+      {/*     <div className="flex items-center gap-2"> */}
+      {/*       <Globe2 className="h-4 w-4 text-gray-400" /> */}
+      {/*       <span>{languages.join(", ")}</span> */}
+      {/*     </div> */}
+      {/*   )} */}
+      {/*   {typeof exp === "number" && ( */}
+      {/*     <div className="flex items-center gap-2"> */}
+      {/*       <Briefcase className="h-4 w-4 text-gray-400" /> */}
+      {/*       <span>{exp}+ years experience</span> */}
+      {/*     </div> */}
+      {/*   )} */}
+      {/* </div> */}
+      {/**/}
       <button
         onClick={handleSelectTherapist}
         className="mt-6 w-full rounded-full bg-primary hover:bg-amber-500 text-black font-semibold py-2.5 transition"
