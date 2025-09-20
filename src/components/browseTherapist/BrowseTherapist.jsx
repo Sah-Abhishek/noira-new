@@ -246,13 +246,13 @@ function TherapistCard({ t }) {
             {t?.profile?.title ?? "Massage Therapist"}
           </p>
 
-          {rating !== null && (
-            <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
-              <Star className="h-4 w-4 fill-primary text-primary" />
-              <span className="font-semibold">{rating.toFixed(1)}</span>
-              <span className="text-gray-400">({ratingCount} reviews)</span>
-            </div>
-          )}
+          {/* {rating !== null && ( */}
+          {/*   <div className="flex items-center gap-1 text-sm text-gray-300 mt-1"> */}
+          {/*     <Star className="h-4 w-4 fill-primary text-primary" /> */}
+          {/*     <span className="font-semibold">{rating.toFixed(1)}</span> */}
+          {/*     <span className="text-gray-400">({ratingCount} reviews)</span> */}
+          {/*   </div> */}
+          {/* )} */}
         </div>
       </div>
 

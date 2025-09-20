@@ -100,26 +100,25 @@ const FeaturedTherapists = () => {
                     </p>
                   </div>
 
-                  {/* Rating + Sessions */}
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="flex text-primary">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${rating >= i + 1
-                            ? "fill-primary"
-                            : "fill-gray-600"
-                            }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-gray-300 text-sm font-medium">
-                      {rating.toFixed(1)}
-                    </span>
-                    <span className="text-gray-500 text-sm">
-                      | {sessions} sessions
-                    </span>
-                  </div>
+                  {/* <div className="flex items-center justify-center space-x-2"> */}
+                  {/*   <div className="flex text-primary"> */}
+                  {/*     {[...Array(5)].map((_, i) => ( */}
+                  {/*       <Star */}
+                  {/*         key={i} */}
+                  {/*         className={`w-4 h-4 ${rating >= i + 1 */}
+                  {/*           ? "fill-primary" */}
+                  {/*           : "fill-gray-600" */}
+                  {/*           }`} */}
+                  {/*       /> */}
+                  {/*     ))} */}
+                  {/*   </div> */}
+                  {/*   <span className="text-gray-300 text-sm font-medium"> */}
+                  {/*     {rating.toFixed(1)} */}
+                  {/*   </span> */}
+                  {/*   <span className="text-gray-500 text-sm"> */}
+                  {/*     | {sessions} sessions */}
+                  {/*   </span> */}
+                  {/* </div> */}
 
                   {/* Specializations */}
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
