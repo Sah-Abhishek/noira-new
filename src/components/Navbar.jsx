@@ -92,7 +92,7 @@ const Navbar = () => {
               onClick={() => handleLinkClick("/adminlogin", { state: { from: location } })}
               className="px-4 py-2 rounded-full bg-primary text-black font-medium hover:bg-opacity-80 transition"
             >
-              Admin Login
+              Admin
             </button>
           </div>
         ) : (
