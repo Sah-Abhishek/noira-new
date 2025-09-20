@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/UserStore";
 
 // Validation schema
@@ -83,11 +83,11 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-[#1c1c1c] rounded-xl shadow-lg p-8 space-y-6 relative">
         {/* Logo and Title */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className="flex items-center h-10 mt-10">
-            <img src={noira} alt="Logo" className="h-10 sm:h-15 mb-10" />
-          </div>
-          <p className="text-gray-400 text-medium font-medium">Wellness Platform</p>
+        <div className="flex flex-col items-center">
+          <Link to='/' >
+            <img src={noira} alt="Logo" className="h-10 sm:h-12 mb-2" />
+            <p className="text-gray-400 font-medium">Wellness Platform</p>
+          </Link>
         </div>
 
         {/* Role Tabs */}

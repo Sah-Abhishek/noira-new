@@ -213,8 +213,8 @@ const TherapistProfileTherapist = () => {
             Service Areas
           </h2>
           <div className="flex flex-wrap gap-2">
-            {therapist.servicePostcodes?.length > 0 ? (
-              therapist.servicePostcodes.map((code, idx) => (
+            {therapist.servicesInPostalCodes?.length > 0 ? (
+              therapist.servicesInPostalCodes.map((code, idx) => (
                 <span
                   key={idx}
                   className="px-3 py-1 bg-gray-800 border border-white/10 text-xs sm:text-sm rounded-full"

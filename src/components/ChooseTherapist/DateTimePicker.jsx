@@ -56,6 +56,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
   const userjwt = localStorage.getItem("userjwt");
+  const sessionPostalCode = sessionStorage.getItem('postalCode');
 
   useEffect(() => {
     setDate(null);
@@ -76,6 +77,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
         service: cart,
         date,
         time,
+        postalCode: sessionPostalCode,
       }, {
         headers: {
           Authorization: `Bearer ${userjwt}`,

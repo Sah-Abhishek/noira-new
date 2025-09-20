@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Upload, User } from "lucide-react";
+import { Upload, User, ChevronDown } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -8,11 +8,19 @@ export default function EditTherapistProfile() {
   const [servicesList, setServicesList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [postalCodeInput, setPostalCodeInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
 
   const therapistId = localStorage.getItem("therapistId");
   const therapistjwt = localStorage.getItem("therapistjwt");
+
+  const londonAreas = [
+    "Central London",
+    "East London",
+    "West London",
+    "North London",
+    "South London"
+  ];
 
   const [form, setForm] = useState({
     firstName: "",
@@ -57,6 +65,20 @@ export default function EditTherapistProfile() {
     fetchServices();
   }, [apiUrl]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isAreaDropdownOpen && !event.target.closest('.area-dropdown')) {
+        setIsAreaDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isAreaDropdownOpen]);
+
   useEffect(() => {
     const fetchTherapist = async () => {
       try {
@@ -84,7 +106,7 @@ export default function EditTherapistProfile() {
           },
           services: t.specializations?.map((s) => s.name) || [],
           languages: t.languages || [],
-          servicesInPostalCodes: t.servicePostcodes || [],
+          servicesInPostalCodes: t.servicesInPostalCodes || [],
           acceptingNewClients: t.active || false,
           gender: t.userId?.gender || "",
           isVerified: t.isVerified || false,
@@ -120,6 +142,25 @@ export default function EditTherapistProfile() {
       setProfileImage(file);
       setPreviewUrl(URL.createObjectURL(file));
     }
+  };
+
+  const handleAreaSelect = (area) => {
+    if (!form.servicesInPostalCodes.includes(area)) {
+      setForm((prev) => ({
+        ...prev,
+        servicesInPostalCodes: [...prev.servicesInPostalCodes, area],
+      }));
+    }
+    setIsAreaDropdownOpen(false);
+  };
+
+  const removeArea = (indexToRemove) => {
+    setForm((prev) => ({
+      ...prev,
+      servicesInPostalCodes: prev.servicesInPostalCodes.filter(
+        (_, index) => index !== indexToRemove
+      ),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -342,66 +383,69 @@ export default function EditTherapistProfile() {
           </div>
         </div>
 
-        {/* Postal Codes */}
-        {/* <div className="mb-4"> */}
-        {/*   <label className="block text-sm text-gray-400 mb-1"> */}
-        {/*     Services Available in Postal Codes */}
-        {/*   </label> */}
-        {/*   <div className="flex flex-col sm:flex-row gap-2 mb-2"> */}
-        {/*     <input */}
-        {/*       type="text" */}
-        {/*       value={postalCodeInput} */}
-        {/*       onChange={(e) => setPostalCodeInput(e.target.value)} */}
-        {/*       placeholder="Enter postal code" */}
-        {/*       className="flex-1 bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary" */}
-        {/*     /> */}
-        {/*     <button */}
-        {/*       type="button" */}
-        {/*       onClick={() => { */}
-        {/*         if ( */}
-        {/*           postalCodeInput.trim() && */}
-        {/*           !form.servicesInPostalCodes.includes(postalCodeInput.trim()) */}
-        {/*         ) { */}
-        {/*           setForm((prev) => ({ */}
-        {/*             ...prev, */}
-        {/*             servicesInPostalCodes: [ */}
-        {/*               ...prev.servicesInPostalCodes, */}
-        {/*               postalCodeInput.trim(), */}
-        {/*             ], */}
-        {/*           })); */}
-        {/*           setPostalCodeInput(""); */}
-        {/*         } */}
-        {/*       }} */}
-        {/*       className="px-3 py-2 rounded-lg bg-primary text-black text-sm hover:bg-primary/80" */}
-        {/*     > */}
-        {/*       Add */}
-        {/*     </button> */}
-        {/*   </div> */}
-        {/*   <div className="flex flex-wrap gap-2"> */}
-        {/*     {form.servicesInPostalCodes.map((pc, i) => ( */}
-        {/*       <span */}
-        {/*         key={i} */}
-        {/*         className="px-3 py-1 rounded-full border border-white/10 text-sm flex items-center gap-2" */}
-        {/*       > */}
-        {/*         {pc} */}
-        {/*         <button */}
-        {/*           type="button" */}
-        {/*           onClick={() => */}
-        {/*             setForm((prev) => ({ */}
-        {/*               ...prev, */}
-        {/*               servicesInPostalCodes: prev.servicesInPostalCodes.filter( */}
-        {/*                 (_, idx) => idx !== i */}
-        {/*               ), */}
-        {/*             })) */}
-        {/*           } */}
-        {/*           className="text-gray-400 hover:text-red-500" */}
-        {/*         > */}
-        {/*           ✕ */}
-        {/*         </button> */}
-        {/*       </span> */}
-        {/*     ))} */}
-        {/*   </div> */}
-        {/* </div> */}
+        {/* Services Available in London Areas */}
+        <div className="mb-4">
+          <label className="block text-sm text-gray-400 mb-2">
+            Services Available in Areas
+          </label>
+
+          {/* Dropdown */}
+          <div className="relative mb-3 area-dropdown">
+            <button
+              type="button"
+              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary hover:ring-1 hover:ring-primary flex items-center justify-between"
+            >
+              <span className="text-gray-400">Select London Areas</span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${isAreaDropdownOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {isAreaDropdownOpen && (
+              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg">
+                {londonAreas.map((area) => (
+                  <button
+                    key={area}
+                    type="button"
+                    onClick={() => handleAreaSelect(area)}
+                    disabled={form.servicesInPostalCodes.includes(area)}
+                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg transition-colors
+                      ${form.servicesInPostalCodes.includes(area)
+                        ? 'text-gray-500 cursor-not-allowed'
+                        : 'text-white hover:text-primary'
+                      }`}
+                  >
+                    {area}
+                    {form.servicesInPostalCodes.includes(area) && (
+                      <span className="ml-2 text-xs">(Selected)</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Selected Areas */}
+          <div className="flex flex-wrap gap-2">
+            {form.servicesInPostalCodes.map((area, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 rounded-full border border-white/10 bg-primary/10 text-sm flex items-center gap-2"
+              >
+                {area}
+                <button
+                  type="button"
+                  onClick={() => removeArea(index)}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
 
         {/* Accepting & Gender */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">

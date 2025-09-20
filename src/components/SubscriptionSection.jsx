@@ -26,13 +26,13 @@ export default function SubscriptionsSection() {
           </p>
 
           {/* Duration Selector */}
-          <div className="flex justify-center space-x-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
             {durationButtons.map((btn) => (
               <button
                 key={btn.value}
                 onClick={() => setDuration(btn.value)}
-                className={`duration-selector px-6 py-3 rounded-full border font-medium flex items-center
-                  ${duration === btn.value
+                className={`duration-selector px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base inline-flex items-center rounded-full border font-medium
+        ${duration === btn.value
                     ? "bg-gradient-to-r from-primary to-yellow-100 text-black scale-105"
                     : "border-primary text-primary hover:border-yellow-300 hover:text-black hover:bg-primary"
                   } transition-all`}
