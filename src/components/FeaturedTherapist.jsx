@@ -56,7 +56,7 @@ const FeaturedTherapists = () => {
         {therapists.map((therapist) => {
           const fullName =
             therapist?.profile?.title ||
-            `${therapist.name?.first || ""} ${therapist.name?.last || ""}`;
+            `${therapist.name?.first || ""} `;
           const username = therapist?.username || "therapist";
           const therapistId = therapist?.therapistId || "N/A";
           const rating = therapist.profile?.rating || 0;
@@ -77,7 +77,7 @@ const FeaturedTherapists = () => {
                 <div className="relative z-10 text-center space-y-5">
                   {/* Profile Image */}
                   <div className="relative inline-block">
-                    <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-primary mx-auto">
+                    <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-primary mx-auto">
                       {image ? (
                         <img
                           src={image}

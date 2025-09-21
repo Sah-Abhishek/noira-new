@@ -44,7 +44,7 @@ const TherapistSelectionCard = ({ therapist }) => {
 
       {/* Name */}
       <h2 className="text-base sm:text-lg md:text-xl font-bold text-center leading-tight">
-        {therapist?.title || "Sarah Johnson"}
+        {therapist?.title || "Therapist"}
       </h2>
 
       {/* Title */}

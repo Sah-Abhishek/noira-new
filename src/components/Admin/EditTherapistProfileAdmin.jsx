@@ -11,6 +11,7 @@ export default function EditTherapistProfileAdmin() {
   const [loading, setLoading] = useState(true);
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
   const adminjwt = localStorage.getItem("adminjwt");
+  const [saving, setSaving] = useState(false);
 
   const londonAreas = [
     "Central London",
@@ -175,6 +176,7 @@ export default function EditTherapistProfileAdmin() {
     }
 
     try {
+      setSaving(true);
       const formData = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
@@ -210,6 +212,8 @@ export default function EditTherapistProfileAdmin() {
     } catch (err) {
       console.error("Error updating therapist:", err);
       toast.error("Failed to update therapist.");
+    } finally {
+      setSaving(true);
     }
   };
   if (loading) {
@@ -580,9 +584,14 @@ export default function EditTherapistProfileAdmin() {
           </button>
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-primary text-black font-semibold hover:opacity-90"
+            disabled={saving}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all
+    ${saving
+                ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+                : "bg-primary text-black hover:opacity-90"
+              }`}
           >
-            Save Changes
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </form>

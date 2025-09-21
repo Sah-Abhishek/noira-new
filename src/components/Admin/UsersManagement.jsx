@@ -69,9 +69,9 @@ export default function UsersManagement() {
     if (search.trim()) {
       const searchLower = search.toLowerCase();
       filtered = filtered.filter(user =>
-        user.name.first.toLowerCase().includes(searchLower) ||
-        user.name.last.toLowerCase().includes(searchLower) ||
-        user.email.toLowerCase().includes(searchLower) ||
+        user.name?.first?.toLowerCase().includes(searchLower) ||
+        user.name?.last?.toLowerCase().includes(searchLower) ||
+        user.email?.toLowerCase().includes(searchLower) ||
         user._id.toLowerCase().includes(searchLower)
       );
     }
@@ -366,7 +366,7 @@ export default function UsersManagement() {
                     {/* User Avatar + Name */}
                     <td className="px-6 py-4 flex items-center gap-3">
                       <img
-                        src={user.avatar_url || "https://randomuser.me/api/portraits/men/1.jpg"}
+                        src={user.avatar_url || "https://www.citypng.com/public/uploads/preview/white-user-member-guest-icon-png-image-701751695037005zdurfaim0y.png?v=2025073005"}
                         alt={user.name.first}
                         className="w-10 h-10 rounded-full object-cover border border-primary"
                         onError={(e) => {
