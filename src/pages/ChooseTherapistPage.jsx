@@ -5,16 +5,14 @@ import TherapistSelection from "../components/ChooseTherapist/TherapistSelection
 import BookingStepper from "../components/ServicesPage/BookingStepper";
 import useBookingStore from "../store/bookingStore";
 import AddressModal from "../components/Modals/AddressModal";
+import useUserStore from "../store/UserStore.jsx"
 
 const ChooseTherapistPage = () => {
   const [isDateAndTimeSelected, setIsDateAndTimeSelected] = useState(false);
   const { selectedTherapist, setSelectedTherapist, date, time } = useBookingStore();
   const { userAddress } = useBookingStore();
-  const [isAddressSaved, setIsAddressSaved] = useState(userAddress ? true : false);
 
-  console.log("This is the isAddressSaved: ", isAddressSaved);
 
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(!isAddressSaved);
 
   useEffect(() => {
     if (selectedTherapist && date && time) {

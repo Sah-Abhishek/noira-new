@@ -94,7 +94,10 @@ export default function EditService() {
         `${apiUrl}/admin/editservices/${id}`, // ✅ updated endpoint
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${adminjwt}`
+          },
         }
       );
 

@@ -35,7 +35,7 @@ const LandingPage = () => {
           property="og:description"
           content="Elite discreet massage services across Mayfair, Chelsea, Knightsbridge & Canary Wharf. Book your luxury massage today."
         />
-        <meta property="og:url" content="https://www.yourdomain.com/" />
+        <meta property="og:url" content="https://www.noira.co.uk/" />
         <meta property="og:type" content="website" />
 
         {/* Twitter card */}

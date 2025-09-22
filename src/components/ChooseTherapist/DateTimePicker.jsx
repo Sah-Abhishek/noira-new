@@ -5,6 +5,7 @@ import useBookingStore from "../../store/bookingStore";
 import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import useUserStore from "../../store/UserStore";
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -56,7 +57,10 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const therapistSelectionRef = useRef(null);
   const navigate = useNavigate();
   const userjwt = localStorage.getItem("userjwt");
-  const sessionPostalCode = sessionStorage.getItem('postalCode');
+  const { user } = useUserStore();
+  const postalCode = sessionStorage.getItem("postalCode") || user.address.PostalCode;
+  console.log("This is the postal code: ", postalCode);
+
 
   useEffect(() => {
     setDate(null);
@@ -77,7 +81,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
         service: cart,
         date,
         time,
-        postalCode: sessionPostalCode,
+        postalCode: postalCode,
       }, {
         headers: {
           Authorization: `Bearer ${userjwt}`,
