@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 import useBookingStore from "../../store/bookingStore";
 
@@ -53,6 +53,15 @@ const BookingSummary = ({ setCouponCode }) => {
     }
   }
 
+
+  // useEffect(() => {
+  //   // Apply RELAX10 coupon by default
+  //   setCoupon("RELAX10");
+  //   setDiscountPercent(10);
+  //   setAppliedCoupon("RELAX10");
+  //   setCouponCode("RELAX10");
+  // }, [setCouponCode]);
+
   // ✅ Coupon Logic
   const handleApplyCoupon = () => {
     const code = coupon.trim().toUpperCase();
@@ -97,18 +106,18 @@ const BookingSummary = ({ setCouponCode }) => {
             <h3 className="text-white font-semibold">{title}</h3>
             <p className="text-primary text-xs">{experience} years experience</p>
             <div className="flex items-center gap-1 mt-1">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-3 h-3 ${star <= Math.round(rating)
-                      ? "text-primary fill-primary"
-                      : "text-gray-600"
-                      }`}
-                  />
-                ))}
-              </div>
-              <span className="text-gray-300 text-xs ml-1">{rating}</span>
+              {/* <div className="flex"> */}
+              {/*   {[1, 2, 3, 4, 5].map((star) => ( */}
+              {/*     <Star */}
+              {/*       key={star} */}
+              {/*       className={`w-3 h-3 ${star <= Math.round(rating) */}
+              {/*         ? "text-primary fill-primary" */}
+              {/*         : "text-gray-600" */}
+              {/*         }`} */}
+              {/*     /> */}
+              {/*   ))} */}
+              {/* </div> */}
+              {/* <span className="text-gray-300 text-xs ml-1">{rating}</span> */}
             </div>
           </div>
         </div>

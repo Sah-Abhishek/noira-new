@@ -7,6 +7,19 @@ const TherapistSelectionCard = ({ therapist }) => {
   const { setSelectedTherapist, selectedTherapist } = useBookingStore();
   const navigate = useNavigate();
 
+  // Rating logic
+  const rawRating = therapist?.rating ?? 0;
+  const rating =
+    rawRating === 0
+      ? (Math.random() * (5 - 4) + 4).toFixed(1) // random between 4.0–5.0
+      : rawRating.toFixed(1);
+
+  const ratingCount =
+    therapist?.ratingCount && therapist?.ratingCount > 0
+      ? therapist.ratingCount
+      : Math.floor(Math.random() * 50 + 10); // fallback reviews
+
+
   const isSelected = selectedTherapist?._id === therapist?._id;
 
   const handleSelect = () => {
@@ -53,23 +66,22 @@ const TherapistSelectionCard = ({ therapist }) => {
       </p>
 
       {/* Rating */}
+      {/* Rating */}
       <div className="flex items-center gap-1 text-xs sm:text-sm">
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
-              className="w-3 h-3 sm:w-4 sm:h-4 text-primary fill-primary"
+              className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.round(rating)
+                  ? "text-primary fill-primary"
+                  : "text-gray-500"
+                }`}
             />
           ))}
         </div>
-        <span className="font-semibold ml-1">
-          {therapist?.rating || "4.9"}
-        </span>
-        <span className="text-gray-400">
-          ({therapist?.ratingCount || "127"} reviews)
-        </span>
+        <span className="font-semibold ml-1">{rating}</span>
+        <span className="text-gray-400">({ratingCount} reviews)</span>
       </div>
-
       {/* Specializations */}
       <div className="flex flex-wrap justify-center gap-2">
         {(therapist?.specializations || []).map((spec, idx) => (
