@@ -72,32 +72,27 @@ export default function StatusCardRow() {
               title="Total Bookings"
               value={stats.totalBookings}
               icon={<FaCalendarAlt />}
-              footer={<p className="text-green-400">↑ +12% from last {filter}</p>}
+            // footer={<p className="text-green-400">↑ +12% from last {filter}</p>}
             />
 
             <StatusCard
               title="Active Therapists"
               value={stats.activeTherapists}
               icon={<FaUsers />}
-              footer={<p className="text-green-400">↑ +5% from last {filter}</p>}
+            // footer={<p className="text-green-400">↑ +5% from last {filter}</p>}
             />
 
             <StatusCard
               title="Today's Sessions"
               value={stats.todaysSessions}
               icon={<FaClock />}
-              footer={<p className="text-blue-400">{stats.upcoming} upcoming</p>}
+            // footer={<p className="text-blue-400">{stats.upcoming} upcoming</p>}
             />
 
             <StatusCard
               title="Revenue"
               value={stats.revenue}
               icon={<MdCurrencyPound />}
-              footer={
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-400 text-sm">vs last {filter}</span>
-                </div>
-              }
             />
           </>
         )}
