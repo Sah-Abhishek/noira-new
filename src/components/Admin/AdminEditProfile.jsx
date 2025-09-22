@@ -15,6 +15,79 @@ export default function AdminEditProfile() {
   const adminjwt = localStorage.getItem("adminjwt");
   const navigate = useNavigate();
 
+  // For address postcode
+  const [addressPostcodeQuery, setAddressPostcodeQuery] = useState("");
+  const [addressPostcodeOptions, setAddressPostcodeOptions] = useState([]);
+  const [isAddressSearching, setIsAddressSearching] = useState(false);
+
+  // For servicesInPostalCodes
+  const [postcodeQuery, setPostcodeQuery] = useState("");
+  const [postcodeOptions, setPostcodeOptions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+
+  const fetchPostcodes = async (query, setOptions, setLoading) => {
+    if (!query.trim()) {
+      setOptions([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `https://api.postcodes.io/postcodes?q=${query}&limit=50`
+      );
+      setOptions(res.data?.result || []);
+    } catch (err) {
+      console.error("Error fetching postcodes:", err);
+      setOptions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleAddressPostcodeSelect = (postcode) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: { ...prev.address, PostalCode: postcode },
+    }));
+    setAddressPostcodeQuery("");
+    setAddressPostcodeOptions([]);
+  };
+
+  const handleServicePostcodeSelect = (postcode) => {
+    if (!formData.servicesInPostalCodes?.includes(postcode)) {
+      setFormData((prev) => ({
+        ...prev,
+        servicesInPostalCodes: [...(prev.servicesInPostalCodes || []), postcode],
+      }));
+    }
+    setPostcodeQuery("");
+    setPostcodeOptions([]);
+  };
+
+  const removeServicePostcode = (postcode) => {
+    setFormData((prev) => ({
+      ...prev,
+      servicesInPostalCodes: prev.servicesInPostalCodes.filter((p) => p !== postcode),
+    }));
+  };
+
+
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchPostcodes(addressPostcodeQuery, setAddressPostcodeOptions, setIsAddressSearching);
+    }, 400);
+    return () => clearTimeout(delay);
+  }, [addressPostcodeQuery]);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchPostcodes(postcodeQuery, setPostcodeOptions, setIsSearching);
+    }, 400);
+    return () => clearTimeout(delay);
+  }, [postcodeQuery]);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {

@@ -10,17 +10,18 @@ export default function EditTherapistProfile() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
+  const [isAddressDropdownOpen, setIsAddressDropdownOpen] = useState(false);
+
+  // New states for postcode suggestions
+  const [areaPostcodeQuery, setAreaPostcodeQuery] = useState("");
+  const [addressPostcodeQuery, setAddressPostcodeQuery] = useState("");
+  const [areaPostcodeSuggestions, setAreaPostcodeSuggestions] = useState([]);
+  const [addressPostcodeSuggestions, setAddressPostcodeSuggestions] = useState([]);
+  const [loadingAreaSuggestions, setLoadingAreaSuggestions] = useState(false);
+  const [loadingAddressSuggestions, setLoadingAddressSuggestions] = useState(false);
 
   const therapistId = localStorage.getItem("therapistId");
   const therapistjwt = localStorage.getItem("therapistjwt");
-
-  const londonAreas = [
-    "Central London",
-    "East London",
-    "West London",
-    "North London",
-    "South London"
-  ];
 
   const [form, setForm] = useState({
     firstName: "",
@@ -49,6 +50,75 @@ export default function EditTherapistProfile() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
+  // Debounce function for API calls
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  // Function to fetch postcode suggestions
+  const fetchPostcodeSuggestions = async (query, isForAddress = false) => {
+    if (query.length < 2) {
+      if (isForAddress) {
+        setAddressPostcodeSuggestions([]);
+      } else {
+        setAreaPostcodeSuggestions([]);
+      }
+      return;
+    }
+
+    try {
+      if (isForAddress) {
+        setLoadingAddressSuggestions(true);
+      } else {
+        setLoadingAreaSuggestions(true);
+      }
+
+      const response = await axios.get(`https://api.postcodes.io/postcodes?q=${query}&limit=10`);
+
+      if (response.data.status === 200 && response.data.result) {
+        const suggestions = response.data.result.map(item => ({
+          postcode: item.postcode,
+          district: item.admin_district,
+          ward: item.admin_ward,
+          country: item.country
+        }));
+
+        if (isForAddress) {
+          setAddressPostcodeSuggestions(suggestions);
+        } else {
+          setAreaPostcodeSuggestions(suggestions);
+        }
+      } else {
+        if (isForAddress) {
+          setAddressPostcodeSuggestions([]);
+        } else {
+          setAreaPostcodeSuggestions([]);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching postcodes:", error);
+      if (isForAddress) {
+        setAddressPostcodeSuggestions([]);
+      } else {
+        setAreaPostcodeSuggestions([]);
+      }
+    } finally {
+      if (isForAddress) {
+        setLoadingAddressSuggestions(false);
+      } else {
+        setLoadingAreaSuggestions(false);
+      }
+    }
+  };
+
+  // Debounced versions of the fetch functions
+  const debouncedFetchAreaPostcodes = debounce((query) => fetchPostcodeSuggestions(query, false), 300);
+  const debouncedFetchAddressPostcodes = debounce((query) => fetchPostcodeSuggestions(query, true), 300);
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -65,11 +135,14 @@ export default function EditTherapistProfile() {
     fetchServices();
   }, [apiUrl]);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isAreaDropdownOpen && !event.target.closest('.area-dropdown')) {
         setIsAreaDropdownOpen(false);
+      }
+      if (isAddressDropdownOpen && !event.target.closest('.address-dropdown')) {
+        setIsAddressDropdownOpen(false);
       }
     };
 
@@ -77,7 +150,7 @@ export default function EditTherapistProfile() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isAreaDropdownOpen]);
+  }, [isAreaDropdownOpen, isAddressDropdownOpen]);
 
   useEffect(() => {
     const fetchTherapist = async () => {
@@ -144,14 +217,23 @@ export default function EditTherapistProfile() {
     }
   };
 
-  const handleAreaSelect = (area) => {
-    if (!form.servicesInPostalCodes.includes(area)) {
+  const handleAreaPostcodeSelect = (postcode) => {
+    if (!form.servicesInPostalCodes.includes(postcode)) {
       setForm((prev) => ({
         ...prev,
-        servicesInPostalCodes: [...prev.servicesInPostalCodes, area],
+        servicesInPostalCodes: [...prev.servicesInPostalCodes, postcode],
       }));
     }
+    setAreaPostcodeQuery("");
+    setAreaPostcodeSuggestions([]);
     setIsAreaDropdownOpen(false);
+  };
+
+  const handleAddressPostcodeSelect = (postcode) => {
+    handleChange("PostalCode", postcode, true);
+    setAddressPostcodeQuery(postcode);
+    setAddressPostcodeSuggestions([]);
+    setIsAddressDropdownOpen(false);
   };
 
   const removeArea = (indexToRemove) => {
@@ -307,8 +389,8 @@ export default function EditTherapistProfile() {
 
         {/* Address */}
         <label className="block text-sm text-gray-400 mb-2">Address</label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-          {["Building_No", "Street", "Locality", "PostTown", "PostalCode"].map(
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+          {["Building_No", "Street", "Locality", "PostTown"].map(
             (field) => (
               <input
                 key={field}
@@ -319,6 +401,44 @@ export default function EditTherapistProfile() {
                 className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
               />
             )
+          )}
+        </div>
+
+        {/* Address Postal Code with Search */}
+        <div className="relative mb-4 address-dropdown">
+          <input
+            type="text"
+            placeholder="Search Postal Code..."
+            value={addressPostcodeQuery}
+            onChange={(e) => {
+              setAddressPostcodeQuery(e.target.value);
+              setIsAddressDropdownOpen(true);
+              debouncedFetchAddressPostcodes(e.target.value);
+            }}
+            onFocus={() => setIsAddressDropdownOpen(true)}
+            className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+          />
+
+          {isAddressDropdownOpen && (addressPostcodeSuggestions.length > 0 || loadingAddressSuggestions) && (
+            <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+              {loadingAddressSuggestions ? (
+                <div className="px-3 py-2 text-sm text-gray-400">Loading...</div>
+              ) : (
+                addressPostcodeSuggestions.map((item, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleAddressPostcodeSelect(item.postcode)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-800 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                  >
+                    <div className="text-white font-medium">{item.postcode}</div>
+                    <div className="text-gray-400 text-xs">
+                      {item.district}, {item.country}
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
           )}
         </div>
 
@@ -383,58 +503,66 @@ export default function EditTherapistProfile() {
           </div>
         </div>
 
-        {/* Services Available in London Areas */}
+        {/* Services Available in Postal Codes */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">
-            Services Available in Areas
+            Services Available in Postal Codes
           </label>
 
-          {/* Dropdown */}
+          {/* Search Dropdown */}
           <div className="relative mb-3 area-dropdown">
-            <button
-              type="button"
-              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary hover:ring-1 hover:ring-primary flex items-center justify-between"
-            >
-              <span className="text-gray-400">Select London Areas</span>
-              <ChevronDown
-                size={16}
-                className={`transition-transform ${isAreaDropdownOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
+            <input
+              type="text"
+              placeholder="Search Postal Codes..."
+              value={areaPostcodeQuery}
+              onChange={(e) => {
+                setAreaPostcodeQuery(e.target.value);
+                setIsAreaDropdownOpen(true);
+                debouncedFetchAreaPostcodes(e.target.value);
+              }}
+              onFocus={() => setIsAreaDropdownOpen(true)}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+            />
 
-            {isAreaDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg">
-                {londonAreas.map((area) => (
-                  <button
-                    key={area}
-                    type="button"
-                    onClick={() => handleAreaSelect(area)}
-                    disabled={form.servicesInPostalCodes.includes(area)}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg transition-colors
-                      ${form.servicesInPostalCodes.includes(area)
-                        ? 'text-gray-500 cursor-not-allowed'
-                        : 'text-white hover:text-primary'
-                      }`}
-                  >
-                    {area}
-                    {form.servicesInPostalCodes.includes(area) && (
-                      <span className="ml-2 text-xs">(Selected)</span>
-                    )}
-                  </button>
-                ))}
+            {isAreaDropdownOpen && (areaPostcodeSuggestions.length > 0 || loadingAreaSuggestions) && (
+              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                {loadingAreaSuggestions ? (
+                  <div className="px-3 py-2 text-sm text-gray-400">Loading...</div>
+                ) : (
+                  areaPostcodeSuggestions.map((item, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleAreaPostcodeSelect(item.postcode)}
+                      disabled={form.servicesInPostalCodes.includes(item.postcode)}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 transition-colors first:rounded-t-lg last:rounded-b-lg
+                        ${form.servicesInPostalCodes.includes(item.postcode)
+                          ? 'text-gray-500 cursor-not-allowed'
+                          : 'text-white hover:text-primary'
+                        }`}
+                    >
+                      <div className="font-medium">{item.postcode}</div>
+                      <div className="text-gray-400 text-xs">
+                        {item.district}, {item.country}
+                        {form.servicesInPostalCodes.includes(item.postcode) && (
+                          <span className="ml-2">(Already selected)</span>
+                        )}
+                      </div>
+                    </button>
+                  ))
+                )}
               </div>
             )}
           </div>
 
-          {/* Selected Areas */}
+          {/* Selected Postal Codes */}
           <div className="flex flex-wrap gap-2">
-            {form.servicesInPostalCodes.map((area, index) => (
+            {form.servicesInPostalCodes.map((postcode, index) => (
               <span
                 key={index}
                 className="px-3 py-1 rounded-full border border-white/10 bg-primary/10 text-sm flex items-center gap-2"
               >
-                {area}
+                {postcode}
                 <button
                   type="button"
                   onClick={() => removeArea(index)}

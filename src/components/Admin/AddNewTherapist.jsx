@@ -11,13 +11,50 @@ export default function AddNewTherapist() {
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
   const adminjwt = localStorage.getItem("adminjwt");
 
-  const londonAreas = [
-    "Central London",
-    "East London",
-    "West London",
-    "North London",
-    "South London"
-  ];
+  // Add these states at the top with other useStates
+  const [postcodeQuery, setPostcodeQuery] = useState("");
+  const [postcodeOptions, setPostcodeOptions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Address postcode search
+  const [addressPostcodeQuery, setAddressPostcodeQuery] = useState("");
+  const [addressPostcodeOptions, setAddressPostcodeOptions] = useState([]);
+  const [isAddressSearching, setIsAddressSearching] = useState(false);
+
+
+  useEffect(() => {
+    if (!addressPostcodeQuery.trim()) {
+      setAddressPostcodeOptions([]);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        setIsAddressSearching(true);
+        const res = await axios.get(
+          `https://api.postcodes.io/postcodes?q=${addressPostcodeQuery}&limit=50`
+        );
+        setAddressPostcodeOptions(res.data?.result || []);
+      } catch (err) {
+        console.error("Error fetching address postcodes:", err);
+        setAddressPostcodeOptions([]);
+      } finally {
+        setIsAddressSearching(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [addressPostcodeQuery]);
+
+  const handleAddressPostcodeSelect = (postcode) => {
+    setForm((prev) => ({
+      ...prev,
+      address: { ...prev.address, PostalCode: postcode },
+    }));
+    setAddressPostcodeQuery("");
+    setAddressPostcodeOptions([]);
+  };
+
 
   const [form, setForm] = useState({
     firstName: "",
@@ -44,6 +81,41 @@ export default function AddNewTherapist() {
   });
 
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    if (!postcodeQuery.trim()) {
+      setPostcodeOptions([]);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        setIsSearching(true);
+        const res = await axios.get(
+          `https://api.postcodes.io/postcodes?q=${postcodeQuery}&limit=100`
+        );
+        setPostcodeOptions(res.data?.result || []);
+      } catch (err) {
+        console.error("Error fetching postcodes:", err);
+        setPostcodeOptions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 400); // debounce 400ms
+
+    return () => clearTimeout(delayDebounce);
+  }, [postcodeQuery]);
+
+  const handlePostcodeSelect = (postcode) => {
+    if (!form.servicesInPostalCodes.includes(postcode)) {
+      setForm((prev) => ({
+        ...prev,
+        servicesInPostalCodes: [...prev.servicesInPostalCodes, postcode],
+      }));
+    }
+    setPostcodeQuery(""); // clear input after select
+    setPostcodeOptions([]);
+  };
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -126,6 +198,7 @@ export default function AddNewTherapist() {
     if (form.services.length === 0) return toast.error("Select at least one service");
     if (form.languages.length === 0) return toast.error("Add at least one language");
     if (!form.gender) return toast.error("Gender is required");
+    if (!form.address.PostalCode) return toast.error("Address PostalCode is required");
 
     setLoading(true);
     try {
@@ -331,18 +404,56 @@ export default function AddNewTherapist() {
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">Address</label>
           <div className="grid grid-cols-2 gap-2">
-            {["Building_No", "Street", "Locality", "PostTown", "PostalCode"].map(
-              (field) => (
-                <input
-                  key={field}
-                  type="text"
-                  placeholder={field}
-                  value={form.address[field]}
-                  onChange={(e) => handleChange(field, e.target.value, true)}
-                  className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
-                />
-              )
-            )}
+            {["Building_No", "Street", "Locality", "PostTown"].map((field) => (
+              <input
+                key={field}
+                type="text"
+                placeholder={field}
+                value={form.address[field]}
+                onChange={(e) => handleChange(field, e.target.value, true)}
+                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+              />
+            ))}
+
+            {/* 🔍 PostalCode with search */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="PostalCode"
+                value={form.address.PostalCode || addressPostcodeQuery}
+                onChange={(e) => {
+                  setAddressPostcodeQuery(e.target.value);
+                  handleChange("PostalCode", e.target.value, true);
+                }}
+                className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary"
+              />
+
+              {addressPostcodeOptions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-black border border-white/10 rounded-lg shadow-lg">
+                  {addressPostcodeOptions.map((item) => (
+                    <button
+                      key={item.postcode}
+                      type="button"
+                      onClick={() => handleAddressPostcodeSelect(item.postcode)}
+                      className={`w-full text-left px-3 py-2 text-sm transition-colors
+                ${form.address.PostalCode === item.postcode
+                          ? "text-gray-500 cursor-not-allowed"
+                          : "text-white hover:bg-gray-800 hover:text-primary"
+                        }`}
+                    >
+                      {item.postcode}{" "}
+                      <span className="text-xs text-gray-500">({item.region})</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {isAddressSearching && (
+                <div className="absolute top-full mt-1 text-sm text-gray-400">
+                  Searching...
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -404,55 +515,57 @@ export default function AddNewTherapist() {
         {/* Services Available in London Areas */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">
-            Services Available in Areas *
+            Services Available in Postcodes *
           </label>
 
-          {/* Dropdown */}
-          <div className="relative mb-3 area-dropdown">
-            <button
-              type="button"
-              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary hover:ring-1 hover:ring-primary flex items-center justify-between"
-            >
-              <span className="text-gray-400">Select London Areas</span>
-              <ChevronDown
-                size={16}
-                className={`transition-transform ${isAreaDropdownOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
+          {/* Search Input */}
+          <div className="relative mb-3">
+            <input
+              type="text"
+              value={postcodeQuery}
+              onChange={(e) => setPostcodeQuery(e.target.value)}
+              placeholder="Search postcode (e.g., SW1A)"
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary focus:ring-1 focus:ring-primary"
+            />
 
-            {isAreaDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg">
-                {londonAreas.map((area) => (
+            {/* Dropdown */}
+            {postcodeOptions.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-black border border-white/10 rounded-lg shadow-lg">
+                {postcodeOptions.map((item) => (
                   <button
-                    key={area}
+                    key={item.postcode}
                     type="button"
-                    onClick={() => handleAreaSelect(area)}
-                    disabled={form.servicesInPostalCodes.includes(area)}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg transition-colors
-                      ${form.servicesInPostalCodes.includes(area)
-                        ? 'text-gray-500 cursor-not-allowed'
-                        : 'text-white hover:text-primary'
+                    onClick={() => handlePostcodeSelect(item.postcode)}
+                    disabled={form.servicesInPostalCodes.includes(item.postcode)}
+                    className={`w-full text-left px-3 py-2 text-sm transition-colors
+              ${form.servicesInPostalCodes.includes(item.postcode)
+                        ? "text-gray-500 cursor-not-allowed"
+                        : "text-white hover:bg-gray-800 hover:text-primary"
                       }`}
                   >
-                    {area}
-                    {form.servicesInPostalCodes.includes(area) && (
-                      <span className="ml-2 text-xs">(Selected)</span>
-                    )}
+                    {item.postcode}{" "}
+                    <span className="text-xs text-gray-500">({item.region})</span>
                   </button>
                 ))}
               </div>
             )}
+
+            {/* Loading */}
+            {isSearching && (
+              <div className="absolute top-full mt-1 text-sm text-gray-400">
+                Searching...
+              </div>
+            )}
           </div>
 
-          {/* Selected Areas */}
+          {/* Selected Postcodes */}
           <div className="flex flex-wrap gap-2">
-            {form.servicesInPostalCodes.map((area, index) => (
+            {form.servicesInPostalCodes.map((pc, index) => (
               <span
                 key={index}
                 className="px-3 py-1 rounded-full border border-white/10 bg-primary/10 text-sm flex items-center gap-2"
               >
-                {area}
+                {pc}
                 <button
                   type="button"
                   onClick={() => removeArea(index)}

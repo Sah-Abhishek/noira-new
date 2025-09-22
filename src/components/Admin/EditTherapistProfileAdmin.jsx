@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Upload, User, ChevronDown } from "lucide-react";
+import { Upload, User, ChevronDown, Loader2Icon } from "lucide-react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -12,6 +12,10 @@ export default function EditTherapistProfileAdmin() {
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
   const adminjwt = localStorage.getItem("adminjwt");
   const [saving, setSaving] = useState(false);
+
+  const [addressPostcodeSearch, setAddressPostcodeSearch] = useState("");
+  const [addressPostcodeSuggestions, setAddressPostcodeSuggestions] = useState([]);
+  const [searchingAddressPostcodes, setSearchingAddressPostcodes] = useState(false);
 
   const londonAreas = [
     "Central London",
@@ -43,6 +47,9 @@ export default function EditTherapistProfileAdmin() {
     gender: "",
     isVerified: false,
     bio: "",
+    postcodeSearch: "",
+    postcodeSuggestions: [],
+    searchingPostcodes: false,
   });
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -80,6 +87,33 @@ export default function EditTherapistProfileAdmin() {
     };
   }, [isAreaDropdownOpen]);
 
+  // Address postcode search effect
+  useEffect(() => {
+    if (addressPostcodeSearch.length < 2) {
+      setAddressPostcodeSuggestions([]);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      setSearchingAddressPostcodes(true);
+      try {
+        const res = await axios.get(
+          `https://api.postcodes.io/postcodes?q=${addressPostcodeSearch}&limit=50`
+        );
+        setAddressPostcodeSuggestions(
+          res.data?.result?.map((r) => r.postcode) || []
+        );
+      } catch (err) {
+        console.error("Address postcode search failed:", err);
+        setAddressPostcodeSuggestions([]);
+      } finally {
+        setSearchingAddressPostcodes(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [addressPostcodeSearch]);
+
   // Fetch therapist details
   useEffect(() => {
     const fetchTherapist = async () => {
@@ -113,8 +147,14 @@ export default function EditTherapistProfileAdmin() {
           gender: t.userId?.gender || "",
           isVerified: t.isVerified || false,
           bio: t.bio || "",
+          postcodeSearch: "",
+          postcodeSuggestions: [],
+          searchingPostcodes: false,
         });
         console.log("These are the services: ", form.services);
+
+        // Set address postcode search to match the current address postcode
+        setAddressPostcodeSearch(t.userId?.address?.PostalCode || "");
 
         if (t.userId?.avatar_url) {
           setPreviewUrl(t.userId.avatar_url);
@@ -192,7 +232,7 @@ export default function EditTherapistProfileAdmin() {
           formData.append("active", value);
         } else if (Array.isArray(value)) {
           value.forEach((v) => formData.append(`${key}[]`, v));
-        } else {
+        } else if (!["postcodeSearch", "postcodeSuggestions", "searchingPostcodes"].includes(key)) {
           formData.append(key, value);
         }
       });
@@ -213,9 +253,10 @@ export default function EditTherapistProfileAdmin() {
       console.error("Error updating therapist:", err);
       toast.error("Failed to update therapist.");
     } finally {
-      setSaving(true);
+      setSaving(false);
     }
   };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black text-white">
@@ -334,7 +375,7 @@ export default function EditTherapistProfileAdmin() {
         {/* Address */}
         <label className="block text-sm text-gray-400 mb-2">Address</label>
         <div className="grid grid-cols-2 gap-2 mb-4">
-          {["Building_No", "Street", "Locality", "PostTown", "PostalCode"].map(
+          {["Building_No", "Street", "Locality", "PostTown"].map(
             (field) => (
               <input
                 key={field}
@@ -346,6 +387,46 @@ export default function EditTherapistProfileAdmin() {
               />
             )
           )}
+          {/* PostalCode with search */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="PostalCode"
+              value={addressPostcodeSearch}
+              onChange={(e) => {
+                setAddressPostcodeSearch(e.target.value);
+              }}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+            />
+
+            {/* Loader */}
+            {searchingAddressPostcodes && (
+              <div className="absolute mt-1 w-full bg-black border border-white/10 rounded-lg p-2 flex items-center gap-2 text-gray-400 text-sm">
+                <Loader2Icon className="w-4 h-4 animate-spin" /> Searching...
+              </div>
+            )}
+
+            {/* Suggestions */}
+            {!searchingAddressPostcodes &&
+              addressPostcodeSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg max-h-56 overflow-y-auto">
+                  {addressPostcodeSuggestions.map((pc) => (
+                    <button
+                      key={pc}
+                      type="button"
+                      onClick={() => {
+                        handleChange("PostalCode", pc, true);
+                        setAddressPostcodeSearch(pc);
+                        setAddressPostcodeSuggestions([]);
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-800 transition-colors text-white"
+                    >
+                      {pc}
+                    </button>
+                  ))}
+                </div>
+              )}
+          </div>
         </div>
 
         {/* Services Offered */}
@@ -408,61 +489,93 @@ export default function EditTherapistProfileAdmin() {
           </div>
         </div>
 
-        {/* Services Available in London Areas */}
+        {/* Services Available in Postcodes */}
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-2">
-            Services Available in Areas
+            Services Available in Postcodes
           </label>
 
-          {/* Dropdown */}
           <div className="relative mb-3 area-dropdown">
-            <button
-              type="button"
-              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
-              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary hover:ring-1 hover:ring-primary flex items-center justify-between"
-            >
-              <span className="text-gray-400">Select London Areas</span>
-              <ChevronDown
-                size={16}
-                className={`transition-transform ${isAreaDropdownOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
+            <input
+              type="text"
+              placeholder="Enter postcode to add service area..."
+              value={form.postcodeSearch || ""}
+              onChange={async (e) => {
+                const value = e.target.value;
+                handleChange("postcodeSearch", value);
 
-            {isAreaDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg">
-                {londonAreas.map((area) => (
-                  <button
-                    key={area}
-                    type="button"
-                    onClick={() => handleAreaSelect(area)}
-                    disabled={form.servicesInPostalCodes.includes(area)}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg transition-colors
-                      ${form.servicesInPostalCodes.includes(area)
-                        ? 'text-gray-500 cursor-not-allowed'
-                        : 'text-white hover:text-primary'
-                      }`}
-                  >
-                    {area}
-                    {form.servicesInPostalCodes.includes(area) && (
-                      <span className="ml-2 text-xs">(Selected)</span>
-                    )}
-                  </button>
-                ))}
+                if (value.length < 2) {
+                  setForm((prev) => ({ ...prev, postcodeSuggestions: [] }));
+                  return;
+                }
+
+                setForm((prev) => ({ ...prev, searchingPostcodes: true }));
+                try {
+                  const res = await axios.get(
+                    `https://api.postcodes.io/postcodes?q=${value}&limit=50`
+                  );
+                  setForm((prev) => ({
+                    ...prev,
+                    postcodeSuggestions: res.data?.result?.map((r) => r.postcode) || [],
+                  }));
+                } catch (err) {
+                  console.error("Postcode search failed:", err);
+                  setForm((prev) => ({ ...prev, postcodeSuggestions: [] }));
+                } finally {
+                  setForm((prev) => ({ ...prev, searchingPostcodes: false }));
+                }
+              }}
+              className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
+            />
+
+            {/* Loader + Suggestions */}
+            {form.searchingPostcodes && (
+              <div className="absolute mt-1 w-full bg-black border border-white/10 rounded-lg p-2 text-gray-400 text-sm">
+                Searching...
               </div>
             )}
+            {!form.searchingPostcodes &&
+              form.postcodeSuggestions &&
+              form.postcodeSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-black border border-white/10 rounded-lg shadow-lg max-h-56 overflow-y-auto">
+                  {form.postcodeSuggestions.map((pc) => (
+                    <button
+                      key={pc}
+                      type="button"
+                      onClick={() => {
+                        // Add to service areas if not already present
+                        if (!form.servicesInPostalCodes.includes(pc)) {
+                          handleChange("servicesInPostalCodes", [...form.servicesInPostalCodes, pc]);
+                        }
+                        // Clear search
+                        handleChange("postcodeSearch", "");
+                        setForm((prev) => ({ ...prev, postcodeSuggestions: [] }));
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-800 transition-colors text-white"
+                    >
+                      {pc}
+                    </button>
+                  ))}
+                </div>
+              )}
           </div>
 
-          {/* Selected Areas */}
+          {/* Selected Postcodes */}
           <div className="flex flex-wrap gap-2">
-            {form.servicesInPostalCodes.map((area, index) => (
+            {form.servicesInPostalCodes.map((pc, index) => (
               <span
                 key={index}
                 className="px-3 py-1 rounded-full border border-white/10 bg-primary/10 text-sm flex items-center gap-2"
               >
-                {area}
+                {pc}
                 <button
                   type="button"
-                  onClick={() => removeArea(index)}
+                  onClick={() => {
+                    handleChange(
+                      "servicesInPostalCodes",
+                      form.servicesInPostalCodes.filter((_, i) => i !== index)
+                    );
+                  }}
                   className="text-gray-400 hover:text-red-500 transition-colors"
                 >
                   ✕
