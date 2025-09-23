@@ -111,9 +111,9 @@ const FeaturedTherapists = () => {
                     <span className="text-gray-300 text-sm font-medium">
                       {rating}
                     </span>
-                    <span className="text-gray-500 text-sm">
-                      | {therapist?.profile?.ratingCount || 0} reviews
-                    </span>
+                    {/* <span className="text-gray-500 text-sm"> */}
+                    {/*   | {therapist?.profile?.ratingCount || 0} reviews */}
+                    {/* </span> */}
                   </div>
 
                   {/* Specializations */}
