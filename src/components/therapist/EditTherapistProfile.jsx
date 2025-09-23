@@ -59,6 +59,37 @@ export default function EditTherapistProfile() {
     };
   };
 
+  // Fetch outcodes from your backend
+  const fetchAreaOutcodeSuggestions = async (query) => {
+    if (query.length < 2) {
+      setAreaPostcodeSuggestions([]);
+      return;
+    }
+
+    try {
+      setLoadingAreaSuggestions(true);
+
+      const res = await axios.get(`${apiUrl}/outcodes?q=${query}&limit=50`, {
+        headers: { Authorization: `Bearer ${therapistjwt}` },
+      });
+
+      if (res.data?.result) {
+        setAreaPostcodeSuggestions(res.data.result); // [{ postcode: "SW1A" }, ...]
+      } else {
+        setAreaPostcodeSuggestions([]);
+      }
+    } catch (err) {
+      console.error("Error fetching outcodes:", err);
+      setAreaPostcodeSuggestions([]);
+    } finally {
+      setLoadingAreaSuggestions(false);
+    }
+  };
+
+  const debouncedFetchAreaOutcodes = debounce(fetchAreaOutcodeSuggestions, 300);
+
+
+
   // Function to fetch postcode suggestions
   const fetchPostcodeSuggestions = async (query, isForAddress = false) => {
     if (query.length < 2) {
@@ -518,7 +549,7 @@ export default function EditTherapistProfile() {
               onChange={(e) => {
                 setAreaPostcodeQuery(e.target.value);
                 setIsAreaDropdownOpen(true);
-                debouncedFetchAreaPostcodes(e.target.value);
+                debouncedFetchAreaOutcodes(e.target.value);
               }}
               onFocus={() => setIsAreaDropdownOpen(true)}
               className="w-full bg-black border border-white/10 rounded-lg p-2 text-white focus:border-primary"
@@ -536,18 +567,15 @@ export default function EditTherapistProfile() {
                       onClick={() => handleAreaPostcodeSelect(item.postcode)}
                       disabled={form.servicesInPostalCodes.includes(item.postcode)}
                       className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-800 transition-colors first:rounded-t-lg last:rounded-b-lg
-                        ${form.servicesInPostalCodes.includes(item.postcode)
+            ${form.servicesInPostalCodes.includes(item.postcode)
                           ? 'text-gray-500 cursor-not-allowed'
                           : 'text-white hover:text-primary'
                         }`}
                     >
-                      <div className="font-medium">{item.postcode}</div>
-                      <div className="text-gray-400 text-xs">
-                        {item.district}, {item.country}
-                        {form.servicesInPostalCodes.includes(item.postcode) && (
-                          <span className="ml-2">(Already selected)</span>
-                        )}
-                      </div>
+                      {item.postcode}
+                      {form.servicesInPostalCodes.includes(item.postcode) && (
+                        <span className="ml-2 text-xs">(Already selected)</span>
+                      )}
                     </button>
                   ))
                 )}

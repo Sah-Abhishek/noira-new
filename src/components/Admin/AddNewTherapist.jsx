@@ -82,6 +82,7 @@ export default function AddNewTherapist() {
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  // Fetch outcodes for service areas
   useEffect(() => {
     if (!postcodeQuery.trim()) {
       setPostcodeOptions([]);
@@ -92,16 +93,18 @@ export default function AddNewTherapist() {
       try {
         setIsSearching(true);
         const res = await axios.get(
-          `https://api.postcodes.io/postcodes?q=${postcodeQuery}&limit=100`
+          `${apiUrl}/outcodes?q=${postcodeQuery}&limit=50`,
+          { headers: { Authorization: `Bearer ${adminjwt}` } }
         );
+        // API returns { result: [ { postcode: "SW1A" }, ... ] }
         setPostcodeOptions(res.data?.result || []);
       } catch (err) {
-        console.error("Error fetching postcodes:", err);
+        console.error("Error fetching outcodes:", err);
         setPostcodeOptions([]);
       } finally {
         setIsSearching(false);
       }
-    }, 400); // debounce 400ms
+    }, 400);
 
     return () => clearTimeout(delayDebounce);
   }, [postcodeQuery]);
@@ -538,13 +541,12 @@ export default function AddNewTherapist() {
                     onClick={() => handlePostcodeSelect(item.postcode)}
                     disabled={form.servicesInPostalCodes.includes(item.postcode)}
                     className={`w-full text-left px-3 py-2 text-sm transition-colors
-              ${form.servicesInPostalCodes.includes(item.postcode)
+          ${form.servicesInPostalCodes.includes(item.postcode)
                         ? "text-gray-500 cursor-not-allowed"
                         : "text-white hover:bg-gray-800 hover:text-primary"
                       }`}
                   >
-                    {item.postcode}{" "}
-                    <span className="text-xs text-gray-500">({item.region})</span>
+                    {item.postcode}
                   </button>
                 ))}
               </div>
