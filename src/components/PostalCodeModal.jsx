@@ -86,13 +86,13 @@ export default function PostalCodeModal({ isOpen, onClose, }) {
                   CONTINUE →
                 </button>
 
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="w-full text-sm text-gray-400 hover:text-primary transition"
-                >
-                  Continue without setting location
-                </button>
+                {/* <button */}
+                {/*   type="button" */}
+                {/*   onClick={onClose} */}
+                {/*   className="w-full text-sm text-gray-400 hover:text-primary transition" */}
+                {/* > */}
+                {/*   Continue without setting location */}
+                {/* </button> */}
               </form>
 
               {/* Right Side (Service Area Map) */}
