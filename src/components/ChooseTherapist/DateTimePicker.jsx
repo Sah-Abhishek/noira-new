@@ -66,7 +66,7 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const navigate = useNavigate();
   const userjwt = localStorage.getItem("userjwt");
   const { user } = useUserStore();
-  const postalCode = sessionStorage.getItem("postalCode") || user.address.PostalCode;
+  const postalCode = sessionStorage.getItem("postalCode") || user?.address?.PostalCode;
   console.log("This is the postal code: ", postalCode);
 
 
