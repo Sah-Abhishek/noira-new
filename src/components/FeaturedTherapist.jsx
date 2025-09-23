@@ -45,7 +45,7 @@ const FeaturedTherapists = () => {
     <section id="therapists" className="py-20 px-6 md:px-20 bg-[#111]">
       <div className="text-center mb-16">
         <h2 className="text-4xl text-primary font-braven font-bold">
-          Featured <span className="text-primary">Therapists</span>
+          Our Top <span className="text-primary">Therapists</span>
         </h2>
         <p className="mt-4 text-gray-400">
           Meet our certified wellness professionals
@@ -102,8 +102,8 @@ const FeaturedTherapists = () => {
                         <Star
                           key={i}
                           className={`w-4 h-4 ${i < Math.round(rating)
-                              ? "fill-primary"
-                              : "fill-gray-600"
+                            ? "fill-primary"
+                            : "fill-gray-600"
                             }`}
                         />
                       ))}

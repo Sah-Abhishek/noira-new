@@ -178,7 +178,7 @@ const BookingSummary = ({ setCouponCode }) => {
       {/* Coupon Section */}
       <div className="bg-[#111] rounded-2xl p-4 space-y-3">
         <h3 className="text-primary font-semibold text-sm">Add Coupon</h3>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <input
             type="text"
             value={coupon}
@@ -191,7 +191,7 @@ const BookingSummary = ({ setCouponCode }) => {
           />
           <button
             onClick={handleApplyCoupon}
-            className="px-4 py-2 rounded-lg bg-primary text-black font-semibold text-sm hover:opacity-90"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-black font-semibold text-sm hover:opacity-90"
           >
             Apply
           </button>

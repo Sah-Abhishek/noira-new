@@ -26,6 +26,13 @@ const isPastTime = (timeString, selectedDate) => {
 const generateMonthDays = (year, month) => {
   const date = new Date(year, month, 1);
   const days = [];
+
+  // ✅ add padding for empty days before the 1st
+  const firstDayIndex = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  for (let i = 0; i < firstDayIndex; i++) {
+    days.push(null);
+  }
+
   while (date.getMonth() === month) {
     days.push({
       date: date.getDate(),
@@ -33,6 +40,7 @@ const generateMonthDays = (year, month) => {
     });
     date.setDate(date.getDate() + 1);
   }
+
   return days;
 };
 
@@ -282,17 +290,21 @@ const DateTimePicker = ({ availableTimes = [] }) => {
               </div>
               <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center">
                 {days.map((d, idx) => {
+                  if (!d) {
+                    return <div key={idx} className="w-8 h-8 sm:w-10 sm:h-10" />; // empty placeholder
+                  }
+
                   const fullDate = formatDate(d.fullDate);
                   const isSelected = date === fullDate;
-                  const isPast =
-                    d.fullDate < new Date(new Date().setHours(0, 0, 0, 0));
+                  const isPast = d.fullDate < new Date(new Date().setHours(0, 0, 0, 0));
+
                   return (
                     <button
                       key={idx}
                       disabled={isPast}
                       onClick={() => !isPast && setDate(fullDate)}
                       className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg text-[11px] sm:text-sm transition
-                        ${isPast
+          ${isPast
                           ? "text-gray-600 cursor-not-allowed"
                           : isSelected
                             ? "bg-primary text-black font-semibold shadow-[0_0_8px_var(--tw-color-primary)]"

@@ -16,6 +16,14 @@ const formatDate = (date) => {
 const generateMonthDays = (year, month) => {
   const date = new Date(year, month, 1);
   const days = [];
+
+  // Add empty slots before the first day
+  const firstDayIndex = date.getDay(); // 0 = Sun, 1 = Mon, ...
+  for (let i = 0; i < firstDayIndex; i++) {
+    days.push(null);
+  }
+
+  // Push actual days
   while (date.getMonth() === month) {
     days.push({
       date: date.getDate(),
@@ -23,6 +31,7 @@ const generateMonthDays = (year, month) => {
     });
     date.setDate(date.getDate() + 1);
   }
+
   return days;
 };
 
@@ -293,29 +302,30 @@ const FindTherapistByAvailability = () => {
                 </div>
                 <div className="grid grid-cols-7 gap-1 md:gap-2 text-center">
                   {days.map((d, idx) => {
+                    if (!d) {
+                      // Empty slot before the 1st
+                      return <div key={idx} className="w-8 h-8 md:w-10 md:h-10" />;
+                    }
+
                     const fullDate = formatDate(d.fullDate);
                     const isSelected = date === fullDate;
-                    const isPast =
-                      d.fullDate <
-                      new Date(new Date().setHours(0, 0, 0, 0));
+                    const isPast = d.fullDate < new Date(new Date().setHours(0, 0, 0, 0));
                     const isAvailable = availableDates.includes(fullDate);
 
                     return (
                       <button
                         key={idx}
                         disabled={isPast || !isAvailable}
-                        onClick={() =>
-                          !isPast && isAvailable && setDate(fullDate)
-                        }
+                        onClick={() => !isPast && isAvailable && setDate(fullDate)}
                         className={`
-                          flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg text-xs md:text-sm font-medium transition
-                          ${isPast || !isAvailable
+          flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg text-xs md:text-sm font-medium transition
+          ${isPast || !isAvailable
                             ? "text-gray-600 cursor-not-allowed"
                             : isSelected
                               ? "bg-primary text-black font-semibold shadow-[0_0_15px_var(--tw-color-primary)]"
                               : "text-primary hover:bg-primary hover:text-black"
                           }
-                        `}
+        `}
                       >
                         {d.date}
                       </button>
