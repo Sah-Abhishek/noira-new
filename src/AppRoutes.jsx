@@ -59,6 +59,8 @@ import ReviewBookingsPage from "./components/user/ReviewBookingPage.jsx";
 import UsersManagement from "./components/Admin/UsersManagement.jsx";
 import AdminProfile from "./components/adminDashboard/AdminProfile.jsx";
 import AdminEditProfile from "./components/Admin/AdminEditProfile.jsx";
+import BlogPage from "./Blog/BlogPage.jsx";
+import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 
 
 const AppRoutes = () => {
@@ -87,6 +89,8 @@ const AppRoutes = () => {
         <Route path="/paymentfail" element={<PaymentFail />} />
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:id" element={<BlogPageArticle />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
           path="/servicesbytherapist"
