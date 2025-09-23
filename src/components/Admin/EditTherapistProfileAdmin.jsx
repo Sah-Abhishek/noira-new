@@ -512,7 +512,7 @@ export default function EditTherapistProfileAdmin() {
                 setForm((prev) => ({ ...prev, searchingPostcodes: true }));
                 try {
                   const res = await axios.get(
-                    `https://api.postcodes.io/postcodes?q=${value}&limit=50`
+                    `${apiUrl}/outcodes?q=${value}&limit=50`
                   );
                   setForm((prev) => ({
                     ...prev,
