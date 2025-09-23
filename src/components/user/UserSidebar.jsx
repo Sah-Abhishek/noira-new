@@ -27,6 +27,7 @@ const UserSidebar = () => {
 
   const handleLogOut = () => {
     localStorage.clear();
+    sessionStorage.clear();
     navigate("/userlogin");
   };
 

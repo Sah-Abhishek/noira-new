@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import useBookingStore from "../../store/bookingStore";
 import FancyDropdown from "./FancyDropdown";
 import { User } from 'lucide-react';
+import useUserStore from "../../store/UserStore";
+import PostalCodeModal from "../PostalCodeModal";
 
 /** Helpers */
 const fullName = (t) =>
@@ -36,6 +38,13 @@ export default function BrowseTherapists() {
   const navigate = useNavigate();
   const { setSelectedTherapist } = useBookingStore();
   const userjwt = localStorage.getItem("userjwt");
+  const isPostalCodeSaved = sessionStorage.getItem("postalCode") ? true : false;
+  const { user } = useUserStore();
+  const [isPostalCodeModalOpen, setIsPostalCodeModalOpen] = useState(!isPostalCodeSaved);
+  const postalCode = sessionStorage.getItem("postalCode") || user?.address?.PostalCode;
+
+
+
 
   const gridRef = useRef(null);
 
@@ -44,7 +53,7 @@ export default function BrowseTherapists() {
       setLoading(true);
       setError(null);
       const res = await axios.get(`${apiUrl}/therapist/getalltherapists`, {
-        params: { page: pageNum, limit: LIMIT },
+        params: { page: pageNum, limit: LIMIT, postalCode },
         headers: {
           Authorization: `Bearer ${userjwt}`,
         },
@@ -201,6 +210,10 @@ export default function BrowseTherapists() {
           onChange={(p) => setPage(p)}
         />
       </div>
+      {!user?.address &&
+        <PostalCodeModal isOpen={isPostalCodeModalOpen} onClose={() => setIsPostalCodeModalOpen(false)} />
+      }
+
     </div>
   );
 }

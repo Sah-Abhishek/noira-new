@@ -155,25 +155,33 @@ export default function BookingsPage() {
                       <h2 className="text-lg font-semibold text-primary tracking-wide">
                         {service ? service.name : "Custom Session"}
                       </h2>
+
                       <div className="flex flex-col items-end gap-1">
-                        <span
-                          className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-yellow-500/20 text-yellow-400"
-                            }`}
-                        >
-                          {booking.paymentStatus}
-                        </span>
-                        <span
-                          className={`px-3 py-1 text-xs rounded-full font-medium ${booking.status === "completed"
-                            ? "bg-green-500/20 text-green-400"
-                            : booking.status === "declined" || booking.status === "cancelled"
-                              ? "bg-red-500/20 text-red-400"
+                        <div className="inline-flex">
+                          <h1 className="mr-2 text-primary font-bold">Payment </h1>
+                          <span
+                            className={`px-3 py-1 text-xs rounded-full font-medium ${booking.paymentStatus === "paid"
+                              ? "bg-green-500/20 text-green-400"
                               : "bg-yellow-500/20 text-yellow-400"
-                            }`}
-                        >
-                          {booking.status}
-                        </span>
+                              }`}
+                          >
+                            {booking.paymentStatus}
+                          </span>
+                        </div>
+                        <div className="inline-flex">
+                          <h1 className="mr-2 text-primary font-bold">Slot </h1>
+
+                          <span
+                            className={`px-3 py-1 text-xs rounded-full font-medium ${booking.status === "completed"
+                              ? "bg-green-500/20 text-green-400"
+                              : booking.status === "declined" || booking.status === "cancelled"
+                                ? "bg-red-500/20 text-red-400"
+                                : "bg-yellow-500/20 text-yellow-400"
+                              }`}
+                          >
+                            {booking.status}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -244,7 +252,9 @@ export default function BookingsPage() {
                       {booking.bookingCode && (
                         <p className="flex items-center gap-2 text-gray-500 text-xs">
                           <Hash className="w-4 h-4 text-primary" />
-                          #{booking.bookingCode}
+                          <span className="font-semibold text-primary">Booking Id</span>
+
+                          {booking._id}
                         </p>
                       )}
                     </div>

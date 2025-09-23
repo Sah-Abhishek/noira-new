@@ -73,14 +73,14 @@ const TherapistSelectionCard = ({ therapist }) => {
             <Star
               key={star}
               className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.round(rating)
-                  ? "text-primary fill-primary"
-                  : "text-gray-500"
+                ? "text-primary fill-primary"
+                : "text-gray-500"
                 }`}
             />
           ))}
         </div>
         <span className="font-semibold ml-1">{rating}</span>
-        <span className="text-gray-400">({ratingCount} reviews)</span>
+        {/* <span className="text-gray-400">({ratingCount} reviews)</span> */}
       </div>
       {/* Specializations */}
       <div className="flex flex-wrap justify-center gap-2">
