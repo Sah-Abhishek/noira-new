@@ -79,6 +79,11 @@ const Navbar = () => {
         >
           Careers
         </button>
+        <button onClick={() => handleLinkClick("/blog")}
+          className={`hover:text-primary transition ${isActive("/blog") ? "text-[#C49E5B] font-semibold" : ""}`}
+        >
+          Blog
+        </button>
 
         {!isLoggedIn ? (
           <div className="">
