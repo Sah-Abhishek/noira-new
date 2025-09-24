@@ -8,15 +8,16 @@ export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get("http://192.168.1.22:3000/api/blog/")
+      .get(`${apiUrl}/blog/`)
       .then((res) => setBlogs(res.data.blogs || []))
       .catch((err) => console.error("Error fetching blogs:", err));
   }, []);
 
-  const categories = ["All", "Massage", "Wellness", "Lifestyle", "London Luxury", "Therapy Tips"];
+  const categories = ["All", "Massage", "Wellness", "Lifestyle",];
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesCategory =

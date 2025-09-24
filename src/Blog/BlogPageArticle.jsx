@@ -8,10 +8,11 @@ import Footer from "../components/FooterSection";
 export default function BlogPageArticle() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get(`http://192.168.1.22:3000/api/blog/${id}`)
+      .get(`${apiUrl}/blog/${id}`)
       .then((res) => setBlog(res.data.blog))
       .catch((err) => console.error("Error fetching blog:", err));
   }, [id]);
