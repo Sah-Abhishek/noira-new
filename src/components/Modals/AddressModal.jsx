@@ -13,6 +13,9 @@ const AddressModal = ({ isOpen, onClose }) => {
     postalCode: "",
   });
   const userjwt = localStorage.getItem("userjwt");
+  const isLoggedIn = userjwt ? true : false;
+  const { useAddressStore } = setUserAddress();
+  // console.log("This is the value of isLoggedIn: ", isLoggedIn);
 
   const { setUserAddress } = useBookingStore();
 
@@ -32,6 +35,10 @@ const AddressModal = ({ isOpen, onClose }) => {
     if (!formData.postalCode) {
       toast.error("Postal code is required");
       return;
+    }
+
+    if (!isLoggedIn) {
+
     }
 
     try {
