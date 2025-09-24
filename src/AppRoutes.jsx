@@ -111,9 +111,7 @@ const AppRoutes = () => {
         <Route
           path="/findtherapistbyavailability"
           element={
-            <UserProtectedRoute>
-              <FindTherapistByAvailability />
-            </UserProtectedRoute>
+            <FindTherapistByAvailability />
           }
         />
         {/* <Route */}
@@ -128,9 +126,7 @@ const AppRoutes = () => {
         <Route
           path="/browsetherapists"
           element={
-            <UserProtectedRoute>
-              <BrowseTherapists />
-            </UserProtectedRoute>
+            <BrowseTherapists />
           }
         />
         <Route path="/allservicespage" element={<AllServicesPage />} />
@@ -145,17 +141,13 @@ const AppRoutes = () => {
         <Route
           path="/choosetherapist"
           element={
-            <UserProtectedRoute>
-              <ChooseTherapistPage />
-            </UserProtectedRoute>
+            <ChooseTherapistPage />
           }
         />
         <Route
           path="/paymentpage"
           element={
-            <UserProtectedRoute>
-              <PaymentPage />
-            </UserProtectedRoute>
+            <PaymentPage />
           }
         />
 

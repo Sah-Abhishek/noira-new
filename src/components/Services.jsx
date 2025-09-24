@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import devineHand from '../assets/devineHand.png';
 import dumbell from '../assets/dumbell.png';
 import leave from '../assets/leaf.png';
-import { FaArrowRight } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -35,20 +34,13 @@ const Services = () => {
         const res = await fetch(`${apiUrl}/services/list`);
         const data = await res.json();
 
-        // Compute lowest price per service
-        const mappedServices = data.map(service => {
-          const prices = service.options.map(opt => opt.price.amount);
-          const lowestPrice = Math.min(...prices);
-
-
-          return {
-            title: service.name,
-            description: service.description,
-            lowestPrice: lowestPrice,
-            icon: iconMap[service.name] || devineHand,
-            image: service.image_url,
-          };
-        });
+        const mappedServices = data.map(service => ({
+          title: service.name,
+          description: service.description,
+          options: service.options, // 👈 keep full options here
+          icon: iconMap[service.name] || devineHand,
+          image: service.image_url,
+        }));
 
         setServices(mappedServices);
       } catch (err) {
@@ -101,7 +93,7 @@ const Services = () => {
             variants={fadeInUp}
             transition={{ delay: index * 0.15 }}
           >
-            {/* Image section */}
+            {/* Image */}
             <div className="relative w-full h-52 bg-black">
               <img
                 src={service.image}
@@ -113,7 +105,7 @@ const Services = () => {
             </div>
 
             {/* Content */}
-            <div className="p-8 flex-grow">
+            <div className="p-8 flex-grow flex flex-col">
               <div className="flex items-center gap-4 mb-4">
                 <div className="bg-gradient-to-br from-[#f5e18c] via-[#e0a528] to-[#a66c00] p-3 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-current ring-[#C49E5B]">
                   <img
@@ -132,11 +124,28 @@ const Services = () => {
                 {service.description}
               </p>
 
-              <p className="font-bold text-[#D59940] mb-4">
-                Starting From £{service.lowestPrice}
-              </p>
+              {/* Options with all prices */}
+              <div className="mb-4">
+                <h4 className="text-xs uppercase tracking-wide mb-2 text-[#D59940]">
+                  Durations & Prices
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {service.options.map((opt, i) => (
+                    <button
+                      key={i}
+                      onClick={handleOnClick}
+                      className="px-3 py-1 rounded-full text-xs font-semibold text-[#D59940] border border-[#D59940] hover:bg-[#D59940] hover:text-black transition"
+                    >
+                      {opt.durationMinutes} min • £{opt.price.amount}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-              <button onClick={handleOnClick} className='bg-[#D59940] font-bold text-black rounded-full px-3 py-2'>
+              <button
+                onClick={handleOnClick}
+                className="mt-auto bg-[#D59940] font-bold text-black rounded-full px-3 py-2"
+              >
                 See More
               </button>
             </div>

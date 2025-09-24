@@ -7,7 +7,6 @@ import AddressModal from "../Modals/AddressModal.jsx";
 export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresses }) {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
   // Zustand store
@@ -19,6 +18,12 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
   const userjwt = localStorage.getItem("userjwt");
 
   const fetchAddresses = async () => {
+    if (!userjwt) {
+      setAddresses([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await axios.get(`${apiUrl}/user/${userId}/alladdress`, {
@@ -33,7 +38,7 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
       }
     } catch (err) {
       console.error("Failed to fetch addresses", err);
-      setError("Could not load addresses");
+      setAddresses([]); // ✅ just reset addresses
     } finally {
       setLoading(false);
     }
@@ -45,6 +50,8 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
 
   const handleSelectAddress = async (id) => {
     setSelectedId(id);
+    if (!userjwt) return;
+
     try {
       const response = await axios.post(
         `${apiUrl}/user/${userId}/default`,
@@ -66,7 +73,6 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
   };
 
   if (loading) return <p className="text-gray-400">Loading addresses...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="flex flex-col h-full">
@@ -105,7 +111,7 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
         </div>
       )}
 
-      {/* Add New Address Button */}
+      {/* Add New Address Button (always visible) */}
       <button
         onClick={() => setIsAddressModalOpen(true)}
         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-primary text-black font-semibold hover:scale-105 transition-transform"
