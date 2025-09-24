@@ -124,7 +124,7 @@ export default function BookingsManagement() {
                     key={b._id}
                     className="border-t border-[#222] hover:bg-[#111]"
                   >
-                    <td className="py-3 px-4">{b.bookingCode}</td>
+                    <td className="py-3 px-4">{b._id}</td>
 
                     {/* Customer */}
                     <td className="py-3 px-4">
