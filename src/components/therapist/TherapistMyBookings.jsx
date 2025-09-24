@@ -188,7 +188,7 @@ export default function TherapistBookingsPage() {
                 <div className="flex justify-between items-center mb-3">
                   <h2 className="text-lg font-semibold">{b.serviceId?.name}</h2>
                   <span className="text-xs text-yellow-400 font-medium">
-                    #{b.bookingCode || b._id.slice(-6).toUpperCase()}
+                    #{b._id || b._id.slice(-6).toUpperCase()}
                   </span>
                 </div>
 
