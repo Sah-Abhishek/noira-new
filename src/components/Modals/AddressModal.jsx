@@ -14,7 +14,7 @@ const AddressModal = ({ isOpen, onClose }) => {
   });
   const userjwt = localStorage.getItem("userjwt");
   const isLoggedIn = userjwt ? true : false;
-  const { useAddressStore } = setUserAddress();
+  const { addAddress } = useAddressStore();
   // console.log("This is the value of isLoggedIn: ", isLoggedIn);
 
   const { setUserAddress } = useBookingStore();
@@ -38,6 +38,9 @@ const AddressModal = ({ isOpen, onClose }) => {
     }
 
     if (!isLoggedIn) {
+      addAddress(formData);
+
+      return;
 
     }
 
