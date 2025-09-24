@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import useBookingStore from "../../store/bookingStore";
 import { X } from "lucide-react";
+import useAddressStore from "../../store/addressStore";
 
 const AddressModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
