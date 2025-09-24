@@ -39,7 +39,9 @@ const AddressModal = ({ isOpen, onClose }) => {
     }
 
     if (!isLoggedIn) {
-      addAddress(formData);
+      setUserAddress(formData);
+      onClose();
+
 
       return;
 

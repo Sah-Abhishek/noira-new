@@ -249,7 +249,7 @@ export default function BookingsPage() {
                         </p>
                       )}
 
-                      {booking.bookingCode && (
+                      {booking._id && (
                         <p className="flex items-center gap-2 text-gray-500 text-xs">
                           <Hash className="w-4 h-4 text-primary" />
                           <span className="font-semibold text-primary">Booking Id</span>

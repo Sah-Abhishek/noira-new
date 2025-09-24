@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowLeft, Lock, Loader2 } from "lucide-react";
 import BookingSummary from "../components/PaymentPage/BookingSummary.jsx";
 import BookingStepper from "../components/ServicesPage/BookingStepper.jsx";
@@ -11,10 +11,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import useUserStore from "../store/UserStore.jsx";
 import VerifyMobileModal from "../components/user/VerifyMobileModal.jsx";
+import EmailPhoneAndLoginModal from "../components/PaymentPage/EmailPhoneAndLoginModal.jsx";
 
 const PaymentPage = () => {
   const { userAddress, cart, date, time, selectedTherapist } = useBookingStore();
   const { user } = useUserStore();
+  const [modalEmail, setModalEmail] = useState('');
+  const [modalMobileNumber, setModalMobileNumber] = useState('');
+  const [isGuestPaymentModalOpen, setIsGuestPaymentModalOpen] = useState(false);
 
   const [lengthOfReturnedAddresses, setLengthOfReturnedAddresses] = useState(0);
   const [isVerifyMobileModalOpen, setIsVerifyMobileModalOpen] = useState(false);
@@ -29,8 +33,18 @@ const PaymentPage = () => {
   const userjwt = localStorage.getItem("userjwt");
   const apiUrl = import.meta.env.VITE_API_URL;
   const userEmail = localStorage.getItem("userEmail");
+  console.log("This is the value of the modalOpen: ", isGuestPaymentModalOpen);
 
-  const handlePayment = async () => {
+  // useEffect(() => {
+  //   setIsGuestPaymentModalOpen(false);
+  // })
+
+  const handlePayment = async (modalEmail, modalMobileNumber) => {
+    if (!userjwt) {
+      setIsGuestPaymentModalOpen(true);
+      return
+    }
+
     if (loading) return;
     setLoading(true);
 
@@ -51,10 +65,11 @@ const PaymentPage = () => {
         const res = await axios.post(
           `${apiUrl}/payment/create-checkout-session`,
           {
-            email: userEmail,
+            email: userEmail || modalEmail,
             therapistId: selectedTherapist._id,
             serviceId: cart.serviceId,
             optionIndex: cart.optionIndex,
+            mobileNumber: modalMobileNumber,
             date,
             time,
             couponCode,
@@ -77,6 +92,11 @@ const PaymentPage = () => {
   };
 
   const handlePayByCash = async () => {
+    if (!userjwt) {
+      setIsGuestPaymentModalOpen(true);
+      return
+    }
+
     if (loading) return;
     setLoading(true);
 
@@ -143,18 +163,30 @@ const PaymentPage = () => {
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <BookingSummary setCouponCode={setCouponCode} />
-          </div>
-          <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
-            <SavedAddresses
-              refreshKey={refreshKey}
-              setLengthOfReturnedAddresses={setLengthOfReturnedAddresses}
-            />
-          </div>
-        </div>
+        {userjwt ? (
+          // Authenticated user: two-column layout
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Booking Summary */}
+            <div className="bg-[#0d0d0d] p-6 rounded-2xl flex flex-col h-full">
+              <BookingSummary setCouponCode={setCouponCode} />
+            </div>
 
+            {/* Saved Addresses */}
+            <div className="bg-[#0d0d0d] p-6 rounded-2xl border border-primary/20 flex flex-col h-full">
+              <SavedAddresses
+                refreshKey={refreshKey}
+                setLengthOfReturnedAddresses={setLengthOfReturnedAddresses}
+              />
+            </div>
+          </div>
+        ) : (
+          // Guest user: single column layout
+          <div className="max-w-xl mx-auto">
+            <div className="bg-[#0d0d0d] p-6 rounded-2xl flex flex-col h-full">
+              <BookingSummary setCouponCode={setCouponCode} />
+            </div>
+          </div>
+        )}
         {/* Payment Buttons */}
         <div className="mt-12 max-w-lg mx-auto text-center space-y-5">
           <button
@@ -206,7 +238,18 @@ const PaymentPage = () => {
         isOpen={isVerifyMobileModalOpen}
         onClose={() => setIsVerifyMobileModalOpen(false)}
       />
-    </div>
+      <EmailPhoneAndLoginModal
+        setMobileNumber={setModalMobileNumber}
+        setEmail={setModalEmail}
+        isOpen={isGuestPaymentModalOpen}
+        onConformCash={handlePayByCash}
+        onClose={() => setIsGuestPaymentModalOpen(false)}
+        onConfirmOnline={handlePayment}
+        couponCode={couponCode}
+        setIsGuestPaymentModalOpen={setIsGuestPaymentModalOpen}
+      />
+
+    </div >
   );
 };
 

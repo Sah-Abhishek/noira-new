@@ -16,10 +16,12 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
   const userId = localStorage.getItem("userId");
   const apiUrl = import.meta.env.VITE_API_URL;
   const userjwt = localStorage.getItem("userjwt");
+  // console.log("This is the user Address: ", userAddress);
 
   const fetchAddresses = async () => {
     if (!userjwt) {
-      setAddresses([]);
+
+      setAddresses([userAddress]);
       setLoading(false);
       return;
     }
@@ -84,28 +86,28 @@ export default function SavedAddresses({ refreshKey, setLengthOfReturnedAddresse
         <p className="text-gray-400 mb-6">No saved addresses found.</p>
       ) : (
         <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2 custom-scrollbar">
-          {addresses.map((addr) => (
+          {addresses.map((addr, index) => (
             <div
-              key={addr._id}
+              key={addr._id || index}
               onClick={() => handleSelectAddress(addr._id)}
               className={`bg-[#111] p-4 rounded-xl border transition-colors cursor-pointer ${selectedId === addr._id
-                  ? "border-primary ring-2 ring-primary"
-                  : "border-primary/20 hover:border-primary"
+                ? "border-primary ring-2 ring-primary"
+                : "border-primary/20 hover:border-primary"
                 }`}
             >
               <div className="flex items-center gap-3 mb-2">
                 <Home className="w-5 h-5 text-primary" />
                 <h3 className="text-lg font-semibold text-white">
-                  {addr.PostTown}
+                  {addr.PostTown || addr.postTown}
                 </h3>
               </div>
               <p className="text-gray-300 text-sm">
-                {addr.Building_No}, {addr.Street}
+                {addr.Building_No || addr.buildingNo}, {addr.Street || addr.street}
               </p>
               <p className="text-gray-300 text-sm">
-                {addr.Locality}, {addr.PostTown}
+                {addr.Locality || addr.locality}, {addr.PostTown || addr.postTown}
               </p>
-              <p className="text-gray-300 text-sm">{addr.PostalCode}</p>
+              <p className="text-gray-300 text-sm">{addr.PostalCode || addr.postalCode}</p>
             </div>
           ))}
         </div>

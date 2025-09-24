@@ -5,8 +5,8 @@ const useBookingStore = create(
   persist(
     (set) => ({
       // booking state
-
       userEmail: null,
+      userPhoneNumber: null,
       findingTherapist: false,
       cart: [], // previously service
       date: null,
@@ -14,28 +14,27 @@ const useBookingStore = create(
       hasSearched: false,
       userId: null,
       userDetails: null,
-
-      // services list from API
       services: [],
       therapists: [],
-      selectedTherapist: null, // actual state
+      selectedTherapist: null,
       userAddress: null,
+      couponCode: null,
 
       // setters
-      setUserEmail: (userEmail) => set({ userEmail }),
+      setCouponCode: (couponCode) => ({ couponCode }),
+      setUserPhoneNumber: (phone) => set({ userPhoneNumber: phone }),
+      setUserEmail: (email) => set({ userEmail: email }),
       setHasSearched: (value) => set({ hasSearched: value }),
       setFindingTherapist: (value) => set({ findingTherapist: value }),
       setTherapists: (therapists) => set({ therapists }),
       setCart: (cart) => set({ cart }),
       setDate: (date) => set({ date }),
       setTime: (time) => set({ time }),
-      resetCart: () => set({ cart: [], date: null, time: null }), // better to reset cart to [] instead of null
+      resetCart: () => set({ cart: [], date: null, time: null }),
       setSelectedTherapist: (therapist) => set({ selectedTherapist: therapist }),
       setUserAddress: (address) => set({ userAddress: address }),
       setUserId: (userId) => set({ userId }),
       setUserDetails: (user) => set({ userDetails: user }),
-
-      // save services API response
       setServices: (services) => set({ services }),
     }),
     {
@@ -43,7 +42,7 @@ const useBookingStore = create(
       partialize: (state) => {
         const { hasSearched, ...rest } = state;
         return rest;
-      }
+      },
     }
   )
 );

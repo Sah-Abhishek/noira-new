@@ -61,6 +61,7 @@ import AdminProfile from "./components/adminDashboard/AdminProfile.jsx";
 import AdminEditProfile from "./components/Admin/AdminEditProfile.jsx";
 import BlogPage from "./Blog/BlogPage.jsx";
 import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
+import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
 
 
 const AppRoutes = () => {
@@ -112,6 +113,12 @@ const AppRoutes = () => {
           path="/findtherapistbyavailability"
           element={
             <FindTherapistByAvailability />
+          }
+        />
+        <Route
+          path="/bookingconfirmedbycash"
+          element={
+            <BookingConfirmedByCash />
           }
         />
         {/* <Route */}
