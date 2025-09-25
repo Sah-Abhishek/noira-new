@@ -19,9 +19,11 @@ const useBookingStore = create(
       selectedTherapist: null,
       userAddress: null,
       couponCode: null,
+      userName: null,
 
       // setters
-      setCouponCode: (couponCode) => ({ couponCode }),
+      setUserName: (userName) => set({ userName }),
+      setCouponCode: (couponCode) => set({ couponCode }),
       setUserPhoneNumber: (phone) => set({ userPhoneNumber: phone }),
       setUserEmail: (email) => set({ userEmail: email }),
       setHasSearched: (value) => set({ hasSearched: value }),

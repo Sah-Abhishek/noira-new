@@ -23,6 +23,8 @@ const BookingConfirmed = () => {
     date,
     time,
     selectedTherapist,
+    userPhoneNumber,
+    userName,
   } = useBookingStore();
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -56,6 +58,8 @@ const BookingConfirmed = () => {
         date,
         time,
         couponCode,
+        name: userName,
+        phone: userPhoneNumber,
         address: addressObj,
       });
 
