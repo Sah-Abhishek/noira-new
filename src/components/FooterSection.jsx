@@ -9,6 +9,7 @@ import {
   FaEnvelope,
   FaClock,
   FaMapMarkerAlt,
+  FaCheckCircle, // ✅ for secure payments
 } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { Link } from 'react-router-dom';
@@ -27,7 +28,6 @@ const Footer = () => {
         {/* Logo & Socials */}
         <div>
           <div className="mb-4">
-
             <img src={noira} alt="Noira Logo" className="w-50" />
           </div>
 
@@ -49,41 +49,25 @@ const Footer = () => {
           <h4 className="text-[#C49E5B] font-semibold mb-4">Services</h4>
           <ul className={`space-y-2 text-sm text-white ${mutedText}`}>
             <li>
-              <Link
-                to="/allservicespage"
-                className="block hover:underline hover:text-primary transition"
-              >
+              <Link to="/allservicespage" className="block hover:underline hover:text-primary transition">
                 Classic Reset
               </Link>
             </li>
             <li>
-              <Link
-                to="/allservicespage"
-                className="block hover:underline hover:text-primary transition"
-              >
+              <Link to="/allservicespage" className="block hover:underline hover:text-primary transition">
                 Deep Release
               </Link>
             </li>
             <li>
-              <Link
-                to="/allservicespage"
-                className="block hover:underline hover:text-primary transition"
-              >
+              <Link to="/allservicespage" className="block hover:underline hover:text-primary transition">
                 The NOIRA Ritual
               </Link>
             </li>
-            {/* Uncomment if needed */}
-            {/* <li>
-      <Link to="#" className="block hover:underline hover:text-primary transition">
-        The Executive Reset
-      </Link>
-    </li> */}
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-
           <h4 className="text-[#C49E5B] font-semibold mb-4">Contact</h4>
           <ul className={`space-y-3 text-sm ${mutedText}`}>
             <li className="flex items-center gap-2">
@@ -106,9 +90,26 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Secure Payments Section */}
+      <div className="max-w-7xl mx-auto mt-10 flex items-center justify-center gap-6">
+        {/* Checkmark + Text */}
+        <div className="flex items-center gap-2 text-sm text-white">
+          <FaCheckCircle className="text-[#C49E5B] text-lg" />
+          <span className="font-medium">Secure Payments</span>
+        </div>
+
+        {/* Stripe Logo */}
+        <img
+          src="./stripe_logo.png"
+          alt="Stripe"
+          className="h-60"
+        />
+      </div>
+
       {/* Divider */}
       <div className={`border-t ${divider} mt-10 pt-6 text-center text-sm ${mutedText}`}>
-        © 2025 NOIRA. A luxury without noise. Available to the discerning few      </div>
+        © 2025 NOIRA. A luxury without noise. Available to the discerning few
+      </div>
     </footer>
   );
 };

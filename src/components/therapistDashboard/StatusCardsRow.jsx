@@ -21,10 +21,8 @@ const StatusCardsRow = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
-
       try {
         let body = { filter };
-        console.log("These are the filters: ", body);
 
         if (filter === "custom" && customRange.start && customRange.end) {
           body.startDate = customRange.start;
@@ -42,9 +40,8 @@ const StatusCardsRow = () => {
           }
         );
 
-        console.log("This is the response for status card: ", res.data);
+        console.log("Dashboard API Response:", res.data);
         setDashboardData(res.data);
-
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
       } finally {
@@ -68,6 +65,16 @@ const StatusCardsRow = () => {
     );
   }
 
+  // Pick sessions object based on filter
+  const getSessionsData = () => {
+    if (filter === "today") return dashboardData.todaysSessions || {};
+    if (filter === "week") return dashboardData.weekSessions || {};
+    if (filter === "month") return dashboardData.monthSessions || {};
+    return {};
+  };
+
+  const { confirmed = 0, completed = 0 } = getSessionsData();
+
   return (
     <div className="w-full">
       {/* Filters */}
@@ -77,7 +84,7 @@ const StatusCardsRow = () => {
             key={type}
             onClick={() => setFilter(type)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm
-        ${filter === type
+              ${filter === type
                 ? "bg-blue-600 text-white shadow-md"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               }`}
@@ -123,19 +130,19 @@ const StatusCardsRow = () => {
           icon={sessionIcon}
         />
         <StatusCard
-          title="Total Reviews"
-          value={dashboardData.totalReviews ?? 0}
-          color="text-yellow-500"
-          icon={clockIcon}
-        />
-        <StatusCard
-          title="Sessions"
-          value={dashboardData.weekSessions ?? 0}
+          title="Pending Sessions"
+          value={confirmed}
           color="text-green-400"
           icon={chartIcon}
         />
         <StatusCard
-          title="Earning"
+          title="Completed Sessions"
+          value={completed}
+          color="text-blue-400"
+          icon={clockIcon}
+        />
+        <StatusCard
+          title="Earnings"
           value={`£${dashboardData.totalRevenue?.toFixed(1) ?? "0.0"}`}
           color="text-yellow-300"
           icon={pound}

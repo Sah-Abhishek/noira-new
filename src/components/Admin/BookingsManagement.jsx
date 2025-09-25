@@ -106,6 +106,7 @@ export default function BookingsManagement() {
                 <th className="py-3 px-4 text-left">Duration</th>
                 <th className="py-3 px-4 text-left">Status</th>
                 <th className="py-3 px-4 text-left">Payment</th>
+                <th className="py-3 px-4 text-left">Mode</th>
                 {/* <th className="py-3 px-4 text-left">Actions</th> */}
               </tr>
             </thead>
@@ -175,10 +176,12 @@ export default function BookingsManagement() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${b.status === "confirmed"
-                          ? "bg-green-500/20 text-green-400"
-                          : b.status === "pending"
-                            ? "bg-yellow-500/20 text-yellow-400"
-                            : "bg-red-500/20 text-red-400"
+                            ? "bg-green-500/20 text-green-400"
+                            : b.status === "pending"
+                              ? "bg-yellow-500/20 text-yellow-400"
+                              : b.status === "completed"
+                                ? "bg-blue-500/20 text-blue-400"
+                                : "bg-red-500/20 text-red-400"
                           }`}
                       >
                         {b.status}
@@ -196,6 +199,15 @@ export default function BookingsManagement() {
                         {b.paymentStatus}
                       </span>
                     </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${b.paymentStatus === "paid"
+                          }`}
+                      >
+                        {b.paymentMode}
+                      </span>
+                    </td>
+
 
                     {/* Actions */}
                     {/* <td className="py-3 px-4 space-x-2"> */}

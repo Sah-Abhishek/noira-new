@@ -18,6 +18,7 @@ export default function UserEditProfile() {
     email: "",
     phone: "",
     gender: "",
+    phoneVerified: false,
     address: {
       Building_No: "",
       Street: "",
@@ -54,6 +55,7 @@ export default function UserEditProfile() {
           email: u.email || "",
           phone: u.phone || "",
           gender: u.gender || "",
+          phoneVerified: u.phoneVerified || false,
           address: {
             Building_No: u.address?.Building_No || "",
             Street: u.address?.Street || "",
@@ -288,7 +290,7 @@ export default function UserEditProfile() {
               value={form.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
               className="w-full bg-black border border-white/10 rounded-lg p-2 text-white disabled:cursor-not-allowed disabled:opacity-50 focus:border-primary"
-              disabled={!!form.phone}
+              disabled={form.phoneVerified}   // 👈 disable ONLY if verified
             />
           </div>
         </div>
