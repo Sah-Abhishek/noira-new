@@ -11,8 +11,7 @@ export default function BlogPage() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/blog/`)
+    axios.get(`${apiUrl}/blog/`)
       .then((res) => setBlogs(res.data.blogs || []))
       .catch((err) => console.error("Error fetching blogs:", err));
   }, []);
