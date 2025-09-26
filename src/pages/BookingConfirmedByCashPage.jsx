@@ -64,7 +64,7 @@ const BookingConfirmed = () => {
       });
 
       if (res.status === 200) {
-        toast.success("Address saved successfully");
+        toast.success("Check Mail for login details");
         navigate("/user/mybookings");
       }
     } catch (err) {
