@@ -101,7 +101,7 @@ export default function AuthModal({
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-center mb-6 text-primary">
-          Checkout
+          Guest Login
         </h2>
 
         {/* Input fields */}
@@ -188,12 +188,12 @@ export default function AuthModal({
           >
             Login
           </button>
-          <button
-            onClick={() => navigate("/usersignup")}
-            className="flex-1 py-3 rounded-lg font-semibold border border-primary text-primary hover:bg-primary hover:text-black transition-colors"
-          >
-            Signup
-          </button>
+          {/* <button */}
+          {/*   onClick={() => navigate("/usersignup")} */}
+          {/*   className="flex-1 py-3 rounded-lg font-semibold border border-primary text-primary hover:bg-primary hover:text-black transition-colors" */}
+          {/* > */}
+          {/*   Signup */}
+          {/* </button> */}
         </div>
       </div>
     </div>

@@ -62,6 +62,7 @@ import AdminEditProfile from "./components/Admin/AdminEditProfile.jsx";
 import BlogPage from "./Blog/BlogPage.jsx";
 import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
+import SettlementReportsPage from "./components/Admin/settlementReports/settlementReportsPage.jsx";
 
 
 const AppRoutes = () => {
@@ -179,6 +180,7 @@ const AppRoutes = () => {
           <Route path="usermanagement" element={<UsersManagement />} />
           <Route path="adminprofile" element={<AdminProfile />} />
           <Route path="admineditprofile" element={<AdminEditProfile />} />
+          <Route path="settlementreports" element={<SettlementReportsPage />} />
 
 
         </Route>

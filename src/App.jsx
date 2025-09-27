@@ -44,7 +44,8 @@ function AppLayout() {
     '/user/reviewbooking/:id',
     '/admin/usermanagement',
     '/admin/adminprofile',
-    '/admin/admineditprofile'
+    '/admin/admineditprofile',
+    '/admin/settlementreports'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

@@ -73,7 +73,6 @@ export default function AllServicesPage() {
   ];
 
   const handleSelect = (service, option, optionIndex) => {
-
     setSelectedOptions({ [service._id]: option });
     setCart({
       serviceId: service._id,
@@ -122,10 +121,7 @@ export default function AllServicesPage() {
               return (
                 <div
                   key={service._id}
-                  className={`service-card mb-30 rounded-3xl overflow-hidden gold-foil group cursor-pointer ${cart?.serviceId === service._id
-                    ? "ring-2 ring-noira-gold"
-                    : ""
-                    }`}
+                  className="service-card mb-30 rounded-3xl overflow-hidden gold-foil group cursor-pointer"
                   style={{ backgroundImage: `url(${bg})` }}
                 >
                   <div className="specular-sweep"></div>
@@ -179,9 +175,9 @@ export default function AllServicesPage() {
                               onClick={() =>
                                 handleSelect(service, opt, index)
                               }
-                              className={`duration-chip px-4 py-2 rounded-full text-xs transition-all ${isActive
-                                ? "bg-noira-gold text-black font-semibold"
-                                : "text-noira-gold border border-noira-gold hover:bg-noira-gold/10"
+                              className={`duration-chip px-4 py-2 rounded-full text-xs transition-all duration-300 ${isActive
+                                  ? "bg-noira-gold text-black font-semibold shadow-lg ring-2 ring-noira-gold/50 transform scale-110 animate-pulse"
+                                  : "text-noira-gold border border-noira-gold hover:bg-noira-gold/10 hover:scale-105"
                                 }`}
                             >
                               {opt.durationMinutes} min • £

@@ -68,7 +68,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <h4 className="text-[#C49E5B] font-semibold mb-4">Contact</h4>
+          <h4 className="text-[#C49E5B] font-semibold ">Contact</h4>
           <ul className={`space-y-3 text-sm ${mutedText}`}>
             <li className="flex items-center gap-2">
               <FaPhoneAlt className="text-[#C49E5B]" />
@@ -91,7 +91,7 @@ const Footer = () => {
       </div>
 
       {/* Secure Payments Section */}
-      <div className="max-w-7xl mx-auto mt-10 flex items-center justify-center gap-6">
+      <div className="max-w-7xl mx-auto  flex  mb-10 justify-center gap-6">
         {/* Checkmark + Text */}
         <div className="flex items-center gap-2 text-sm text-white">
           <FaCheckCircle className="text-[#C49E5B] text-lg" />
@@ -102,12 +102,12 @@ const Footer = () => {
         <img
           src="./stripe_logo.png"
           alt="Stripe"
-          className="h-60"
+          className="h-18"
         />
       </div>
 
       {/* Divider */}
-      <div className={`border-t ${divider} mt-10 pt-6 text-center text-sm ${mutedText}`}>
+      <div className={`border-t ${divider}  pt-6 text-center text-sm ${mutedText}`}>
         © 2025 NOIRA. A luxury without noise. Available to the discerning few
       </div>
     </footer>

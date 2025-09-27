@@ -198,31 +198,43 @@ const PaymentPage = () => {
             Back to therapist
           </button>
 
-          <button
-            onClick={handlePayment}
-            disabled={loading}
-            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Redirecting...
-              </>
-            ) : (
-              <>
-                <Lock className="w-4 h-4" />
-                Confirm and Pay
-              </>
-            )}
-          </button>
+          {userjwt ? (
+            <>
+              <button
+                onClick={handlePayment}
+                disabled={loading}
+                className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Redirecting...
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    Confirm and Pay
+                  </>
+                )}
+              </button>
 
-          <button
-            onClick={handlePayByCash}
-            disabled={loading}
-            className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Pay by Cash
-          </button>
+              <button
+                onClick={handlePayByCash}
+                disabled={loading}
+                className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Pay by Cash
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setIsGuestPaymentModalOpen(true)}
+              disabled={loading}
+              className="w-full bg-primary text-black font-semibold py-3 px-6 rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Confirm
+            </button>
+          )}
         </div>
       </div>
 
