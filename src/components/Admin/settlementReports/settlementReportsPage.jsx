@@ -12,6 +12,7 @@ import FancyDropdown from "../../browseTherapist/FancyDropdown.jsx";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import StatusCardsSettlementReports from "./StatusCardsSettlementReports.jsx";
+import SettlementReportsTable from "./SettlementReportsTable.jsx";
 
 export default function SettlementReportsPage() {
   // draft filter states (UI controls)
@@ -22,8 +23,8 @@ export default function SettlementReportsPage() {
   const [paymentMode, setPaymentMode] = useState("All Modes");
   const [settlementStatus, setSettlementStatus] = useState("All Status");
 
+
   // applied filters (sent to API)
-  const [appliedFilters, setAppliedFilters] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -31,6 +32,36 @@ export default function SettlementReportsPage() {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
+
+
+  // helper: format date to YYYY-MM-DD
+  const formatDate = (date) => {
+    if (!date) return null;
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+
+  const getDefaultFilters = () => {
+    const today = new Date();
+    const start = new Date();
+    start.setDate(today.getDate() - 7); // last 7 days default
+    return {
+      startDate: formatDate(start),
+      endDate: formatDate(today),
+      therapistId: null,
+      paymentMode: "All modes",
+      settlementStatus: "All status",
+    };
+  };
+  const [appliedFilters, setAppliedFilters] = useState(getDefaultFilters());
+  console.log("These are the applied filters: ", appliedFilters);
+
+
+
+
 
   // fetch therapists
   useEffect(() => {
@@ -63,26 +94,29 @@ export default function SettlementReportsPage() {
     };
   }, [query]);
 
+
+
   // helper: build filters object
   const buildFilters = () => {
     let startDate, endDate;
+    const today = new Date();
 
     if (dateRange === "Last 7 Days") {
-      endDate = new Date();
+      endDate = today;
       startDate = new Date();
-      startDate.setDate(endDate.getDate() - 7);
+      startDate.setDate(today.getDate() - 7);
     } else if (dateRange === "Last 30 Days") {
-      endDate = new Date();
+      endDate = today;
       startDate = new Date();
-      startDate.setDate(endDate.getDate() - 30);
+      startDate.setDate(today.getDate() - 30);
     } else if (dateRange === "Custom Range") {
       startDate = customStartDate;
       endDate = customEndDate;
     }
 
     return {
-      startDate: startDate ? startDate.toISOString().split("T")[0] : null,
-      endDate: endDate ? endDate.toISOString().split("T")[0] : null,
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
       therapistId: therapist?.id || null,
       paymentMode: paymentMode !== "All Modes" ? paymentMode : null,
       settlementStatus: settlementStatus !== "All Status" ? settlementStatus : null,
@@ -245,26 +279,29 @@ export default function SettlementReportsPage() {
                 setQuery("");
                 setPaymentMode("All Modes");
                 setSettlementStatus("All Status");
-                setAppliedFilters(null); // clear applied filters
+                setAppliedFilters(getDefaultFilters()); // reset to defaults
               }}
             >
               <RotateCcw className="w-4 h-4" /> Reset
             </button>
 
-            <div className="ml-auto flex gap-3">
-              <button className="flex items-center gap-2 bg-green-600 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700 transition">
-                <FileSpreadsheet className="w-4 h-4" /> Export Excel
-              </button>
-              <button className="flex items-center gap-2 bg-red-600 text-white font-medium px-4 py-2 rounded-md hover:bg-red-700 transition">
-                <FileText className="w-4 h-4" /> Export PDF
-              </button>
-            </div>
+            {/* <div className="ml-auto flex gap-3"> */}
+            {/*   <button className="flex items-center gap-2 bg-green-600 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700 transition"> */}
+            {/*     <FileSpreadsheet className="w-4 h-4" /> Export Excel */}
+            {/*   </button> */}
+            {/*   <button className="flex items-center gap-2 bg-red-600 text-white font-medium px-4 py-2 rounded-md hover:bg-red-700 transition"> */}
+            {/*     <FileText className="w-4 h-4" /> Export PDF */}
+            {/*   </button> */}
+            {/* </div> */}
           </div>
         </div>
 
-        {/* Show summary only after Apply Filters */}
+        {/* Status cards only after Apply Filters */}
         {appliedFilters && (
-          <StatusCardsSettlementReports filters={appliedFilters} />
+          <>
+            <StatusCardsSettlementReports filters={appliedFilters} />
+            <SettlementReportsTable filters={appliedFilters} apiUrl={apiUrl} />
+          </>
         )}
       </section>
     </div>
