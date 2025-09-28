@@ -130,7 +130,7 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
             }`}
           onClick={() => setActiveTab("weekly")}
         >
-          Weekly Settlement
+          Weekly Pending Settlement
         </button>
       </div>
 
@@ -190,13 +190,11 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                           ₹{row.therapistShare?.toLocaleString()}
                         </td>
                         <td
-                          className={`py-2 px-2 font-medium ${row.netSettlement >= 0
-                            ? "text-green-400"
-                            : "text-red-400"
+                          className={`py-2 px-2 font-medium ${row.netSettlement >= 0 ? "text-red-400" : "text-green-400"
                             }`}
                         >
-                          {row.netSettlement >= 0 ? "+" : ""}
-                          ₹{row.netSettlement.toLocaleString()}
+                          {row.netSettlement >= 0 ? "-" : "+"}
+                          ₹{Math.abs(row.netSettlement).toLocaleString()}
                         </td>
                         <td className="py-2 px-2">
                           <span
@@ -245,15 +243,15 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                   <h2 className="text-lg font-semibold text-gray-200">
                     Weekly Settlement Summary
                   </h2>
-                  <button className="bg-primary text-black px-4 py-2 rounded-md text-sm font-medium">
-                    Bulk Settle All Pending
-                  </button>
+                  {/* <button className="bg-primary text-black px-4 py-2 rounded-md text-sm font-medium"> */}
+                  {/*   Bulk Settle All Pending */}
+                  {/* </button> */}
                 </div>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-left text-gray-400 border-b border-[#1a1a1a]">
                       <th className="py-3 px-2">Therapist</th>
-                      <th className="py-3 px-2">Total Bookings</th>
+                      <th className="py-3 px-2">Total Unsettled Bookings</th>
                       <th className="py-3 px-2">Total Online (Payable)</th>
                       <th className="py-3 px-2">Total Cash (Receivable)</th>
                       <th className="py-3 px-2">Net Settlement</th>

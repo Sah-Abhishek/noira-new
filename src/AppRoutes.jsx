@@ -63,6 +63,7 @@ import BlogPage from "./Blog/BlogPage.jsx";
 import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
 import SettlementReportsPage from "./components/Admin/settlementReports/settlementReportsPage.jsx";
+import TherapistPayout from "./components/TherapistPayout/TherapistPayout.jsx";
 
 
 const AppRoutes = () => {
@@ -218,6 +219,7 @@ const AppRoutes = () => {
           <Route path="therapistprofiletherapist" element={<TherapistProfileTherapist />} />
           <Route path="edittherapistprofile" element={<EditTherapistProfile />} />
           <Route path="therapistbookingspage" element={<TherapistBookingsPage />} />
+          <Route path="therapistpayout" element={<TherapistPayout />} />
           <Route
             path="therapistschedule"
             element={

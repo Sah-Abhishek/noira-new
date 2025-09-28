@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-export default function SettlementSummary({ filters }) {
+export default function StatusCardsSettlementReports({ filters }) {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -37,7 +37,8 @@ export default function SettlementSummary({ filters }) {
     new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "GBP",
-      maximumFractionDigits: 0,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(value || 0);
 
   if (loading) {

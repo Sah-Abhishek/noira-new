@@ -42,6 +42,11 @@ const TherapistSidebar = () => {
       icon: <BookOpen className="w-5 h-5" />,
       path: "/therapist/therapistbookingspage",
     },
+    {
+      name: "Payout Reports",
+      icon: <BookOpen className="w-5 h-5" />,
+      path: "/therapist/therapistpayout",
+    },
     // {
     //   name: "Feedback",
     //   icon: <MessageSquare className="w-5 h-5" />,
