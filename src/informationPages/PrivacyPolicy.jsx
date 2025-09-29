@@ -1,6 +1,6 @@
 
 // src/pages/PrivacyPolicy.jsx
-export default function PrivacyPolicy() {
+const PrivacyPolicy = () => {
   return (
     <div className="bg-[#0d0d0d] pt-10 text-white min-h-screen">
       <div className="max-w-4xl mx-auto px-6 py-12 space-y-12">
@@ -58,3 +58,4 @@ export default function PrivacyPolicy() {
     </div>
   );
 }
+export default PrivacyPolicy;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import noira from '/noira.svg';
 import {
   FaInstagram,
@@ -9,7 +8,7 @@ import {
   FaEnvelope,
   FaClock,
   FaMapMarkerAlt,
-  FaCheckCircle, // ✅ for secure payments
+  FaCheckCircle,
 } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { Link } from 'react-router-dom';
@@ -47,7 +46,7 @@ const Footer = () => {
         {/* Services */}
         <div>
           <h4 className="text-[#C49E5B] font-semibold mb-4">Services</h4>
-          <ul className={`space-y-2 text-sm text-white ${mutedText}`}>
+          <ul className={`space-y-2 text-sm ${mutedText}`}>
             <li>
               <Link to="/allservicespage" className="block hover:underline hover:text-primary transition">
                 Classic Reset
@@ -68,7 +67,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <h4 className="text-[#C49E5B] font-semibold ">Contact</h4>
+          <h4 className="text-[#C49E5B] font-semibold">Contact</h4>
           <ul className={`space-y-3 text-sm ${mutedText}`}>
             <li className="flex items-center gap-2">
               <FaPhoneAlt className="text-[#C49E5B]" />
@@ -90,24 +89,45 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Policies Links */}
+      <div className="max-w-7xl mx-auto mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+        <Link to="/privacypolicy" className="hover:underline hover:text-primary transition">
+          Privacy Policy
+        </Link>
+        <Link to="/termsandcondition" className="hover:underline hover:text-primary transition">
+          Terms & Conditions
+        </Link>
+        <Link to="/codeofethics" className="hover:underline hover:text-primary transition">
+          Code of Ethics
+        </Link>
+        <Link to="/gpdrstatement" className="hover:underline hover:text-primary transition">
+          GDPR Statement
+        </Link>
+        <Link to="/cancellationpolicy" className="hover:underline hover:text-primary transition">
+          Cancellation Policy
+        </Link>
+        <Link to="/refundpolicy" className="hover:underline hover:text-primary transition">
+          Refund Policy
+        </Link>
+        <Link to="/healthandsafetypolicy" className="hover:underline hover:text-primary transition">
+          Health & Safety
+        </Link>
+        <Link to="/accessibility" className="hover:underline hover:text-primary transition">
+          Accessibility
+        </Link>
+      </div>
+
       {/* Secure Payments Section */}
-      <div className="max-w-7xl mx-auto  flex  mb-10 justify-center gap-6">
-        {/* Checkmark + Text */}
+      <div className="max-w-7xl mx-auto flex mb-10 mt-8 justify-center gap-6">
         <div className="flex items-center gap-2 text-sm text-white">
           <FaCheckCircle className="text-[#C49E5B] text-lg" />
           <span className="font-medium">Secure Payments</span>
         </div>
-
-        {/* Stripe Logo */}
-        <img
-          src="./stripe_logo.png"
-          alt="Stripe"
-          className="h-18"
-        />
+        <img src="./stripe_logo.png" alt="Stripe" className="h-8" />
       </div>
 
       {/* Divider */}
-      <div className={`border-t ${divider}  pt-6 text-center text-sm ${mutedText}`}>
+      <div className={`border-t ${divider} pt-6 text-center text-sm ${mutedText}`}>
         © 2025 NOIRA. A luxury without noise. Available to the discerning few
       </div>
     </footer>
