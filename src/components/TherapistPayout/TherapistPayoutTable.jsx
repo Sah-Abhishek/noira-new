@@ -463,6 +463,8 @@ export default function TherapistPayoutTable() {
                         >
                           {row.netSettlement >= 0 ? "+" : ""}
                           {formatCurrency(row.netSettlement)}
+                          {row.netSettlement >= 0 ? " (Pay)" : " (Collect)"}
+
                         </td>
                         <td className="px-4 py-3">
                           <span
