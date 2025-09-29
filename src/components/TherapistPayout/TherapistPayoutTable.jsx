@@ -303,6 +303,7 @@ export default function TherapistPayoutTable() {
                 <thead className="bg-[#111] text-gray-300">
                   <tr>
                     <th className="px-4 py-3">Booking ID</th>
+                    <th className="px-4 py-3">Booking Date</th>
                     <th className="px-4 py-3">Client Name</th>
                     <th className="px-4 py-3">Service</th>
                     <th className="px-4 py-3">Amount</th>
@@ -331,6 +332,9 @@ export default function TherapistPayoutTable() {
                       >
                         <td className="px-4 py-3 text-primary font-medium">
                           #{row.bookingId.toUpperCase()}
+                        </td>
+                        <td className="px-4 py-3 text-primary font-medium">
+                          {row.bookingDate.slice(0, 10)}
                         </td>
                         <td className="px-4 py-3 text-gray-200">
                           {row.clientName.first} {row.clientName.last}

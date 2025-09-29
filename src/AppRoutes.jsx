@@ -64,6 +64,7 @@ import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
 import SettlementReportsPage from "./components/Admin/settlementReports/settlementReportsPage.jsx";
 import TherapistPayout from "./components/TherapistPayout/TherapistPayout.jsx";
+import PrivaryPolicyPage from "./pages/PrivacyPolicyPage.jsx";
 
 
 const AppRoutes = () => {
@@ -93,6 +94,7 @@ const AppRoutes = () => {
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/privacypolicy" element={<PrivaryPolicyPage />} />
         <Route path="/blog/:id" element={<BlogPageArticle />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
