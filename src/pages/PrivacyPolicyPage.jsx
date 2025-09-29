@@ -46,7 +46,8 @@ export default function PrivaryPolicyPage() {
               <strong className="text-primary">Retention:</strong> Data kept only as necessary.
             </li>
             <li>
-              <strong className="text-primary">Contact:</strong> NOIRA Ltd, [Business Address], [Email], [Phone].
+              <strong className="text-primary">Contact:</strong> NOIRA Ltd, London, info@noira.co.uk, +44 7350 700055
+              .
             </li>
           </ul>
         </section>
@@ -60,7 +61,8 @@ export default function PrivaryPolicyPage() {
           <ul className="list-disc list-inside space-y-1">
             <li><strong className="text-primary">Data Rights:</strong> Access, rectification, erasure, portability, restriction, objection.</li>
             <li><strong className="text-primary">Consent:</strong> Marketing requires explicit opt-in.</li>
-            <li><strong className="text-primary">Accountability:</strong> Data protection officer contact: [Insert].</li>
+            <li><strong className="text-primary">Accountability:</strong> Data protection officer contact: +44 7350 700055
+            </li>
           </ul>
         </section>
 
@@ -93,7 +95,7 @@ export default function PrivaryPolicyPage() {
           <h2 className="text-2xl font-bold text-primary mb-4">
             NOIRA Ltd – Terms & Conditions
           </h2>
-          <p className="text-sm text-gray-400 mb-6">Effective Date: [Insert Date]</p>
+          <p className="text-sm text-gray-400 mb-6">Effective Date: 20 sept 2025</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Bookings: via official channels, age 18+.</li>
             <li>Payments: secure gateways, due at confirmation.</li>
@@ -109,7 +111,7 @@ export default function PrivaryPolicyPage() {
           <h2 className="text-2xl font-bold text-primary mb-4">
             NOIRA Ltd – Cancellation & No-Show Policy
           </h2>
-          <p className="text-sm text-gray-400 mb-6">Effective Date: [Insert Date]</p>
+          <p className="text-sm text-gray-400 mb-6">Effective Date: 20 sept 2025</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Cancellations: Free with 2+ hours’ notice, otherwise restricted.</li>
             <li>No-Shows: Prepaid non-refundable; unpaid requires settlement.</li>
@@ -123,7 +125,7 @@ export default function PrivaryPolicyPage() {
           <h2 className="text-2xl font-bold text-primary mb-4">
             NOIRA Ltd – Refund Policy
           </h2>
-          <p className="text-sm text-gray-400 mb-6">Effective Date: [Insert Date]</p>
+          <p className="text-sm text-gray-400 mb-6">Effective Date: 20 sept 2025</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Eligible: Full refunds for 2+ hours cancellation, 7–10 days processing.</li>
             <li>Non-Refundable: No-shows, services delivered.</li>
@@ -137,7 +139,7 @@ export default function PrivaryPolicyPage() {
           <h2 className="text-2xl font-bold text-primary mb-4">
             NOIRA Ltd – Health & Safety Policy
           </h2>
-          <p className="text-sm text-gray-400 mb-6">Effective Date: [Insert Date]</p>
+          <p className="text-sm text-gray-400 mb-6">Effective Date: 20 sept 2025</p>
           <ul className="list-disc list-inside space-y-1">
             <li>Therapist Standards: vetted, insured, sanitised equipment.</li>
             <li>Client Obligations: safe space, disclose health conditions.</li>
