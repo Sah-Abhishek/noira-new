@@ -271,7 +271,7 @@ function TherapistCard({ t }) {
       {/* Short Bio placed here */}
       {bio && (
         <p className="mt-4 text-sm text-gray-400 line-clamp-3">
-          {bio}
+          {bio.length > 150 ? bio.slice(0, 150) + "..." : bio}
         </p>
       )}
 

@@ -66,6 +66,7 @@ const FeaturedTherapists = () => {
 
           const experience = therapist?.profile?.experience || 0;
           const specializations = therapist?.profile?.specializations || [];
+          const bio = therapist?.profile?.bio; // ✅ Grab bio
           const image = therapist?.avatar_url;
 
           return (
@@ -108,13 +109,15 @@ const FeaturedTherapists = () => {
                         />
                       ))}
                     </div>
-                    <span className="text-gray-300 text-sm font-medium">
-                      {rating}
-                    </span>
-                    {/* <span className="text-gray-500 text-sm"> */}
-                    {/*   | {therapist?.profile?.ratingCount || 0} reviews */}
-                    {/* </span> */}
+                    <span className="text-gray-300 text-sm font-medium">{rating}</span>
                   </div>
+
+                  {/* ✅ Short Bio */}
+                  {bio && (
+                    <p className="text-sm text-gray-400 line-clamp-3 mt-2">
+                      {bio.length > 150 ? bio.slice(0, 150) + "..." : bio}
+                    </p>
+                  )}
 
                   {/* Specializations */}
                   {specializations.length > 0 && (

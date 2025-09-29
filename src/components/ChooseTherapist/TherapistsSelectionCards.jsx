@@ -1,5 +1,5 @@
 import React from "react";
-import { Star, MapPin, Globe } from "lucide-react";
+import { Star, Globe } from "lucide-react";
 import useBookingStore from "../../store/bookingStore";
 import { useNavigate } from "react-router-dom";
 
@@ -19,13 +19,16 @@ const TherapistSelectionCard = ({ therapist }) => {
       ? therapist.ratingCount
       : Math.floor(Math.random() * 50 + 10); // fallback reviews
 
-
   const isSelected = selectedTherapist?._id === therapist?._id;
 
   const handleSelect = () => {
     setSelectedTherapist(therapist);
     console.log("Selected therapist:", therapist);
   };
+
+  // ✅ Bio handling
+  const bio = therapist?.bio || therapist?.profile?.bio || "";
+  const shortBio = bio.length > 150 ? bio.slice(0, 150) + "..." : bio;
 
   return (
     <div
@@ -37,7 +40,8 @@ const TherapistSelectionCard = ({ therapist }) => {
         border mx-auto
         ${isSelected
           ? "border-primary shadow-[0_0_20px_rgba(251,191,36,0.6)] scale-[1.03]"
-          : "border-white/10 hover:scale-[1.01]"}
+          : "border-white/10 hover:scale-[1.01]"
+        }
       `}
     >
       {/* Avatar */}
@@ -66,15 +70,14 @@ const TherapistSelectionCard = ({ therapist }) => {
       </p>
 
       {/* Rating */}
-      {/* Rating */}
       <div className="flex items-center gap-1 text-xs sm:text-sm">
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
               className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= Math.round(rating)
-                ? "text-primary fill-primary"
-                : "text-gray-500"
+                  ? "text-primary fill-primary"
+                  : "text-gray-500"
                 }`}
             />
           ))}
@@ -82,6 +85,14 @@ const TherapistSelectionCard = ({ therapist }) => {
         <span className="font-semibold ml-1">{rating}</span>
         {/* <span className="text-gray-400">({ratingCount} reviews)</span> */}
       </div>
+
+      {/* ✅ Short Bio */}
+      {shortBio && (
+        <p className="text-gray-400 text-xs sm:text-sm text-center mt-1">
+          {shortBio}
+        </p>
+      )}
+
       {/* Specializations */}
       <div className="flex flex-wrap justify-center gap-2">
         {(therapist?.specializations || []).map((spec, idx) => (
@@ -93,12 +104,6 @@ const TherapistSelectionCard = ({ therapist }) => {
           </span>
         ))}
       </div>
-
-      {/* Location + Experience */}
-      {/* <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm"> */}
-      {/* <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-primary" /> */}
-      {/* <span>Manhattan • {therapist?.experience || "5"} yrs exp</span> */}
-      {/* </div> */}
 
       {/* Languages */}
       <div className="flex items-center gap-1 text-gray-400 text-xs sm:text-sm">
