@@ -136,8 +136,11 @@ export default function SettlementReportsPage() {
           </p>
         </div>
 
+        <StatusCardsSettlementReports filters={appliedFilters} />
+
+
         {/* Filters Section */}
-        <div className="bg-[#111] p-6 rounded-lg shadow-lg border border-[#1a1a1a]">
+        <div className="bg-[#111] p-6 mt-10 rounded-lg shadow-lg border border-[#1a1a1a]">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             {/* Date Range */}
             <div className="col-span-1">
@@ -299,7 +302,6 @@ export default function SettlementReportsPage() {
         {/* Status cards only after Apply Filters */}
         {appliedFilters && (
           <>
-            <StatusCardsSettlementReports filters={appliedFilters} />
             <SettlementReportsTable filters={appliedFilters} apiUrl={apiUrl} />
           </>
         )}
