@@ -64,8 +64,14 @@ import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
 import SettlementReportsPage from "./components/Admin/settlementReports/settlementReportsPage.jsx";
 import TherapistPayout from "./components/TherapistPayout/TherapistPayout.jsx";
-import PrivaryPolicyPage from "./pages/PrivacyPolicyPage.jsx";
-
+// import PrivacyPolicy from "./informationPages/PrivacyPolicy.jsx";
+// import TermsAndConditions from "./InformationPages/TermsAndCondition.jsx";
+// import CodeOfEthics from "./InformationPages/CodeOfEthics.jsx";
+// import GDPRStatement from "./InformationPages/GPDRStatement.jsx";
+// import CancellationPolicy from "./InformationPages/CancellationPolicy.jsx";
+// import RefundPolicy from "./InformationPages/RefundPolicy.jsx";
+// import HealthAndSafety from "./InformationPages/HealthAndSafetyPolicy.jsx";
+//
 
 const AppRoutes = () => {
   return (
@@ -94,7 +100,15 @@ const AppRoutes = () => {
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/blog" element={<BlogPage />} />
-        <Route path="/privacypolicy" element={<PrivaryPolicyPage />} />
+        {/* <Route path="/privacypolicy" element={<PrivacyPolicy />} /> */}
+        {/* <Route path="/termsandcondition" element={<TermsAndConditions />} /> */}
+        {/* <Route path="/codeofethics" element={<CodeOfEthics />} /> */}
+        {/* <Route path="/gpdrstatement" element={<GDPRStatement />} /> */}
+        {/* <Route path="/cancellationpolicy" element={<CancellationPolicy />} /> */}
+        {/* <Route path="/refundpolicy" element={<RefundPolicy />} /> */}
+        {/* <Route path="/healthandsafetypolicy" element={<HealthAndSafety />} /> */}
+        {/* <Route path="/accessibility" element={<HealthAndSafety />} /> */}
+        {/**/}
         <Route path="/blog/:id" element={<BlogPageArticle />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route

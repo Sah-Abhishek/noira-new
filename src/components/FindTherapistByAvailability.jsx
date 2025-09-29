@@ -38,6 +38,7 @@ const generateMonthDays = (year, month) => {
 const FindTherapistByAvailability = () => {
   const today = new Date();
   const { date, time, setDate, setTime, selectedTherapist } = useBookingStore();
+  const { cart } = useBookingStore();
 
   const [days, setDays] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -71,8 +72,8 @@ const FindTherapistByAvailability = () => {
     const fetchAvailability = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const res = await axios.get(
-          `${apiUrl}/therapist/availability/${therapistId}`,
+        const res = await axios.post(
+          `${apiUrl}/therapist/availability/${therapistId}`, { cart },
           {
             headers: {
               Authorization: `Bearer ${userjwt}`,

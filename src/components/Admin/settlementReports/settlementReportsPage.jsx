@@ -288,14 +288,14 @@ export default function SettlementReportsPage() {
               <RotateCcw className="w-4 h-4" /> Reset
             </button>
 
-            {/* <div className="ml-auto flex gap-3"> */}
-            {/*   <button className="flex items-center gap-2 bg-green-600 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700 transition"> */}
-            {/*     <FileSpreadsheet className="w-4 h-4" /> Export Excel */}
-            {/*   </button> */}
-            {/*   <button className="flex items-center gap-2 bg-red-600 text-white font-medium px-4 py-2 rounded-md hover:bg-red-700 transition"> */}
-            {/*     <FileText className="w-4 h-4" /> Export PDF */}
-            {/*   </button> */}
-            {/* </div> */}
+            <div className="ml-auto flex gap-3">
+              <button className="flex items-center gap-2 bg-green-600 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700 transition">
+                <FileSpreadsheet className="w-4 h-4" /> Export Excel
+              </button>
+              <button className="flex items-center gap-2 bg-red-600 text-white font-medium px-4 py-2 rounded-md hover:bg-red-700 transition">
+                <FileText className="w-4 h-4" /> Export PDF
+              </button>
+            </div>
           </div>
         </div>
 

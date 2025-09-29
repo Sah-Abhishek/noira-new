@@ -232,6 +232,8 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                         >
                           {row.netSettlement >= 0 ? "-" : "+"}
                           £{Math.abs(row.netSettlement).toLocaleString()}
+                          {row.netSettlement >= 0 ? " (pay)" : " (collect)"}
+
                         </td>
                         <td className="py-2 px-2">
                           <span

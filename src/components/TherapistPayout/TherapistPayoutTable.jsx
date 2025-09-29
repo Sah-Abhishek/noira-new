@@ -209,6 +209,8 @@ export default function TherapistPayoutTable() {
         <Tab.Panels>
           {/* Booking-wise Report */}
           <Tab.Panel>
+            <div className="flex justify-end mb-4">
+            </div>
             <div className="bg-[#111] p-4 rounded-md mb-6 grid grid-cols-5 gap-4">
               {/* Date Range */}
               <select
@@ -369,6 +371,8 @@ export default function TherapistPayoutTable() {
                         >
                           {row.netSettlement >= 0 ? "+" : ""}
                           {formatCurrency(row.netSettlement)}
+                          {row.netSettlement >= 0 ? " (collect)" : " (pay)"}
+
                         </td>
                         <td className="px-4 py-3">
                           <span
