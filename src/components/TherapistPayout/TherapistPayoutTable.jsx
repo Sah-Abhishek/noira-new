@@ -74,12 +74,12 @@ export default function TherapistPayoutTable() {
   const [loading, setLoading] = useState(false);
   const [weeklyLoading, setWeeklyLoading] = useState(false);
   const [services, setServices] = useState([]);
-  const apiUrl = import.meta.env.VITE_API_URL;
   const therapistId = localStorage.getItem("therapistId");
   const [activeTab, setActiveTab] = useState(0); // 0 = booking-wise, 1 = weekly
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [filters, setFilters] = useState({
-    dateRange: "This Week",
+    dateRange: "This Month",
     serviceId: null,
     paymentMode: "All Modes",
     settlementStatus: "All Status",
@@ -165,7 +165,7 @@ export default function TherapistPayoutTable() {
     const fetchServices = async () => {
       try {
         const res = await axios.get(
-          "http://192.168.1.24:3000/api/services/list"
+          `${apiUrl}/services/list`
         );
         if (res.data) {
           setServices(res.data);
