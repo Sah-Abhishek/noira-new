@@ -61,7 +61,7 @@ export default function StatusCardsSettlementReports({ filters }) {
       {/* Total Bookings */}
       <div className="bg-[#111] p-4 rounded-xl border border-[#1a1a1a] flex items-stretch justify-between">
         <div className="flex flex-col justify-center">
-          <p className="text-sm text-gray-400">Total Bookings</p>
+          <p className="text-sm text-gray-400">Total Pending Bookings</p>
           <p className="text-2xl font-semibold text-white">
             {metrics.totalBookings}
           </p>

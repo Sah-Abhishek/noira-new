@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SettlementReportsTable({ filters, apiUrl }) {
   const [activeTab, setActiveTab] = useState("booking"); // booking | weekly
@@ -38,6 +39,42 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
   };
 
 
+  // Mark weekly settlement
+  const markWeeklySettlement = async (therapistId) => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(`${apiUrl}/payout/admin/marksettleweek`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          therapistId,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (res.ok) {
+        console.log("Weekly settlement success:", json.message || json);
+        // Refresh weekly reports
+        fetchWeeklyReports(pagination?.currentPage || 1);
+      } else {
+        console.error("Settlement failed:", json);
+        toast.error(json.message || "Failed to mark weekly settlement");
+      }
+    } catch (err) {
+      console.error("Error marking weekly settlement:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   // inside SettlementReportsTable component
 
   // Mark booking as settled
@@ -60,11 +97,11 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
         fetchBookingReports(pagination?.currentPage || 1);
       } else {
         console.error("Settlement failed:", json);
-        alert(json.message || "Failed to mark settled");
+        toast.error(json.message || "Failed to mark settled");
       }
     } catch (err) {
       console.error("Error marking settled:", err);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -171,7 +208,7 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                         <td className="py-2 px-2">{row.therapist}</td>
                         <td className="py-2 px-2">{row.service}</td>
                         <td className="py-2 px-2 font-medium">
-                          ₹{row.amount?.toLocaleString()}
+                          £{row.amount?.toLocaleString()}
                         </td>
                         <td className="py-2 px-2">
                           <span
@@ -184,17 +221,17 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                           </span>
                         </td>
                         <td className="py-2 px-2 text-yellow-400">
-                          ₹{row.companyShare?.toLocaleString()}
+                          £{row.companyShare?.toLocaleString()}
                         </td>
                         <td className="py-2 px-2 text-green-400">
-                          ₹{row.therapistShare?.toLocaleString()}
+                          £{row.therapistShare?.toLocaleString()}
                         </td>
                         <td
                           className={`py-2 px-2 font-medium ${row.netSettlement >= 0 ? "text-red-400" : "text-green-400"
                             }`}
                         >
                           {row.netSettlement >= 0 ? "-" : "+"}
-                          ₹{Math.abs(row.netSettlement).toLocaleString()}
+                          £{Math.abs(row.netSettlement).toLocaleString()}
                         </td>
                         <td className="py-2 px-2">
                           <span
@@ -272,16 +309,16 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                           </td>
                           <td className="py-2 px-2">{row.totalBookings}</td>
                           <td className="py-2 px-2 text-green-400">
-                            ₹{row.totalOnlinePayable?.toLocaleString()}
+                            £{row.totalOnlinePayable?.toLocaleString()}
                           </td>
                           <td className="py-2 px-2 text-red-400">
-                            ₹{row.totalCashReceivable?.toLocaleString()}
+                            £{row.totalCashReceivable?.toLocaleString()}
                           </td>
                           <td
                             className={`py-2 px-2 font-medium ${isPay ? "text-green-400" : "text-red-400"
                               }`}
                           >
-                            {isPay ? "Pay" : "Collect"} ₹
+                            {isPay ? "Pay" : "Collect"} £
                             {Math.abs(row.netSettlement).toLocaleString()}
                           </td>
                           <td className="py-2 px-2">
@@ -294,23 +331,21 @@ export default function SettlementReportsTable({ filters, apiUrl }) {
                               {row.settlementStatus}
                             </span>
                           </td>
-                          <td className="py-2 px-2 flex gap-2">
-                            {row.settlementStatus === "PENDING" ? (
-                              <button className="bg-primary text-black px-3 py-1 rounded-md text-xs font-medium">
-                                Settle Now
-                              </button>
-                            ) : (
-                              <button
-                                className="bg-gray-800 text-gray-400 px-3 py-1 rounded-md text-xs cursor-not-allowed"
-                                disabled
-                              >
-                                Settled
-                              </button>
-                            )}
-                            <button className="text-gray-400 text-xs underline">
-                              Adjust Next Week
+                          {row.settlementStatus === "PENDING" ? (
+                            <button
+                              onClick={() => markWeeklySettlement(row.therapistId)}
+                              className="bg-primary text-black px-3 py-1 rounded-md text-xs font-medium"
+                            >
+                              Settle Now
                             </button>
-                          </td>
+                          ) : (
+                            <button
+                              className="bg-gray-800 text-gray-400 px-3 py-1 rounded-md text-xs cursor-not-allowed"
+                              disabled
+                            >
+                              Settled
+                            </button>
+                          )}
                         </tr>
                       );
                     })}
