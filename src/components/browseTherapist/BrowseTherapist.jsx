@@ -46,6 +46,7 @@ export default function BrowseTherapists() {
 
 
 
+
   const gridRef = useRef(null);
 
   const fetchTherapists = async (pageNum) => {
@@ -228,6 +229,9 @@ function TherapistCard({ t }) {
   const tags = (t?.profile?.specializations ?? []).slice(0, 4);
   const languages = t?.profile?.languages ?? [];
   const exp = t?.profile?.experience;
+  const bio = t?.profile?.bio || "";
+  // console.log("This is the bio: ", bio);
+
   const navigate = useNavigate();
   const { setSelectedTherapist } = useBookingStore();
 
@@ -260,12 +264,16 @@ function TherapistCard({ t }) {
           <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
             <Star className="h-4 w-4 fill-primary text-primary" />
             <span className="font-semibold">{rating}</span>
-            {/* <span className="text-gray-400"> */}
-            {/*   ({ratingCount || Math.floor(Math.random() * 50 + 10)} reviews) */}
-            {/* </span> */}
           </div>
         </div>
       </div>
+
+      {/* Short Bio placed here */}
+      {bio && (
+        <p className="mt-4 text-sm text-gray-400 line-clamp-3">
+          {bio}
+        </p>
+      )}
 
       {!!tags.length && (
         <div className="flex flex-wrap gap-2 mt-4">
