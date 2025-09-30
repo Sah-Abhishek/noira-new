@@ -46,7 +46,8 @@ function AppLayout() {
     '/admin/adminprofile',
     '/admin/admineditprofile',
     '/admin/settlementreports',
-    '/therapist/therapistpayout'
+    '/therapist/therapistpayout',
+    '/therapist/therapistresources'
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

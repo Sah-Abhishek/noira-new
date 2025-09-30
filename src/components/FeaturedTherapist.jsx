@@ -19,6 +19,7 @@ const FeaturedTherapists = () => {
         const res = await axios.get(
           `${apiUrl}/therapist/getalltherapists?page=1&limit=3`
         );
+
         if (res.data?.therapists) {
           setTherapists(res.data.therapists);
         } else {
@@ -107,8 +108,8 @@ const FeaturedTherapists = () => {
                         <Star
                           key={i}
                           className={`w-4 h-4 ${i < Math.round(rating)
-                              ? "fill-primary"
-                              : "fill-gray-600"
+                            ? "fill-primary"
+                            : "fill-gray-600"
                             }`}
                         />
                       ))}

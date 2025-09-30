@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "/noira.png";
 import {
+  Book,
   BookOpen,
   Calendar,
   Home,
@@ -57,6 +58,11 @@ const TherapistSidebar = () => {
       icon: <User className="w-5 h-5" />,
       path: `/therapist/therapistprofiletherapist`,
     },
+    // {
+    //   name: "Resources",
+    //   icon: <Book className="w-5 h-5" />,
+    //   path: `/therapist/therapistresources`,
+    // },
   ];
 
   const fullName = user?.name

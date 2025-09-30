@@ -6,6 +6,7 @@ import { FaCrown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import useUserStore from "../../store/UserStore";
+import toast from "react-hot-toast";
 
 const formatDate = (date) => {
   if (!(date instanceof Date)) return null;
@@ -67,7 +68,11 @@ const DateTimePicker = ({ availableTimes = [] }) => {
   const userjwt = localStorage.getItem("userjwt");
   const { user } = useUserStore();
   const postalCode = sessionStorage.getItem("postalCode") || user?.address?.PostalCode;
-  console.log("This is the postal code: ", postalCode);
+  // console.log("This is the postal code: ", postalCode);
+  const onUserConfirm = () => {
+    setManualTrigger(true);
+    handleConfirm(true);
+  };
 
 
   useEffect(() => {
@@ -97,6 +102,13 @@ const DateTimePicker = ({ availableTimes = [] }) => {
       });
       setTherapists(res.data.therapists);
       setHasSearched(true);
+
+      // console.log("This is the length: ", res.data.therapists);
+      const therapistsList = res.data?.therapists;
+
+      // if (therapistsList.length === 0) {
+      //   toast.error("No therapist found for given date and time and postcode, Try again later");
+      // }
       if (res.data.therapists.length > 0) {
         setTimeout(() => {
           therapistSelectionRef.current?.scrollIntoView({

@@ -299,6 +299,13 @@ export default function BookingsPage() {
                         </p>
                       </div>
                     )}
+                    <a
+                      href="/pdfs/noira_massage_setup_updated.pdf"
+                      download
+                      className="mt-4 w-full flex items-center justify-center gap-2 bg-primary text-black font-semibold px-4 py-2 rounded-lg hover:bg-amber-500 transition"
+                    >
+                      Download Setup Guide
+                    </a>
                   </div>
                 </div>
               );

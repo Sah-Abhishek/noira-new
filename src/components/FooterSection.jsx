@@ -115,6 +115,14 @@ const Footer = () => {
         <Link to="/accessibility" className="hover:underline hover:text-primary transition">
           Accessibility
         </Link>
+        <a
+          href="/pdfs/noira_massage_setup_updated.pdf"
+          download
+          className="hover:underline text-center hover:text-primary transition"
+        >
+          Download Preparation Guide
+        </a>
+
       </div>
 
       {/* Secure Payments Section */}

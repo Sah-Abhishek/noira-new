@@ -14,6 +14,7 @@ import FancyDropdown from "./FancyDropdown";
 import { User } from 'lucide-react';
 import useUserStore from "../../store/UserStore";
 import PostalCodeModal from "../PostalCodeModal";
+import toast from "react-hot-toast";
 
 /** Helpers */
 const fullName = (t) =>
@@ -42,6 +43,8 @@ export default function BrowseTherapists() {
   const { user } = useUserStore();
   const [isPostalCodeModalOpen, setIsPostalCodeModalOpen] = useState(!isPostalCodeSaved);
   const postalCode = sessionStorage.getItem("postalCode") || user?.address?.PostalCode;
+  const [noTherapistToastShown, setNoTherapistToastShown] = useState(false);
+
 
 
 
@@ -59,6 +62,13 @@ export default function BrowseTherapists() {
           Authorization: `Bearer ${userjwt}`,
         },
       });
+      console.log("This is the length: ", res?.data);
+      const therapistsList = res.data?.therapists ?? [];
+
+      if (therapistsList.length === 0 && !noTherapistToastShown) {
+        toast.error("No therapist found");
+        setNoTherapistToastShown(true);
+      }
       setTherapists(res.data?.therapists ?? []);
       setTotalPages(res.data?.totalPages ?? 1);
 

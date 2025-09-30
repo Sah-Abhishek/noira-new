@@ -71,6 +71,7 @@ import GDPRStatement from "./informationPages/GPDRStatement.jsx";
 import CancellationPolicy from "./informationPages/CancellationPolicy.jsx";
 import RefundPolicy from "./informationPages/RefundPolicy.jsx";
 import HealthAndSafety from "./informationPages/HealthAndSafetyPolicy.jsx";
+import ResourcesPage from "./components/therapist/TherapistResources.jsx";
 
 const AppRoutes = () => {
   return (
@@ -235,6 +236,7 @@ const AppRoutes = () => {
           <Route path="edittherapistprofile" element={<EditTherapistProfile />} />
           <Route path="therapistbookingspage" element={<TherapistBookingsPage />} />
           <Route path="therapistpayout" element={<TherapistPayout />} />
+          <Route path="therapistresources" element={<ResourcesPage />} />
           <Route
             path="therapistschedule"
             element={
