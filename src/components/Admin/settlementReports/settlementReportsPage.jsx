@@ -30,10 +30,25 @@ export default function SettlementReportsPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const normalizeToUTC = (date) => {
+    if (!date) return null;
+    // Simply format the local date string and parse it as UTC
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    // Parse as UTC by appending 'T00:00:00Z'
+    return new Date(`${year}-${month}-${day}T00:00:00Z`);
+  };
+
   // helper: format date to YYYY-MM-DD (UTC)
+  // force UTC YYYY-MM-DD (ignores local timezone)
   const formatDate = (date) => {
     if (!date) return null;
-    return date.toISOString().split("T")[0]; // always UTC YYYY-MM-DD
+    // Directly format UTC date components to YYYY-MM-DD
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   // get last week's Monday (00:00 UTC) to Sunday (23:59 UTC)
@@ -197,7 +212,7 @@ export default function SettlementReportsPage() {
                     <label className="text-xs text-gray-400 mb-1">Start</label>
                     <DatePicker
                       selected={customStartDate}
-                      onChange={(date) => setCustomStartDate(date)}
+                      onChange={(date) => setCustomStartDate(normalizeToUTC(date))}
                       selectsStart
                       startDate={customStartDate}
                       endDate={customEndDate}
@@ -210,7 +225,7 @@ export default function SettlementReportsPage() {
                     <label className="text-xs text-gray-400 mb-1">End</label>
                     <DatePicker
                       selected={customEndDate}
-                      onChange={(date) => setCustomEndDate(date)}
+                      onChange={(date) => setCustomEndDate(normalizeToUTC(date))}
                       selectsEnd
                       startDate={customStartDate}
                       endDate={customEndDate}
