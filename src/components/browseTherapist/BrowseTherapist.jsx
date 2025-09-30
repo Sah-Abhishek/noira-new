@@ -234,6 +234,8 @@ function TherapistCard({ t }) {
 
   const navigate = useNavigate();
   const { setSelectedTherapist } = useBookingStore();
+  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ modal state
+
 
   const handleSelectTherapist = () => {
     setSelectedTherapist(t?.profile);
@@ -241,75 +243,102 @@ function TherapistCard({ t }) {
   };
 
   return (
-    <div className="rounded-3xl bg-[#0d0d0d] border border-white/10 shadow-lg p-6 relative">
-      {verified && (
-        <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-emerald-400 text-xs">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          Verified
-        </span>
-      )}
+    <>
+      <div className="rounded-3xl bg-[#0d0d0d] border border-white/10 shadow-lg p-6 relative">
+        {verified && (
+          <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-emerald-400 text-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            Verified
+          </span>
+        )}
 
-      <div className="flex items-center gap-4">
-        <img
-          src={t?.avatar_url}
-          alt={`${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`}
-          className="h-20 w-20 rounded-full object-cover ring-2 ring-primary/50"
-        />
-        <div>
-          <h1 className="text-lg font-semibold">
-            {t?.profile?.title ?? "Massage Therapist"}
-          </h1>
+        <div className="flex items-center gap-4">
+          <img
+            src={t?.avatar_url}
+            alt={`${t?.name?.first ?? ""} ${t?.name?.last ?? ""}`}
+            className="h-20 w-20 rounded-full object-cover ring-2 ring-primary/50"
+            onClick={() => setIsModalOpen(true)}
+          />
+          <div>
+            <h1 className="text-lg font-semibold">
+              {t?.profile?.title ?? "Massage Therapist"}
+            </h1>
 
-          {/* ⭐ Rating */}
-          <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
-            <Star className="h-4 w-4 fill-primary text-primary" />
-            <span className="font-semibold">{rating}</span>
+            {/* ⭐ Rating */}
+            <div className="flex items-center gap-1 text-sm text-gray-300 mt-1">
+              <Star className="h-4 w-4 fill-primary text-primary" />
+              <span className="font-semibold">{rating}</span>
+            </div>
           </div>
         </div>
+
+        {/* Short Bio placed here */}
+        {bio && (
+          <p className="mt-4 text-sm text-gray-400 line-clamp-3">
+            {bio.length > 150 ? bio.slice(0, 150) + "..." : bio}
+          </p>
+        )}
+
+        {!!tags.length && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 rounded-full text-xs bg-amber-500/10 text-amber-300 border border-primary/20"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-4 space-y-2 text-sm text-gray-300">
+          {!!languages.length && (
+            <div className="flex items-center gap-2">
+              <Globe2 className="h-4 w-4 text-gray-400" />
+              <span>{languages.join(", ")}</span>
+            </div>
+          )}
+          {typeof exp === "number" && (
+            <div className="flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-gray-400" />
+              <span>{exp}+ years experience</span>
+            </div>
+          )}
+        </div>
+
+        <button
+          onClick={handleSelectTherapist}
+          className="mt-6 w-full rounded-full bg-primary hover:bg-amber-500 text-black font-semibold py-2.5 transition"
+        >
+          Select Therapist
+        </button>
       </div>
-
-      {/* Short Bio placed here */}
-      {bio && (
-        <p className="mt-4 text-sm text-gray-400 line-clamp-3">
-          {bio.length > 150 ? bio.slice(0, 150) + "..." : bio}
-        </p>
-      )}
-
-      {!!tags.length && (
-        <div className="flex flex-wrap gap-2 mt-4">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2 py-1 rounded-full text-xs bg-amber-500/10 text-amber-300 border border-primary/20"
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setIsModalOpen(false)} // close on overlay click
+        >
+          <div
+            className="relative max-w-3xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()} // prevent modal close when clicking inside
+          >
+            <button
+              className="absolute top-2 right-2 bg-black/60 text-white p-2 rounded-full hover:bg-black/80"
+              onClick={() => setIsModalOpen(false)}
             >
-              {tag}
-            </span>
-          ))}
+              ✕
+            </button>
+            <img
+              src={t?.avatar_url}
+              alt="Therapist"
+              className="w-full h-auto max-h-[80vh] rounded-lg object-contain shadow-lg"
+            />
+          </div>
         </div>
       )}
 
-      <div className="mt-4 space-y-2 text-sm text-gray-300">
-        {!!languages.length && (
-          <div className="flex items-center gap-2">
-            <Globe2 className="h-4 w-4 text-gray-400" />
-            <span>{languages.join(", ")}</span>
-          </div>
-        )}
-        {typeof exp === "number" && (
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-gray-400" />
-            <span>{exp}+ years experience</span>
-          </div>
-        )}
-      </div>
-
-      <button
-        onClick={handleSelectTherapist}
-        className="mt-6 w-full rounded-full bg-primary hover:bg-amber-500 text-black font-semibold py-2.5 transition"
-      >
-        Select Therapist
-      </button>
-    </div>
+    </>
   );
 }
 /** Pagination */

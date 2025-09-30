@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Star, Award } from "lucide-react";
+import { Star, Award, X } from "lucide-react";
 
 const FeaturedTherapists = () => {
   const { isDarkMode } = useTheme();
@@ -10,6 +10,7 @@ const FeaturedTherapists = () => {
 
   const [therapists, setTherapists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null); // ✅ modal state
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const FeaturedTherapists = () => {
 
           const experience = therapist?.profile?.experience || 0;
           const specializations = therapist?.profile?.specializations || [];
-          const bio = therapist?.profile?.bio; // ✅ Grab bio
+          const bio = therapist?.profile?.bio;
           const image = therapist?.avatar_url;
 
           return (
@@ -75,7 +76,10 @@ const FeaturedTherapists = () => {
               <div className="relative bg-[#1a1a1a] rounded-2xl p-8 border shadow-lg shadow-primary border-primary transition-all duration-300">
                 <div className="relative z-10 text-center space-y-5">
                   {/* Profile Image */}
-                  <div className="relative inline-block">
+                  <div
+                    className="relative inline-block cursor-pointer"
+                    onClick={() => setSelectedImage(image)} // ✅ open modal
+                  >
                     <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-primary mx-auto">
                       {image ? (
                         <img
@@ -103,16 +107,18 @@ const FeaturedTherapists = () => {
                         <Star
                           key={i}
                           className={`w-4 h-4 ${i < Math.round(rating)
-                            ? "fill-primary"
-                            : "fill-gray-600"
+                              ? "fill-primary"
+                              : "fill-gray-600"
                             }`}
                         />
                       ))}
                     </div>
-                    <span className="text-gray-300 text-sm font-medium">{rating}</span>
+                    <span className="text-gray-300 text-sm font-medium">
+                      {rating}
+                    </span>
                   </div>
 
-                  {/* ✅ Short Bio */}
+                  {/* Short Bio */}
                   {bio && (
                     <p className="text-sm text-gray-400 line-clamp-3 mt-2">
                       {bio.length > 150 ? bio.slice(0, 150) + "..." : bio}
@@ -155,6 +161,31 @@ const FeaturedTherapists = () => {
           );
         })}
       </div>
+
+      {/* ✅ Modal for Enlarged Image */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setSelectedImage(null)} // click outside to close
+        >
+          <div
+            className="relative max-w-3xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()} // prevent close on image click
+          >
+            <button
+              className="absolute top-2 right-2 bg-black/60 text-white p-2 rounded-full hover:bg-black/80"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img
+              src={selectedImage}
+              alt="Therapist"
+              className="w-full h-auto max-h-[80vh] rounded-lg object-contain shadow-lg"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
