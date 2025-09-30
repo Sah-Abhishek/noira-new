@@ -7,6 +7,7 @@ export default function PostalCodeModal({ isOpen, onClose }) {
   const [postalCode, setPostalCode] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
   // Fetch suggestions as user types
   useEffect(() => {
@@ -16,6 +17,11 @@ export default function PostalCodeModal({ isOpen, onClose }) {
     }
 
     const fetchSuggestions = async () => {
+      if (!showSuggestions) {
+        setLoadingSuggestions(false);
+        return; // don't call API if suggestions are hidden
+      }
+
       setLoadingSuggestions(true);
       try {
         const res = await axios.get(
@@ -33,7 +39,7 @@ export default function PostalCodeModal({ isOpen, onClose }) {
 
     const timeoutId = setTimeout(fetchSuggestions, 300); // debounce 300ms
     return () => clearTimeout(timeoutId);
-  }, [postalCode]);
+  }, [postalCode, showSuggestions]);
 
   const onSubmit = (code) => {
     sessionStorage.setItem("postalCode", code);
@@ -49,6 +55,7 @@ export default function PostalCodeModal({ isOpen, onClose }) {
   const handleSelectSuggestion = (code) => {
     setPostalCode(code);
     setSuggestions([]);
+    setShowSuggestions(false); // hide after selecting
   };
 
   return (
@@ -95,14 +102,17 @@ export default function PostalCodeModal({ isOpen, onClose }) {
                   id="postal"
                   type="text"
                   value={postalCode}
-                  onChange={(e) => setPostalCode(e.target.value)}
+                  onChange={(e) => {
+                    setPostalCode(e.target.value);
+                    setShowSuggestions(true); // show suggestions again when typing
+                  }}
                   placeholder="Enter your postal code"
                   className="w-full p-3 rounded-lg bg-gray-900 text-white border border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                   autoComplete="off"
                 />
 
                 {/* Suggestions dropdown */}
-                {suggestions.length > 0 && (
+                {showSuggestions && suggestions.length > 0 && (
                   <ul className="absolute z-20 top-full left-0 right-0 bg-gray-900 border border-gray-700 rounded-md mt-1 max-h-40 overflow-y-auto shadow-lg">
                     {suggestions.map((s, idx) => (
                       <li
@@ -118,7 +128,6 @@ export default function PostalCodeModal({ isOpen, onClose }) {
 
                 {loadingSuggestions && (
                   <div className="px-4 py-2 bg-gray-800">
-
                     <p className="absolute top-full mt-1 text-gray-400 text-sm">
                       Loading...
                     </p>

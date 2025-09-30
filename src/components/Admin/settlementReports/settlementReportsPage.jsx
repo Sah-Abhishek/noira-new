@@ -16,15 +16,12 @@ import SettlementReportsTable from "./SettlementReportsTable.jsx";
 
 export default function SettlementReportsPage() {
   // draft filter states (UI controls)
-  const [dateRange, setDateRange] = useState("Last 7 Days");
+  const [dateRange, setDateRange] = useState("Last Week");
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [therapist, setTherapist] = useState(null);
   const [paymentMode, setPaymentMode] = useState("All Modes");
   const [settlementStatus, setSettlementStatus] = useState("All Status");
-
-
-  // applied filters (sent to API)
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -33,35 +30,51 @@ export default function SettlementReportsPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
-  // helper: format date to YYYY-MM-DD
+  // helper: format date to YYYY-MM-DD (UTC)
   const formatDate = (date) => {
     if (!date) return null;
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
+    return date.toISOString().split("T")[0]; // always UTC YYYY-MM-DD
   };
 
+  // get last week's Monday (00:00 UTC) to Sunday (23:59 UTC)
+  const getLastWeekRange = () => {
+    const today = new Date();
+    const utcDay = today.getUTCDay(); // 0=Sun, 1=Mon ... 6=Sat
+
+    // get last Monday UTC
+    const lastMonday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+    lastMonday.setUTCDate(today.getUTCDate() - utcDay - 6);
+
+    // last Sunday UTC (end of day)
+    const lastSunday = new Date(lastMonday);
+    lastSunday.setUTCDate(lastMonday.getUTCDate() + 6);
+
+    return { start: lastMonday, end: lastSunday };
+  };
+
+  // get last month's 1st (00:00 UTC) to last date (23:59 UTC)
+  const getLastMonthRange = () => {
+    const today = new Date();
+
+    const firstDayLastMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, 1));
+    const lastDayLastMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0));
+
+    return { start: firstDayLastMonth, end: lastDayLastMonth };
+  };
 
   const getDefaultFilters = () => {
-    const today = new Date();
-    const start = new Date();
-    start.setDate(today.getDate() - 7); // last 7 days default
+    const { start, end } = getLastWeekRange();
     return {
       startDate: formatDate(start),
-      endDate: formatDate(today),
+      endDate: formatDate(end),
       therapistId: null,
       paymentMode: "All modes",
       settlementStatus: "All status",
     };
   };
+
   const [appliedFilters, setAppliedFilters] = useState(getDefaultFilters());
   console.log("These are the applied filters: ", appliedFilters);
-
-
-
-
 
   // fetch therapists
   useEffect(() => {
@@ -87,6 +100,9 @@ export default function SettlementReportsPage() {
       }
     };
 
+
+
+
     const timeout = setTimeout(fetchTherapists, 300);
     return () => {
       clearTimeout(timeout);
@@ -94,21 +110,45 @@ export default function SettlementReportsPage() {
     };
   }, [query]);
 
+  const handleExportPDF = async () => {
+    if (!therapist) return;
 
+    try {
+      const res = await fetch(
+        `${apiUrl}/payout/admin/weekly-settlement/pdf?therapistId=${therapist.id}&startDate=${appliedFilters.startDate}&endDate=${appliedFilters.endDate}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to export PDF");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `settlement-report-${therapist.name}.pdf`;
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error exporting PDF:", err);
+    }
+  };
 
   // helper: build filters object
   const buildFilters = () => {
     let startDate, endDate;
-    const today = new Date();
 
-    if (dateRange === "Last 7 Days") {
-      endDate = today;
-      startDate = new Date();
-      startDate.setDate(today.getDate() - 7);
-    } else if (dateRange === "Last 30 Days") {
-      endDate = today;
-      startDate = new Date();
-      startDate.setDate(today.getDate() - 30);
+    if (dateRange === "Last Week") {
+      const { start, end } = getLastWeekRange();
+      startDate = start;
+      endDate = end;
+    } else if (dateRange === "Last Month") {
+      const { start, end } = getLastMonthRange();
+      startDate = start;
+      endDate = end;
     } else if (dateRange === "Custom Range") {
       startDate = customStartDate;
       endDate = customEndDate;
@@ -138,7 +178,6 @@ export default function SettlementReportsPage() {
 
         <StatusCardsSettlementReports filters={appliedFilters} />
 
-
         {/* Filters Section */}
         <div className="bg-[#111] p-6 mt-10 rounded-lg shadow-lg border border-[#1a1a1a]">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -146,7 +185,7 @@ export default function SettlementReportsPage() {
             <div className="col-span-1">
               <FancyDropdown
                 label="Date Range"
-                options={["Last 7 Days", "Last 30 Days", "Custom Range"]}
+                options={["Last Week", "Last Month", "Custom Range"]}
                 value={dateRange}
                 onChange={setDateRange}
               />
@@ -275,7 +314,7 @@ export default function SettlementReportsPage() {
             <button
               className="flex items-center gap-2 bg-[#1a1a1a] text-gray-300 font-medium px-4 py-2 rounded-md hover:bg-[#222] transition"
               onClick={() => {
-                setDateRange("Last 7 Days");
+                setDateRange("Last Week");
                 setCustomStartDate(null);
                 setCustomEndDate(null);
                 setTherapist(null);
@@ -289,10 +328,27 @@ export default function SettlementReportsPage() {
             </button>
 
             <div className="ml-auto flex gap-3">
-              <button className="flex items-center gap-2 bg-green-600 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700 transition">
-                <FileSpreadsheet className="w-4 h-4" /> Export Excel
-              </button>
-              <button className="flex items-center gap-2 bg-red-600 text-white font-medium px-4 py-2 rounded-md hover:bg-red-700 transition">
+              {/*         <button */}
+              {/*           disabled={!therapist} */}
+              {/*           className={`flex items-center gap-2 font-medium px-4 py-2 rounded-md transition */}
+              {/* ${therapist */}
+              {/*               ? "bg-green-600 text-white hover:bg-green-700" */}
+              {/*               : "bg-gray-600 text-gray-300 cursor-not-allowed" */}
+              {/*             }`} */}
+              {/*         > */}
+              {/*           <FileSpreadsheet className="w-4 h-4" /> Export Excel */}
+              {/*         </button> */}
+
+              <button
+                disabled={!therapist}
+                onClick={handleExportPDF}
+
+                className={`flex items-center gap-2 font-medium px-4 py-2 rounded-md transition
+      ${therapist
+                    ? "bg-red-600 text-white hover:bg-red-700"
+                    : "bg-gray-600 text-gray-300 cursor-not-allowed"
+                  }`}
+              >
                 <FileText className="w-4 h-4" /> Export PDF
               </button>
             </div>

@@ -89,6 +89,8 @@ const Footer = () => {
         </div>
       </div>
 
+      <div className='border-t border-white/10 mt-10 mt-10'></div>
+
       {/* Policies Links */}
       <div className="max-w-7xl mx-auto mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
         <Link to="/privacypolicy" className="hover:underline hover:text-primary transition">
@@ -115,14 +117,22 @@ const Footer = () => {
         <Link to="/accessibility" className="hover:underline hover:text-primary transition">
           Accessibility
         </Link>
-        <a
-          href="/pdfs/noira_massage_setup_updated.pdf"
-          download
-          className="hover:underline text-center hover:text-primary transition"
-        >
-          Download Preparation Guide
-        </a>
 
+      </div>
+
+      <div className='text-center border-t border-white/10 mt-10 pt-10'>
+        <h4 className="text-[#C49E5B] font-semibold mb-4">Client Info</h4>
+        <ul className={`space-y-2 text-sm ${mutedText}`}>
+          <li>
+            <a
+              href="/pdfs/noira_massage_setup_updated.pdf"
+              download="Massage-Setup-Guide.pdf"
+              className="block hover:underline hover:text-primary transition"
+            >
+              Massage Setup & Preparation Guide (PDF)
+            </a>
+          </li>
+        </ul>
       </div>
 
       {/* Secure Payments Section */}
