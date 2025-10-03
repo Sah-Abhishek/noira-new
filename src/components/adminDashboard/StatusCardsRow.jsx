@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function StatusCardRow() {
   const [stats, setStats] = useState(null);
-  const [filter, setFilter] = useState("month");
+  const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(false); // 👈 track loading
   const adminjwt = localStorage.getItem("adminjwt");
 
@@ -49,6 +49,7 @@ export default function StatusCardRow() {
           <option value="today">Today</option>
           <option value="week">This Week</option>
           <option value="month">This Month</option>
+          <option value="all">All</option>
         </select>
       </div>
 
