@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, ChevronLeft, ChevronRight, X, Pencil, Eye } from "lucide-react";
-import BookingsTableSkeleton from "./BookingsTableSkeleton"; // 👈 skeleton component
+import BookingsTableSkeleton from "./BookingsTableSkeleton";
+import CancelBookingModal from "./CancelBookingConfirmModal.jsx";
+import EditBookingModal from "./EditBookingModal.jsx";
+import BookingDetailsModal from "./BookingDetailsModal.jsx";
+import { VscFeedback } from "react-icons/vsc";
+
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -16,6 +21,14 @@ export default function BookingsManagement() {
   const adminjwt = localStorage.getItem("adminjwt");
   const limit = 10;
 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState();
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+
   useEffect(() => {
     fetchBookings(page);
   }, [page]);
@@ -24,15 +37,16 @@ export default function BookingsManagement() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${apiUrl}/admin/bookings?page=${pageNum}&limit=${limit}`, {
-        headers: {
-          Authorization: `Bearer ${adminjwt}`,
-        },
-      }
+        `${apiUrl}/admin/bookings?page=${pageNum}&limit=${limit}`,
+        {
+          headers: { Authorization: `Bearer ${adminjwt}` },
+        }
       );
       setBookings(res.data.bookings || []);
       setTotalPages(res.data.totalPages || 1);
-      setTotalBookings(res.data.totalBookings || res.data.bookings?.length || 0);
+      setTotalBookings(
+        res.data.totalBookings || res.data.bookings?.length || 0
+      );
     } catch (err) {
       console.error("Error fetching bookings:", err);
     } finally {
@@ -41,11 +55,9 @@ export default function BookingsManagement() {
   };
 
   const formatRawDateTime = (start, end) => {
-    // Extract date and time from ISO string
-    const startDate = start.slice(0, 10); // YYYY-MM-DD
-    const startTime = start.slice(11, 16); // HH:MM
-    const endTime = end.slice(11, 16);     // HH:MM
-
+    const startDate = start.slice(0, 10);
+    const startTime = start.slice(11, 16);
+    const endTime = end.slice(11, 16);
     return `${startDate} ${startTime} - ${endTime}`;
   };
 
@@ -112,10 +124,10 @@ export default function BookingsManagement() {
             </thead>
             <tbody>
               {loading ? (
-                <BookingsTableSkeleton /> // 👈 skeleton integration
+                <BookingsTableSkeleton />
               ) : filteredBookings.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="py-6 text-center text-gray-400">
+                  <td colSpan="10" className="py-6 text-center text-gray-400">
                     No bookings found.
                   </td>
                 </tr>
@@ -126,8 +138,6 @@ export default function BookingsManagement() {
                     className="border-t border-[#222] hover:bg-[#111]"
                   >
                     <td className="py-3 px-4">{b._id}</td>
-
-                    {/* Customer */}
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         {b.clientId?.avatar_url && (
@@ -149,21 +159,13 @@ export default function BookingsManagement() {
                         </div>
                       </div>
                     </td>
-
-                    {/* Therapist */}
                     <td className="py-3 px-4">
                       {b.therapistId?.title || "Unassigned"}
                     </td>
-
-                    {/* Service */}
                     <td className="py-3 px-4">{b.serviceId?.name || "N/A"}</td>
-
-                    {/* Date/Time */}
                     <td className="py-3 px-4">
                       {formatRawDateTime(b.slotStart, b.slotEnd)}
                     </td>
-
-                    {/* Duration */}
                     <td className="py-3 px-4">
                       {Math.round(
                         (new Date(b.slotEnd) - new Date(b.slotStart)) /
@@ -171,8 +173,6 @@ export default function BookingsManagement() {
                       )}{" "}
                       min
                     </td>
-
-                    {/* Status */}
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${b.status === "confirmed"
@@ -187,8 +187,6 @@ export default function BookingsManagement() {
                         {b.status}
                       </span>
                     </td>
-
-                    {/* Payment */}
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${b.paymentStatus === "paid"
@@ -199,27 +197,44 @@ export default function BookingsManagement() {
                         {b.paymentStatus}
                       </span>
                     </td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${b.paymentStatus === "paid"
-                          }`}
-                      >
-                        {b.paymentMode}
-                      </span>
-                    </td>
-
-
+                    <td className="py-3 px-4">{b.paymentMode}</td>
                     <td className="py-3 px-4 space-x-1 inline-flex">
-                      <button className=" px-3 py-1 text-green-700 bold hover:text-blue-500 text-xs">
+                      <button
+                        onClick={() => {
+                          setSelectedBooking(b);
+                          setIsDetailsModalOpen(true);
+                        }}
+                        className="px-3 py-1 text-green-700 hover:text-blue-500 text-xs">
                         <Eye />
                       </button>
-                      <button className=" px-3 py-1 text-blue-700 bold hover:text-blue-500 text-xs">
+                      <button
+                        onClick={() => {
+                          setSelectedBooking(b);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="px-3 py-1 text-blue-700 hover:text-blue-500 text-xs"
+                      >
                         <Pencil />
                       </button>
-                      <button className=" px-3 py-1 text-red-700 bold hover:text-red-500 text-xs">
-
+                      <button
+                        onClick={() => {
+                          setSelectedBooking(b);
+                          setIsCancelModalOpen(true);
+                        }}
+                        className="px-3 py-1 text-red-700 hover:text-red-500 text-xs"
+                      >
                         <X />
                       </button>
+                      {/* <button */}
+                      {/*   onClick={() => { */}
+                      {/*     setSelectedBooking(b); */}
+                      {/*     setIsCancelModalOpen(true); */}
+                      {/*   }} */}
+                      {/*   className="px-3 py-1 text-green-700 hover:text-green-500 text-xl text-bold" */}
+                      {/* > */}
+                      {/*   <VscFeedback /> */}
+                      {/* </button> */}
+                      {/**/}
                     </td>
                   </tr>
                 ))
@@ -263,6 +278,37 @@ export default function BookingsManagement() {
           </div>
         </div>
       </div>
+
+      {/* Cancel Booking Modal */}
+      <CancelBookingModal
+        isOpen={isCancelModalOpen}
+        onClose={(success) => {
+          setIsCancelModalOpen(false);
+          setSelectedBooking(null);
+          if (success) fetchBookings(page);
+        }}
+        booking={selectedBooking}
+      />
+
+      <EditBookingModal
+        isOpen={isEditModalOpen}
+        booking={selectedBooking}
+        onClose={(success) => {
+          setIsEditModalOpen(false);
+          setSelectedBooking(null);
+          if (success) fetchBookings(page); // refresh data if edited
+        }}
+      />
+      <BookingDetailsModal
+        isOpen={isDetailsModalOpen}
+        booking={selectedBooking}
+        onClose={(success) => {
+          setIsDetailsModalOpen(false);
+          setSelectedBooking(null);
+          if (success) fetchBookings(page); // refresh data if edited
+        }}
+      />
+
     </div>
   );
 }
