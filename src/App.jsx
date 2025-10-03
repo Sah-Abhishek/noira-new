@@ -1,4 +1,6 @@
 import React from 'react';
+import "./setupAxios.js";  // 👈 Add this
+
 
 import AppRoutes from './AppRoutes';
 import { BrowserRouter, useLocation } from 'react-router-dom';

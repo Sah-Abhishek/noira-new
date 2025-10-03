@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Pencil, Eye } from "lucide-react";
 import BookingsTableSkeleton from "./BookingsTableSkeleton"; // 👈 skeleton component
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -107,7 +107,7 @@ export default function BookingsManagement() {
                 <th className="py-3 px-4 text-left">Status</th>
                 <th className="py-3 px-4 text-left">Payment</th>
                 <th className="py-3 px-4 text-left">Mode</th>
-                {/* <th className="py-3 px-4 text-left">Actions</th> */}
+                <th className="py-3 px-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -176,12 +176,12 @@ export default function BookingsManagement() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${b.status === "confirmed"
-                            ? "bg-green-500/20 text-green-400"
-                            : b.status === "pending"
-                              ? "bg-yellow-500/20 text-yellow-400"
-                              : b.status === "completed"
-                                ? "bg-blue-500/20 text-blue-400"
-                                : "bg-red-500/20 text-red-400"
+                          ? "bg-green-500/20 text-green-400"
+                          : b.status === "pending"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : b.status === "completed"
+                              ? "bg-blue-500/20 text-blue-400"
+                              : "bg-red-500/20 text-red-400"
                           }`}
                       >
                         {b.status}
@@ -209,18 +209,18 @@ export default function BookingsManagement() {
                     </td>
 
 
-                    {/* Actions */}
-                    {/* <td className="py-3 px-4 space-x-2"> */}
-                    {/*   <button className="bg-primary text-black px-3 py-1 rounded text-xs"> */}
-                    {/*     Assign */}
-                    {/*   </button> */}
-                    {/*   <button className="bg-blue-600 px-3 py-1 rounded text-xs"> */}
-                    {/*     Edit */}
-                    {/*   </button> */}
-                    {/*   <button className="bg-red-600 px-3 py-1 rounded text-xs"> */}
-                    {/*     Cancel */}
-                    {/*   </button> */}
-                    {/* </td> */}
+                    <td className="py-3 px-4 space-x-1 inline-flex">
+                      <button className=" px-3 py-1 text-green-700 bold hover:text-blue-500 text-xs">
+                        <Eye />
+                      </button>
+                      <button className=" px-3 py-1 text-blue-700 bold hover:text-blue-500 text-xs">
+                        <Pencil />
+                      </button>
+                      <button className=" px-3 py-1 text-red-700 bold hover:text-red-500 text-xs">
+
+                        <X />
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
