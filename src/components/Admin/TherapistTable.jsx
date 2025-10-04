@@ -5,6 +5,8 @@ import FancyCheckbox from "./FancyCheckBox";
 import DeleteTherapistModal from "./DeleteTherapistModal";
 import TherapistProfileModal from "../TherspistProfile/TherapistProfileModal";
 import { useNavigate } from "react-router-dom";
+import { CalendarCheck } from "lucide-react";
+import TherapistScheduleModalAdmin from "./TherapistScheduleModalAdmin.jsx";
 
 export default function TherapistTable({
   therapists,
@@ -16,6 +18,10 @@ export default function TherapistTable({
   const [therapistToDelete, setTherapistToDelete] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedTherapistId, setSelectedTherapistId] = useState(null);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+
+  // console.log("This is the therapistId:", therapists);
+
   const navigate = useNavigate();
 
   // ✅ consistently grab unique id
@@ -69,6 +75,7 @@ export default function TherapistTable({
               <th className="p-3">Experience</th>
               <th className="p-3">Status</th>
               <th className="p-3">Actions</th>
+              <th className="p-3">Schedule</th>
             </tr>
           </thead>
           <tbody>
@@ -123,6 +130,7 @@ export default function TherapistTable({
             <th className="p-3">Experience</th>
             <th className="p-3">Status</th>
             <th className="p-3">Actions</th>
+            <th className="p-3">Schedule</th>
           </tr>
         </thead>
         <tbody>
@@ -175,17 +183,16 @@ export default function TherapistTable({
 
                 {/* Location */}
                 <td className="p-3">
-                  {t.address?.PostTown || "—"},{" "}
-                  {t.address?.PostalCode || "—"}
+                  {t.address?.PostTown || "—"}, {t.address?.PostalCode || "—"}
                 </td>
 
                 {/* Languages */}
                 <td className="p-3">
                   <div className="flex gap-1 flex-wrap">
                     {t.profile?.languages?.length ? (
-                      t.profile.languages.map((lang) => (
+                      t.profile.languages.map((lang, index) => (
                         <span
-                          key={lang}
+                          key={index}
                           className="bg-[#111] border border-white/20 text-xs px-2 py-1 rounded-lg"
                         >
                           {lang}
@@ -202,14 +209,6 @@ export default function TherapistTable({
 
                 {/* Status */}
                 <td className="p-3">
-                  {/* {t.profile?.isVerified ? ( */}
-                  {/*   <span className="flex items-center gap-1 text-green-400 text-xs"> */}
-                  {/*     <FaCheckCircle /> Verified */}
-                  {/*   </span> */}
-                  {/* ) : ( */}
-                  {/*   <span className="flex items-center gap-1 text-yellow-400 text-xs"> */}
-                  {/*     <FaHourglassHalf /> Not Verified                    </span> */}
-                  {/* )} */}
                   <p
                     className={`text-xs ${t.profile?.active ? "text-green-300" : "text-red-400"
                       }`}
@@ -219,19 +218,48 @@ export default function TherapistTable({
                 </td>
 
                 {/* Actions */}
-                <td className="p-3 flex gap-3">
-                  <button title="View">
-                    <MdVisibility
+                <td className="p-3">
+                  <div className="flex items-center gap-3">
+                    <button
+                      title="View"
                       onClick={() => handleViewProfile(t)}
-                      className="cursor-pointer text-blue-400 hover:text-blue-500"
-                    />
-                  </button>
-                  <button title="Edit">
-                    <MdEdit onClick={() => navigate(`/admin/edittherapistprofileadmin/${t?.profile?._id}`)} className="cursor-pointer text-yellow-400 hover:text-yellow-500" />
-                  </button>
-                  <button title="Delete" onClick={() => handleClickTrash(t)}>
-                    <MdDelete className="cursor-pointer text-red-400 hover:text-red-500" />
-                  </button>
+                      className="text-blue-400 hover:text-blue-500 transition"
+                    >
+                      <MdVisibility />
+                    </button>
+                    <button
+                      title="Edit"
+                      onClick={() =>
+                        navigate(`/admin/edittherapistprofileadmin/${t?.profile?._id}`)
+                      }
+                      className="text-yellow-400 hover:text-yellow-500 transition"
+                    >
+                      <MdEdit />
+                    </button>
+                    <button
+                      title="Delete"
+                      onClick={() => handleClickTrash(t)}
+                      className="text-red-400 hover:text-red-500 transition"
+                    >
+                      <MdDelete />
+                    </button>
+                  </div>
+                </td>
+
+                {/* Schedule */}
+                <td className="p-3">
+                  <div className="flex items-center justify-center">
+                    <button
+                      title="View Schedule"
+                      onClick={() => {
+                        setSelectedTherapistId(t.profile._id);
+                        setIsScheduleModalOpen(true);
+                      }}
+                      className="text-green-400 hover:text-green-500 transition"
+                    >
+                      <CalendarCheck />
+                    </button>
+                  </div>
                 </td>
               </tr>
             );
@@ -250,6 +278,8 @@ export default function TherapistTable({
         onClose={() => setIsProfileModalOpen(false)}
         therapistId={selectedTherapistId}
       />
-    </div>
+      <TherapistScheduleModalAdmin isOpen={isScheduleModalOpen} onClose={() => setIsScheduleModalOpen()} therapistId={selectedTherapistId} />
+
+    </div >
   );
 }

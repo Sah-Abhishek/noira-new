@@ -49,7 +49,8 @@ function AppLayout() {
     '/admin/admineditprofile',
     '/admin/settlementreports',
     '/therapist/therapistpayout',
-    '/therapist/therapistresources'
+    '/therapist/therapistresources',
+    '/admin/reviewsmanagement',
   ];
 
   const shouldHideNavbar = hideNavbarPaths.some((path) => {

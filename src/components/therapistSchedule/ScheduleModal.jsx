@@ -385,15 +385,21 @@ export default function ScheduleModal({
         <div className="flex space-x-3">
           <button
             onClick={handleSave}
-            disabled={cleaDarLoading} // ✅ disable during loading
+            disabled={
+              cleaDarLoading ||
+              !availabilityData[selectedDay] ||
+              availabilityData[selectedDay].length === 0
+            } // ✅ disable if no slots
             className={`flex-1 py-3 rounded-xl font-semibold transition-all
-    ${cleaDarLoading
+    ${cleaDarLoading ||
+                !availabilityData[selectedDay] ||
+                availabilityData[selectedDay].length === 0
                 ? "bg-primary opacity-50 cursor-not-allowed text-black"
                 : "bg-primary hover:bg-amber-500 text-black"
               }`}
           >
             {cleaDarLoading ? (
-              <span>Saving...</span> // ✅ feedback during loading
+              <span>Saving...</span>
             ) : (
               <>
                 <FaSave className="inline mr-2" /> {copyType ? "Save & Copy" : "Save"}

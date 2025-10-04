@@ -5,6 +5,7 @@ import TherapistTable from "./TherapistTable";
 import { useNavigate } from "react-router-dom";
 import { Check, Trash } from "lucide-react";
 import BulkActionConfirmModal from "./BulkActionConfirmationModal";
+import TherapistScheduleModalAdmin from "./TherapistScheduleModalAdmin";
 
 export default function TherapistManagement() {
   const [therapists, setTherapists] = useState([]);

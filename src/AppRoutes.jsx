@@ -72,6 +72,7 @@ import CancellationPolicy from "./informationPages/CancellationPolicy.jsx";
 import RefundPolicy from "./informationPages/RefundPolicy.jsx";
 import HealthAndSafety from "./informationPages/HealthAndSafetyPolicy.jsx";
 import ResourcesPage from "./components/therapist/TherapistResources.jsx";
+import ReviewsPage from "./components/Admin/ReviewsManagement/ReviewsPage.jsx";
 
 const AppRoutes = () => {
   return (
@@ -198,6 +199,7 @@ const AppRoutes = () => {
           <Route path="adminprofile" element={<AdminProfile />} />
           <Route path="admineditprofile" element={<AdminEditProfile />} />
           <Route path="settlementreports" element={<SettlementReportsPage />} />
+          <Route path="reviewsmanagement" element={<ReviewsPage />} />
 
 
         </Route>
