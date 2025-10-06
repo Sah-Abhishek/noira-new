@@ -106,7 +106,7 @@ export default function TherapistReviewsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#0d0d0d] to-[#111] text-white px-6 py-12">
       <header className="mb-12 max-w-6xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-bold bg-primary to-primary bg-clip-text text-transparent tracking-tight mb-3">
+        <h1 className="text-5xl md:text-3xl font-bold bg-primary to-primary bg-clip-text text-transparent tracking-tight mb-3">
           Therapist Reviews
         </h1>
         <p className="text-gray-400 text-lg">Manage and respond to customer feedback</p>

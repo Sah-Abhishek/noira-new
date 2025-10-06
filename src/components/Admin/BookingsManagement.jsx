@@ -210,21 +210,22 @@ export default function BookingsManagement() {
                       <button
                         onClick={() => {
                           setSelectedBooking(b);
-                          setIsEditModalOpen(true);
-                        }}
-                        className="px-3 py-1 text-blue-700 hover:text-blue-500 text-xs"
-                      >
-                        <Pencil />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedBooking(b);
                           setIsCancelModalOpen(true);
                         }}
                         className="px-3 py-1 text-red-700 hover:text-red-500 text-xs"
                       >
                         <X />
                       </button>
+                      <button
+                        onClick={() => {
+                          setSelectedBooking(b);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="px-3 py-1 text-blue-700 hover:text-blue-500 text-xs"
+                      >
+                        {(b.status === "confirmed") && <Pencil />}
+                      </button>
+
                       {/* <button */}
                       {/*   onClick={() => { */}
                       {/*     setSelectedBooking(b); */}

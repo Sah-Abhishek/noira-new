@@ -1,4 +1,5 @@
 import ActiveAndInactiveTherapist from "../components/adminDashboard/ActiveTherapistTable";
+import ActiveTherapistGraph from "../components/adminDashboard/AdminGraph/ActiveTherapists";
 import AdminHeaderComponent from "../components/adminDashboard/AdminHeaderComponent";
 import AdminSidebar from "../components/adminDashboard/AdminSidebar";
 import RevenueDashboard from "../components/adminDashboard/RevenueDashboard";
@@ -13,6 +14,10 @@ const AdminDashoboard = () => {
       <StatusCardRow />
       <ActiveAndInactiveTherapist />
       {/* <RevenueDashboard /> */}
+      <div className="p-8">
+        <ActiveTherapistGraph />
+
+      </div>
     </div>
 
   )

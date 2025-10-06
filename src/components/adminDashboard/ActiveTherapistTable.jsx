@@ -157,7 +157,7 @@ const ActiveAndInactiveTherapist = () => {
     activeTab === "available" ? therapists.available : therapists.unavailable;
 
   return (
-    <div className="min-h-screen mt-10 bg-[#111] text-white p-6">
+    <div className=" mt-10 bg-[#111] text-white p-6">
       <div className="max-w-7xl mx-auto">
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Therapists</h1>
@@ -168,8 +168,8 @@ const ActiveAndInactiveTherapist = () => {
           <button
             onClick={() => setActiveTab("available")}
             className={`px-6 py-3 font-semibold transition-all ${activeTab === "available"
-                ? "text-primary border-b-2 border-primary"
-                : "text-gray-400 hover:text-primary"
+              ? "text-primary border-b-2 border-primary"
+              : "text-gray-400 hover:text-primary"
               }`}
           >
             Available ({therapists.available.length})
@@ -177,8 +177,8 @@ const ActiveAndInactiveTherapist = () => {
           <button
             onClick={() => setActiveTab("unavailable")}
             className={`px-6 py-3 font-semibold transition-all ${activeTab === "unavailable"
-                ? "text-primary border-b-2 border-primary"
-                : "text-gray-400 hover:text-primary"
+              ? "text-primary border-b-2 border-primary"
+              : "text-gray-400 hover:text-primary"
               }`}
           >
             Unavailable ({therapists.unavailable.length})
