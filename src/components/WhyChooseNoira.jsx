@@ -32,9 +32,9 @@ const WhyChooseNoira = () => {
         }`}
     >
 
-      {/* Heading */} <h2 className="text-3xl mb-20 md:text-4xl font-braven font-semibold mb-2">
+      {/* Heading */} <h1 className="text-3xl mb-20 md:text-4xl font-braven font-semibold mb-2">
         Why Choose Noira Wellness
-      </h2>
+      </h1>
       <p
         className={`mb-12 text-lg ${isDarkMode ? "text-gray-300" : "text-gray-600"
           }`}

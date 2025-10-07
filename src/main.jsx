@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { registerSW } from "virtual:pwa-register";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // keep it in .env
 
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={clientId}>
     <Elements stripe={stripePromise} >
       <App />
+
     </Elements>
   </GoogleOAuthProvider>
 

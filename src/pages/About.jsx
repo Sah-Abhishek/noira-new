@@ -11,13 +11,40 @@ const AboutPage = () => {
   return (
     <>
 
+      <Helmet>
+        {/* 🧭 Primary SEO Meta Tags */}
+        <title>About Noira | London’s Luxury Mobile Massage Service</title>
+        <meta
+          name="description"
+          content="Discover Noira — London’s premier luxury mobile massage service offering bespoke, in-home spa experiences by elite therapists. Relaxation, redefined."
+        />
+        <meta
+          name="keywords"
+          content="About Noira, Luxury Massage London, Mobile Massage London, In-home Massage, Spa at Home London, Massage Therapists London"
+        />
+        <link rel="canonical" href="https://noira.co.uk/about" />
+
+        {/* 🧩 Open Graph / Facebook */}
+        <meta property="og:title" content="About Noira | London’s Luxury Mobile Massage Service" />
+        <meta property="og:description" content="Noira brings luxury mobile massages across London. Discover our story, our therapists, and our commitment to world-class relaxation." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://yourdomain.com/about" />
+        <meta property="og:image" content="https://yourdomain.com/og-image.jpg" />
+
+        {/* 🐦 Twitter Meta */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Noira | London’s Luxury Mobile Massage Service" />
+        <meta name="twitter:description" content="Discover Noira — London’s premier luxury mobile massage service." />
+        <meta name="twitter:image" content="https://yourdomain.com/twitter-image.jpg" />
+      </Helmet>
+
       <section
         id="about"
         className={`pt-16 px-4 text-center transition-colors duration-300 
         ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}
       >
         {/* Title */}
-        <h2 className="text-3xl md:text-4xl font-semibold mb-2">About Us</h2>
+        <h1 className="text-3xl md:text-4xl font-semibold mb-2">About Us</h1>
         <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#C49E5B] to-transparent mx-auto mb-8" />
 
         {/* Content Box */}

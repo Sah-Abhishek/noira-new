@@ -3,6 +3,7 @@ import axios from "axios";
 import { Search, Calendar, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "../components/FooterSection";
+import { Helmet } from "react-helmet";
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
@@ -32,6 +33,29 @@ export default function BlogPage() {
 
   return (
     <div>
+
+      <Helmet>
+        <title>
+          Wellness & Luxury Blog | Expert Massage, Wellness & Lifestyle Tips | Noira
+        </title>
+        <meta
+          name="description"
+          content="Explore Noira’s Wellness & Luxury Blog for expert tips on massage therapy, relaxation, and luxury wellness in London. Discover how to elevate your lifestyle through holistic care and premium treatments."
+        />
+        <meta
+          name="keywords"
+          content="massage tips, wellness blog, luxury spa, London wellness, at-home massage, self-care, lifestyle articles, relaxation techniques"
+        />
+        <meta property="og:title" content="Noira Wellness & Luxury Blog" />
+        <meta
+          property="og:description"
+          content="Luxury wellness insights from London’s top mobile massage experts. Read about relaxation, body care, and wellness practices that transform your lifestyle."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://noira.co.uk/blog" />
+        <meta property="og:image" content="https://noira.co.uk/og-blog.jpg" />
+      </Helmet>
+
       <div className=" min-h-screen pt-30 bg-black text-white px-6 py-10 md:px-16">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-400 mb-4">
