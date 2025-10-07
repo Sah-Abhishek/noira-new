@@ -89,7 +89,11 @@ const TherapistAvailabilityModal = ({ therapistId, isOpen, onClose }) => {
 
   const getAvailabilityForDate = (date) => {
     if (!therapist || !date) return null;
-    const dateStr = date.toISOString().split("T")[0];
+    // Create date string in local timezone to avoid offset issues
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
     return therapist.availabilities?.find(
       (a) => a.date.split("T")[0] === dateStr
     );
@@ -231,8 +235,8 @@ const TherapistAvailabilityModal = ({ therapistId, isOpen, onClose }) => {
                         );
                         const isSelected =
                           selectedDate &&
-                          new Date(selectedDate).toDateString() ===
-                          day.toDateString();
+                          selectedDate.split("T")[0] ===
+                          `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
                         const isToday =
                           new Date().toDateString() === day.toDateString();
 
@@ -244,12 +248,12 @@ const TherapistAvailabilityModal = ({ therapistId, isOpen, onClose }) => {
                             }
                             disabled={!availability}
                             className={`aspect-square p-2 rounded-lg border transition-all relative ${isSelected
-                                ? "bg-primary text-black border-primary font-bold"
-                                : availability
-                                  ? hasAvailableSlots
-                                    ? "bg-[#111] border-primary/30 text-gray-300 hover:border-primary/50 hover:bg-primary/5"
-                                    : "bg-red-950/20 border-red-600/20 text-red-400"
-                                  : "bg-[#0d0d0d] border-primary/10 text-gray-600 cursor-not-allowed"
+                              ? "bg-primary text-black border-primary font-bold"
+                              : availability
+                                ? hasAvailableSlots
+                                  ? "bg-[#111] border-primary/30 text-gray-300 hover:border-primary/50 hover:bg-primary/5"
+                                  : "bg-red-950/20 border-red-600/20 text-red-400"
+                                : "bg-[#0d0d0d] border-primary/10 text-gray-600 cursor-not-allowed"
                               }`}
                           >
                             <div className="text-sm">{day.getDate()}</div>
@@ -303,15 +307,15 @@ const TherapistAvailabilityModal = ({ therapistId, isOpen, onClose }) => {
                           <div
                             key={index}
                             className={`p-3 rounded-lg border ${block.isAvailable
-                                ? "bg-[#111] border-primary/30"
-                                : "bg-red-950/20 border-red-600/30 opacity-60"
+                              ? "bg-[#111] border-primary/30"
+                              : "bg-red-950/20 border-red-600/30 opacity-60"
                               }`}
                           >
                             <div className="flex items-center justify-between mb-1">
                               <span
                                 className={`text-sm font-semibold ${block.isAvailable
-                                    ? "text-primary"
-                                    : "text-red-400"
+                                  ? "text-primary"
+                                  : "text-red-400"
                                   }`}
                               >
                                 {block.startTime} - {block.endTime}
@@ -324,8 +328,8 @@ const TherapistAvailabilityModal = ({ therapistId, isOpen, onClose }) => {
                             </div>
                             <span
                               className={`text-xs ${block.isAvailable
-                                  ? "text-green-500"
-                                  : "text-red-400"
+                                ? "text-green-500"
+                                : "text-red-400"
                                 }`}
                             >
                               {block.isAvailable ? "Available" : "Booked"}

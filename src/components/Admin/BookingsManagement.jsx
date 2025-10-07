@@ -304,6 +304,7 @@ export default function BookingsManagement() {
         isOpen={isDetailsModalOpen}
         booking={selectedBooking}
         onClose={(success) => {
+          // console.log("It was hit");
           setIsDetailsModalOpen(false);
           setSelectedBooking(null);
           if (success) fetchBookings(page); // refresh data if edited
