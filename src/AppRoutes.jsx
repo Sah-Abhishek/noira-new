@@ -65,13 +65,13 @@ import BlogPageArticle from "./Blog/BlogPageArticle.jsx";
 import BookingConfirmedByCash from "./pages/BookingConfirmedByCashPage.jsx";
 import SettlementReportsPage from "./components/Admin/settlementReports/settlementReportsPage.jsx";
 import TherapistPayout from "./components/TherapistPayout/TherapistPayout.jsx";
-// import PrivacyPolicy from "./informationPages/PrivacyPolicy.jsx";
-// import TermsAndConditions from "./informationPages/TermsAndCondition.jsx";
-// import CodeOfEthics from "./informationPages/CodeOfEthics.jsx";
-// import GDPRStatement from "./informationPages/GPDRStatement.jsx";
-// import CancellationPolicy from "./informationPages/CancellationPolicy.jsx";
-// import RefundPolicy from "./informationPages/RefundPolicy.jsx";
-// import HealthAndSafety from "./informationPages/HealthAndSafetyPolicy.jsx";
+import PrivacyPolicy from "./informationPages/PrivacyPolicy.jsx";
+import TermsAndConditions from "./informationPages/TermsAndCondition.jsx";
+import CodeOfEthics from "./informationPages/CodeOfEthics.jsx";
+import GDPRStatement from "./informationPages/GPDRStatement.jsx";
+import CancellationPolicy from "./informationPages/CancellationPolicy.jsx";
+import RefundPolicy from "./informationPages/RefundPolicy.jsx";
+import HealthAndSafety from "./informationPages/HealthAndSafetyPolicy.jsx";
 import ResourcesPage from "./components/therapist/TherapistResources.jsx";
 import ReviewsPage from "./components/Admin/ReviewsManagement/ReviewsPage.jsx";
 
@@ -102,15 +102,14 @@ const AppRoutes = () => {
         <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
         <Route path="/auth/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/blog" element={<BlogPage />} />
-        {/* <Route path="/privacypolicy" element={<PrivacyPolicy />} /> */}
-        {/* <Route path="/termsandcondition" element={<TermsAndConditions />} /> */}
-        {/* <Route path="/codeofethics" element={<CodeOfEthics />} /> */}
-        {/* <Route path="/gpdrstatement" element={<GDPRStatement />} /> */}
-        {/* <Route path="/cancellationpolicy" element={<CancellationPolicy />} /> */}
-        {/* <Route path="/refundpolicy" element={<RefundPolicy />} /> */}
-        {/* <Route path="/healthandsafetypolicy" element={<HealthAndSafety />} /> */}
-        {/* <Route path="/accessibility" element={<HealthAndSafety />} /> */}
-        {/**/}
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/termsandcondition" element={<TermsAndConditions />} />
+        <Route path="/codeofethics" element={<CodeOfEthics />} />
+        <Route path="/gpdrstatement" element={<GDPRStatement />} />
+        <Route path="/cancellationpolicy" element={<CancellationPolicy />} />
+        <Route path="/refundpolicy" element={<RefundPolicy />} />
+        <Route path="/healthandsafetypolicy" element={<HealthAndSafety />} />
+        <Route path="/accessibility" element={<HealthAndSafety />} />
         <Route path="/blog/:id" element={<BlogPageArticle />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route
