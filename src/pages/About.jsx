@@ -3,6 +3,7 @@ import ContactUs from "../components/ContactUs";
 import FooterSection from '../components/FooterSection';
 import { useTheme } from '../context/ThemeContext'; // Ensure correct path
 import Footer from '../components/FooterSection.jsx'
+import { Helmet } from 'react-helmet';
 
 
 const AboutPage = () => {
