@@ -9,27 +9,43 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function MonthlySubscription() {
-  const phoneNumber = "+447350700055"
+  const phoneNumber = "+447350700055";
   const message = "Hello, I would like to book a session.";
-
 
   const handleWhatsAppClick = () => {
     const encodedMessage = encodeURIComponent(message);
     const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(url, "_blank"); // ✅ opens WhatsApp in new tab/app
+    window.open(url, "_blank");
   };
 
   return (
-    <div
+    <section
       id="wellness-services-section"
       className="min-h-screen px-3 py-6 sm:px-4 lg:px-8 flex items-center justify-center bg-black text-white"
     >
       <div className="max-w-6xl mx-auto w-full">
+        {/* Page H1 for SEO */}
+        <header className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#D59940] font-braven tracking-tight">
+            Monthly & Corporate Wellness Subscriptions
+          </h1>
+          <p className="text-gray-400 mt-3 text-lg max-w-2xl mx-auto">
+            Experience consistent luxury wellness — perfect for individuals or
+            office teams. Discover our Weekly Ritual and Office Wellness Bundles.
+          </p>
+        </header>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
           {/* Card 1: Office Wellness Bundles */}
-          <div className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col">
+          <article
+            className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col"
+            aria-labelledby="office-wellness-heading"
+          >
             <div className="text-center mb-5 sm:mb-6">
-              <h2 className=" text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-2">
+              <h2
+                id="office-wellness-heading"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-2"
+              >
                 OFFICE WELLNESS
                 <br className="hidden sm:block" />
                 BUNDLES
@@ -41,7 +57,7 @@ export default function MonthlySubscription() {
                 </span>
               </div>
 
-              <p className=" text-sm sm:text-base lg:text-lg text-gray-300 font-light">
+              <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-light">
                 Bring wellness directly to your workplace
               </p>
             </div>
@@ -101,20 +117,30 @@ export default function MonthlySubscription() {
             </div>
 
             <div className="text-center">
-              <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
+              <button
+                onClick={handleWhatsAppClick}
+                aria-label="Contact Noira Wellness on WhatsApp for Office Wellness Bundles"
+                className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide"
+              >
                 <FontAwesomeIcon icon={faCalendarPlus} className="mr-2" />
                 Contact on WhatsApp
               </button>
             </div>
-          </div>
+          </article>
 
           {/* Card 2: Weekly Ritual */}
-          <div className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col">
+          <article
+            className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 flex flex-col"
+            aria-labelledby="weekly-ritual-heading"
+          >
             <div className="text-center mb-5 sm:mb-6">
-              <h2 className=" text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-1">
+              <h2
+                id="weekly-ritual-heading"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold text-primary uppercase tracking-wide mb-1"
+              >
                 WEEKLY RITUAL
               </h2>
-              <p className=" text-sm sm:text-base lg:text-lg text-gray-300 font-light uppercase tracking-wider">
+              <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-light uppercase tracking-wider">
                 (Monthly Subscription)
               </p>
 
@@ -140,13 +166,13 @@ export default function MonthlySubscription() {
               </p>
             </div>
 
-            <div className="flex-grow space-y-2 mb-5">
+            <ul className="flex-grow space-y-2 mb-5">
               {[
                 { time: "60 min", price: "£240 / month" },
                 { time: "90 min", price: "£320 / month" },
                 { time: "120 min", price: "£480 / month" },
               ].map((plan, i) => (
-                <div
+                <li
                   key={i}
                   className="flex items-center justify-between py-2.5 border-b border-primary/20"
                 >
@@ -162,9 +188,9 @@ export default function MonthlySubscription() {
                   <span className="text-primary font-bold text-sm sm:text-base">
                     {plan.price}
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <div className="glass-card rounded-lg p-3 sm:p-4 border border-primary/20 mb-5">
               <div className="text-center">
@@ -186,16 +212,20 @@ export default function MonthlySubscription() {
             </div>
 
             <div className="text-center">
-              <button onClick={handleWhatsAppClick} className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide">
+              <button
+                onClick={handleWhatsAppClick}
+                aria-label="Contact Noira Wellness on WhatsApp for Weekly Ritual subscription"
+                className="gold-border-hover px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-primary uppercase tracking-wide"
+              >
                 <FontAwesomeIcon icon={faStar} className="mr-2" />
                 Contact on WhatsApp
               </button>
             </div>
-          </div>
+          </article>
         </div>
       </div>
 
-      {/* Scoped styles */}
+      {/* SEO + accessibility styles */}
       <style>{`
         .glass-card {
           background: rgba(255, 255, 255, 0.03);
@@ -247,6 +277,6 @@ export default function MonthlySubscription() {
           opacity: 0.8;
         }
       `}</style>
-    </div>
+    </section>
   );
 }
